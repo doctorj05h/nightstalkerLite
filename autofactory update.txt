@@ -15,19 +15,19 @@ This helpfile is to help as a quick reference to the resources required for diff
 %2-% 20 %3Diamene sheet (disheet) %%2=% 10 Diamene
 %2-% 1 %3Modular panel (modular_panel) %%2=% 35 R-glass (rglass) [nonmetals] %6+% 20 Nanoplastic %6+% 5 Paristeel [alloys]
 
-%7::QPCS::% AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15)
+%7::QPCS:: AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15)%
 
 %2-% 3 %3HDS Astrium (hdsastrium) %%2=% 10 Astrium %6+% 10 Iriil
 %2-% 1 %3QPC (qpc) %%2=% 1 HDS Astrium %6+% 3 Stesium %6+% 3 Ultarine
 %2-% 1 %3Modular power core (modular_powercore) %%2=% 40 QPC %6+% 5 Sensor Package (sensors) %6+% 5 Universal matter manipulator (umm)
 
-%7::PROCESSORS::% AF_42 RS-4850 (88, 238) AND AF_46 RS-4453 (143, 143)
+%7::PROCESSORS:: AF_42 RS-4850 (88, 238) AND AF_46 RS-4453 (143, 143)%
 
 %2-% 1 %3Processing Array (array) %%2=% 24 Diamene sheet %6+% 5 Magnaril %6+% 5 Elessium %6+% 1 Nanoplastic
 %2-% 2 %3Sensor Package (sensors) %%2=% 1 R-glass (rglass) %6+% 1 Processing Array %6+% 1 QPC
 %2-% 1 %3AI Core (ai_core) %%2=% 45 Processing Array %6+% 8 R-glass (rglass)
 
-%7::BOTS::% AF_15 Paskal (137, 113) NPC
+%7::BOTS:: AF_15 Paskal (137, 113) NPC%
 
 %2-% 5 %3semi-autonomous astromech (astromech) %%2=% 1 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
 %2-% 5 %3gas harvesting drone (harvestdrone) %%2=% 1 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
@@ -35,14 +35,14 @@ This helpfile is to help as a quick reference to the resources required for diff
 %2-% 1 %3Automation machinery (automation_machinery) %%2=% 5 Processing Array %6+% 30 Universal matter manipulator (umm) %6+% 10 Sensor Package (sensors)
 
 
-%7::BATTERIES::% AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15) AND AF_64 RS-7751 (30, 143)
+%7::BATTERIES:: AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15) AND AF_64 RS-7751 (30, 143)%
 
 %2-% 12 %3kinetic battery (kinetic_battery) %%2=% 1 Transteel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Ultarine
 %2-% 12 %3thermal battery (thermal_battery) %%2=% 1 Transteel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Stesium
 %2-% 12 %3EM battery (em_battery) %%2=% 1 Paristeel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Elessium
 %2-% 12 %3gravitic battery (gravitic_battery) %%2=% 1 Paristeel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Astrium
 
-%7::EXPLOSIVES::% AF_38 RS-5645 (1, 100)
+%7::EXPLOSIVES:: AF_38 RS-5645 (1, 100)%
 
 %2-% 100 %3kinetic missile (kinetic_missile) %%2=% 1 Transteel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Ultarine
 %2-% 100 %3thermal missile (thermal_missile) %%2=% 1 Transteel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Stesium
@@ -52,12 +52,12 @@ This helpfile is to help as a quick reference to the resources required for diff
 %2-% 70 %3subspace counter-measure (countermeasure) %%2=% 1 R-glass (rglass) %6+% 2 Nanoplastic %6+% 1 QPC %6+% 1 Universal matter manipulator
 
 
-%7::REPAIR::% AF_41 Vai (169, 147)
+%7::REPAIR:: AF_41 Vai (169, 147)%
 
 %2-% 75 %3ship repairing kit (repairkit) %%2=% 1 Paristeel %6+% 1 Transteel %6+% 1 R-glass (rglass) %6+% 1 Nanoplastic %6+% 4 Diamene sheet
 %2-% 90 %3Structural repairkit (structural_repair) %%2=% 5 Paristeel %6+% 5 Transteel %6+% 5 Nanoplastic %6+% 2 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 2 R-glass (rglass) %6+% 1 Sensor Package (sensors)
 
-%7::RESOURCES::% AF_40 CS-5238 (227, 250) AF_63 CS-5239 (20, 239)
+%7::RESOURCES:: AF_40 CS-5238 (227, 250) AF_63 CS-5239 (20, 239)%
 
 %2-% 100 %3mineral probe (probe) %%2=% 1 Diamene sheet %6+% 1 QPC %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
 %2-% 100 %3multifield tether (tether) %%2=% 1 Paristeel %6+% 5 Magnaril
