@@ -12,7 +12,7 @@
 			<regex></regex>
 			<Alias isActive="yes" isFolder="no">
 				<name>help me</name>
-				<script>send('crt Requesting assistance at '..gmcp.Room.Info.name..' in '..gmcp.Room.Info.area..'!')</script>
+				<script>send('crt Requesting assistance at '..gmcp.Room.Info.name..' in '..gmcp.Room.Info.area..'!')-- you wimp</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^helpme$</regex>
