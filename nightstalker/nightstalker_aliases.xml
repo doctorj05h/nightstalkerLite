@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.001">
+	<TriggerPackage />
+	<TimerPackage />
+	<AliasPackage>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>utility</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<Alias isActive="yes" isFolder="no">
+				<name>help me</name>
+				<script>send('crt Requesting assistance at '..gmcp.Room.Info.name..' in '..gmcp.Room.Info.area..'!')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^helpme$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>my location</name>
+				<script>send("crt I'm at "..gmcp.Room.Info.name.." in "..gmcp.Room.Info.area..".")</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^myloc$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>launch ship</name>
+				<script>OnShip = true
+sendAll("ship launch", 'say activate all')
+expandAlias("shipart")
+enableTimer("ships")</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^(say|ship) launch$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>dock ship</name>
+				<script>OnShip = false
+send("ship dock")
+disableTimer("ships")
+sym.ui.adj.right:hide()
+sym.ui.adj.left:hide()</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^ship dock$</regex>
+			</Alias>
+		</AliasGroup>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>hunter</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<Alias isActive="yes" isFolder="no">
+				<name>runner</name>
+				<script>sym.hunter.runner[matches[2]]()</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^hr (init|start|abort)$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>toggle</name>
+				<script>local hunting = sym.checkmodule('Hunting')
+sym.hunter.system[hunting and 'stop' or 'start']()
+sym.echo('Autohunting has been '..(hunting and 'disabled' or 'enabled')..'.')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^ht$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>set party size</name>
+				<script>sym.hunter.runner.config.party = tonumber(matches[2]) or #gmcp.Room.Players
+sym.echo('&lt;0,128,128&gt;Party Size: &lt;128,128,0&gt;' .. sym.hunter.runner.config.party .. '\n')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^hps(?: (\d+))?$</regex>
+			</Alias>
+		</AliasGroup>
+	</AliasPackage>
+	<ActionPackage />
+	<ScriptPackage />
+	<KeyPackage />
+	<HelpPackage>
+		<helpURL></helpURL>
+	</HelpPackage>
+</MudletPackage>
