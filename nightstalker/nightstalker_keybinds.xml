@@ -1,166 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MudletPackage>
 <MudletPackage version="1.001">
+	<TriggerPackage />
+	<TimerPackage />
+	<AliasPackage />
+	<ActionPackage />
+	<ScriptPackage />
 	<KeyPackage>
 		<KeyGroup isActive="yes" isFolder="yes">
-			<name>nightstalker_keybinds</name>
+			<name>interface</name>
 			<packageName></packageName>
 			<script></script>
 			<command></command>
-			<keyCode>33554431</keyCode>
+			<keyCode>-1</keyCode>
 			<keyModifier>0</keyModifier>
+			<Key isActive="yes" isFolder="no">
+				<name>rotate target</name>
+				<packageName></packageName>
+				<script>sym.ui.rotateroomtarget()</script>
+				<command></command>
+				<keyCode>47</keyCode>
+				<keyModifier>67108864</keyModifier>
+			</Key>
 			<KeyGroup isActive="yes" isFolder="yes">
-				<name>interface</name>
+				<name>movement</name>
 				<packageName></packageName>
 				<script></script>
 				<command></command>
 				<keyCode>-1</keyCode>
 				<keyModifier>0</keyModifier>
 				<Key isActive="yes" isFolder="no">
-					<name>rotate target</name>
+					<name>north</name>
 					<packageName></packageName>
-					<script>sym.ui.rotateroomtarget()</script>
-					<command></command>
-					<keyCode>47</keyCode>
-					<keyModifier>67108864</keyModifier>
-				</Key>
-				<KeyGroup isActive="yes" isFolder="yes">
-					<name>movement</name>
-					<packageName></packageName>
-					<script></script>
-					<command></command>
-					<keyCode>-1</keyCode>
-					<keyModifier>0</keyModifier>
-					<Key isActive="yes" isFolder="no">
-						<name>north</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send('ship turn n')
 elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk n')
 else
   send("n")
 end</script>
-						<command></command>
-						<keyCode>56</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>south</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>56</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>south</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn s")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk s')
 else
   send("s")
 end</script>
-						<command></command>
-						<keyCode>50</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>east</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>50</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>east</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn e")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk e')
 else
   send("e")
 end</script>
-						<command></command>
-						<keyCode>54</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>west</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>54</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>west</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn w")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk w')
 else
   send("w")
 end</script>
-						<command></command>
-						<keyCode>52</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>northeast</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>52</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>northeast</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn ne")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk ne')
 else
   send("ne")
 end</script>
-						<command></command>
-						<keyCode>57</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>northwest</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>57</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>northwest</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn nw")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk nw')
 else
   send("nw")
 end</script>
-						<command></command>
-						<keyCode>55</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>southeast</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>55</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>southeast</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn se")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk se')
 else
   send("se")
 end</script>
-						<command></command>
-						<keyCode>51</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>southwest</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>51</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>southwest</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship turn sw")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk sw')
 else
   send("sw")
 end</script>
-						<command></command>
-						<keyCode>49</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>in</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>49</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>in</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship halt")
     elseif gmcp.Room.Info.name == 'In space.' then
   send('spacewalk board')
 else
   send("in")
 end</script>
-						<command></command>
-						<keyCode>53</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>out</name>
-						<packageName></packageName>
-						<script>local target = gmcp.Char.Status.target:match('%w+')
+					<command></command>
+					<keyCode>53</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>out</name>
+					<packageName></packageName>
+					<script>local target = gmcp.Char.Status.target:match('%w+')
 if gmcp.Room.Info.environment == 'bridge' then
   --  'ship weapon fire weap5 ' ..target,
   --  'ship weapon fire weap6 ' ..target,
@@ -177,60 +175,62 @@ if gmcp.Room.Info.environment == 'bridge' then
 else
   send("out")
 end</script>
-						<command></command>
-						<keyCode>48</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>up</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>48</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>up</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
 send("ship thrust 100 50")
 else
 send("up")
 end
 
 </script>
-						<command></command>
-						<keyCode>45</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>down</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>45</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>down</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
 send("ship thrust 100 100")
 else
 send("d")
 end</script>
-						<command></command>
-						<keyCode>43</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>*  slow thrust</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>43</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>*  slow thrust</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
   send("ship thrust 80 18")
 else
 end</script>
-						<command></command>
-						<keyCode>42</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-					<Key isActive="yes" isFolder="no">
-						<name>/ ship vitals</name>
-						<packageName></packageName>
-						<script>if gmcp.Room.Info.environment == 'bridge' then
+					<command></command>
+					<keyCode>42</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
+				<Key isActive="yes" isFolder="no">
+					<name>/ ship vitals</name>
+					<packageName></packageName>
+					<script>if gmcp.Room.Info.environment == 'bridge' then
 send("ship vitals")
 send("ship details damage")
 end</script>
-						<command></command>
-						<keyCode>47</keyCode>
-						<keyModifier>536870912</keyModifier>
-					</Key>
-				</KeyGroup>
+					<command></command>
+					<keyCode>47</keyCode>
+					<keyModifier>536870912</keyModifier>
+				</Key>
 			</KeyGroup>
 		</KeyGroup>
 	</KeyPackage>
+	<HelpPackage>
+		<helpURL></helpURL>
+	</HelpPackage>
 </MudletPackage>
