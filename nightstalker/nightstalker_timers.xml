@@ -3,7 +3,7 @@
 <MudletPackage version="1.001">
 	<TriggerPackage />
 	<TimerPackage>
-		<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 			<name>ships</name>
 			<script></script>
 			<command></command>

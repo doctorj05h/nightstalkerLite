@@ -204,8 +204,8 @@ end</script>
 					<name>nanoseer</name>
 					<packageName></packageName>
 					<script>sym.hunter.class['Nanoseer'] = function(target)
-  if not sym.hunter.flags.repaired and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
-    sym.hunter.send('nano repair')
+  if not sym.hunter.flags.embraces and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('void embrace')
   elseif not sym.hunter.flags.multistrike and sym.haveskill('Multistrike', 'Nanotech') then
     sym.hunter.send('nano multistrike '..target)
   elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') then
@@ -1105,7 +1105,7 @@ end</script>
   sym.ui.adj = sym.ui.adj or {} 
   sym.ui.adj.top = Adjustable.Container:new({name = 'Module', x = '25%', y = 0, width = '50%', height = '5%', }) 
   sym.ui.adj.bottom = Adjustable.Container:new({name = 'Gauges', x = '25%', y = '95%', width = '50%', height = '5%', }) 
-  sym.ui.adj.left = Adjustable.Container:new({name = 'Starchart', x = '25%', y = '5%', width = '15%', height = '25%', }) 
+  sym.ui.adj.left = Adjustable.Container:new({name = 'Starchart', x = '25%', y = '5%', width = '15%', height = '30%', }) 
   sym.ui.adj.right = Adjustable.Container:new({name = 'Beacon', x = '40%', y = '5%', width = '15%', height = '25%', }) 
 
   sym.ui.left = Geyser.Label:new({ name = 'sym.ui.left', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.left)
@@ -1125,7 +1125,8 @@ end</script>
 				<Script isActive="yes" isFolder="no">
 					<name>create boxes</name>
 					<packageName></packageName>
-					<script>function sym.ui.create_boxes()
+					<script>
+function sym.ui.create_boxes()
   local boxcss = CSSMan.new([[
     background-color: rgba(0,0,0,100);
     border-style: solid;
@@ -1134,14 +1135,13 @@ end</script>
     border-color: rgb(0,40,40);
     margin: 2px;
   ]])
-  sym.ui.adj = sym.ui.adj or {}  
+  sym.ui.adj = sym.ui.adj or {} 
+   
   sym.ui.adj.topright = Adjustable.Container:new({name = 'Chat', x = '75%', y = 0, width = '25%', height = '50%', }) 
   sym.ui.adj.bottomright = Adjustable.Container:new({name = 'Room Info', x = '75%', y = '50%', width = '25%', height = '50%',}) 
   sym.ui.adj.topleft = Adjustable.Container:new({name = 'Map', x = '0%', y = '0%', width = '25%', height = '75%', }) 
   sym.ui.adj.bottomleft = Adjustable.Container:new({name = 'Mindsim', x = '0%', y = '75%', width = '25%', height = '25%', fontSize = 12}) 
     
-    
-
   sym.ui.topright = Geyser.Label:new({ name = 'sym.ui.topright', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.topright)
   sym.ui.topright:setStyleSheet(boxcss:getCSS())
 
@@ -1153,6 +1153,11 @@ end</script>
 
   sym.ui.bottomleft = Geyser.Label:new({ name = 'sym.ui.bottomleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = 11 }, sym.ui.adj.bottomleft)
   sym.ui.bottomleft:setStyleSheet(boxcss:getCSS())
+
+  local fontsize = sym.ui.mapper.config.fontsize - 2
+  beaconMini = beaconMini or Geyser.MiniConsole:new({name = "beacon",  x=0, y=0,  autoWrap = true,  color = "black", fontSize = fontsize,  width="100%", height="100%",}, sym.ui.adj.right)
+  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black", fontSize = fontsize -1,  width="100%", height="100%",}, sym.ui.adj.left)
+
 end</script>
 					<eventHandlerList />
 				</Script>
@@ -1838,7 +1843,7 @@ function sym.ui.mapper:create()
       else
         sym.ui.mapper.windows[tab]:setColor(0, 0, 0)
 -- use this if you want to change the font of the SpaceMap         
---        sym.ui.mapper.windows[tab]:setFont("square")
+        sym.ui.mapper.windows[tab]:setFont("square")
       end
     end
     sym.ui.mapper.windows[tab]:hide()
