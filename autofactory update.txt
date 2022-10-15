@@ -2,14 +2,13 @@
 This helpfile is to help as a quick reference to the resources required for different things made by autofactories.
 
 
-%7::ALLOYS::% AF_46 RS-4453 (143, 143)
+%7::ALLOYS:: AF_46 RS-4453 (143, 143)%
 
 %2-% 1 %3Paristeel (paristeel) %%2=% 4 Titanium %6+% 2 Isotropic Duramine (duramine) 
 %2-% 1 %3Transteel (transteel) %%2=% 4 Titanium %6+% 2 Magnaril 
 %2-% 1 %3Modular frame (modular_frame) %%2=% 35 Transteel %6+% 30 Paristeel %6+% 25 Ultarine 
 
-
-%7::NONMETALS::% AF_40 CS-5238 (227, 250)
+%7::NONMETALS:: AF_40 CS-5238 (227, 250)%
 
 %2-% 1 %3R-glass (rglass) %%2=% 8 Tritium %6+% 5 Vandium %6+% 3 Ultarine
 %2-% 3 %3Nanoplastic (nanoplastic) %%2=% 8 Helium-11 (helium11) %6+% 3 Vandium %6+% 6 Elessium %6+% 4 Isotropic Duramine (duramine)
