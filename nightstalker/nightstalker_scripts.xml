@@ -5,7 +5,2383 @@
 	<TimerPackage />
 	<AliasPackage />
 	<ActionPackage />
-	<ScriptPackage />
+	<ScriptPackage>
+		<Script isActive="yes" isFolder="no">
+			<name>namespace</name>
+			<packageName></packageName>
+			<script>sym = sym or {}</script>
+			<eventHandlerList />
+		</Script>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>hunter</name>
+			<packageName></packageName>
+			<script>sym.hunter = sym.hunter or {}
+sym.hunter.flags = sym.hunter.flags or {}
+sym.hunter.runner = sym.hunter.runner or {}
+
+sym.loadtable('hunter.ignore')
+sym.loadtable('hunter.exceptions')</script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>core</name>
+				<packageName></packageName>
+				<script>sym.hunter.send = function(cmd)
+  if debug.traceback():find('Trigger', 1, true) then
+    decho(' &lt;51,0,255&gt;(&lt;242,234,233&gt;'..cmd..'&lt;51,0,255&gt;)')
+  end
+  send(cmd, false)
+end
+
+sym.hunter.triggy = function(class)
+  class = class:lower()
+
+  local clist = {'b.e.a.s.t.', 'scoundrel', 'nanoseer', 'engineer', 'fury'}
+
+  for _, c in ipairs(clist) do
+    (c == class and enableTrigger or disableTrigger)('oh-'..c)
+  end
+end
+
+sym.hunter.setignore = function(name)
+  sym.hunter.ignore[name] = not sym.hunter.ignore[name]
+  -- and because my ocd can't handle it
+  if not sym.hunter.ignore[name] then sym.hunter.ignore[name] = nil end
+  sym.savetable('hunter.ignore')
+  sym.ui.update_room()
+end
+
+sym.hunter.setexception = function(name)
+  sym.hunter.exceptions[name] = not sym.hunter.exceptions[name]
+  -- it's actually necessary here, though
+  if not sym.hunter.exceptions[name] then sym.hunter.exceptions[name] = nil end
+  sym.savetable('hunter.exceptions')
+  sym.ui.update_room()
+end
+
+sym.hunter.checktarget = function()
+  local area = gmcp.Room.Info.area
+  local prios = sym.hunter.priorities[area]
+  local ignore = sym.hunter.ignore
+  local exceptions = table.keys(sym.hunter.exceptions)
+  local mobs = {}
+
+  table.foreach(sym.ui.roommobs, function(i, mob)
+    if not mob.attrib:find('x', 1, true) and (not mob.name:find('[A-Z]') or table.contains(exceptions, mob.name)) and not ignore[mob.name] then
+      mobs[mob.name] = mob
+    end
+  end)
+
+  if prios then
+    for _, mob in ipairs(prios) do
+      if mobs[mob] then return mobs[mob] end
+    end
+  end
+
+  if next(mobs) then
+    return select(2, next(mobs))
+  end
+
+  return false
+end
+
+function checkSystems()
+	local vitals = gmcp.Char.Vitals
+	local sym_ww = (vitals.ww == "1" and true or false)
+  local efficacy = {"wetwiring_efficacy", "muscular_efficacy", "mind_efficacy", "internal_efficacy", "sensory_efficacy"}
+	local systems = {"wetwiring", "muscular", "mind", "internal", "sensory"}
+	if not sym_ww then return end
+	for _, system in pairs(systems) do
+		local value = math.floor(tonumber(vitals[system]))
+    local evalue = tonumber(vitals[efficacy[_]])
+		if value &lt;= 92.5 and evalue &gt;= 85 then
+			send("ww mend "..system,false)
+			break
+		end
+	end
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>system</name>
+				<packageName></packageName>
+				<script>sym.hunter.system = {
+  start = function()
+    enableTrigger('hunting balance')
+
+    sym.setmodule('Hunting', true)
+
+    sym.hunter.triggy(gmcp.Char.Status.class)
+
+    if not debug.traceback():find('Trigger', 1, true) then
+      send('look', false)
+    end
+  end,
+  stop = function()
+    disableTrigger('hunting balance')
+
+    sym.setmodule('Hunting', false)
+  end,
+}</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>reset</name>
+				<packageName></packageName>
+				<script>sym.hunter.reset = {
+
+  ['B.E.A.S.T.'] = function()
+    sym.hunter.flags.backhand = false
+  end,
+
+  ['Scoundrel'] = function()
+  end,
+
+  ['Nanoseer'] = function()
+    sym.hunter.flags.frozen = false
+  end,
+
+  ['Engineer'] = function()
+  end,
+
+  ['Fury'] = function()
+  end
+
+}</script>
+				<eventHandlerList />
+			</Script>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>class</name>
+				<packageName></packageName>
+				<script>sym.hunter.class = sym.hunter.class or {}</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>b.e.a.s.t.</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['B.E.A.S.T.'] = function()
+  local target = sym.target
+  if not sym.hunter.flags.contingency then
+    sym.hunter.send('contingency')
+  end
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('suit support')
+  elseif not sym.hunter.flags.backhand then
+    sym.hunter.send('suit backhand '..target)
+  else
+    sym.hunter.send('mwp wristblade '..target)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>scoundrel</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['Scoundrel'] = function()
+  local target = sym.target
+  local bullets = tonumber(gmcp.Char.Vitals.bl)
+  if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('guile stim')
+  elseif bullets == 0 then
+    if sym.haveskill ('Fling', 'Improvisation') then
+      sym.hunter.send('ied fling ripper at '..target)
+    elseif sym.haveskill ('Pocketsand', 'Guile') then
+      sym.hunter.send('guile pocketsand '..target)
+    elseif sym.haveskill ('Spin', 'Gunslinging') then
+      sym.hunter.send('gun spin '..target)
+    else
+      sym.hunter.send('gun quickload')
+    end
+  elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+    sym.hunter.send('gun ambush '..target)
+  elseif not sym.hunter.flags.dualshot and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
+    sym.hunter.send('gun rapidfire '..target)
+  else
+    sym.hunter.send('gun crackshot '..target)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>nanoseer</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['Nanoseer'] = function(target)
+  if not sym.hunter.flags.repaired and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('nano repair')
+  elseif not sym.hunter.flags.multistrike and sym.haveskill('Multistrike', 'Nanotech') then
+    sym.hunter.send('nano multistrike '..target)
+  elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') then
+    sym.hunter.send('void freeze '..target)
+  else
+    sym.hunter.send('nano swarm '..target)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>engineer</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['Engineer'] = function()
+  local target = sym.target
+  local sym_name = gmcp.Char.Name.name
+  if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjectors', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('stimjector ' .. sym_name)
+  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
+    sym.hunter.send('bot repeat claw '..target)
+  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
+    sym.hunter.send('bot harass '..target)
+  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
+    sym.hunter.send('gadget shock '..target)
+  else
+    sym.hunter.send('bot claw '..target)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>fury</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['Fury'] = function()
+  local target = sym.target
+  local stance = gmcp.Char.Vitals.st:lower()
+  local rage = tonumber(gmcp.Char.Vitals.rg)
+  
+if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+  sym.hunter.send("suffuse")
+ elseif sym.haveskill('Burn', 'Fulmination') then
+  sym.hunter.send("kith burn " .. target)
+ else
+   sym.hunter.send("kill " .. target)
+end
+        
+  -- for later when you have all yours skills, one way to do a bashing route for fury
+  
+ --     if
+ --       not sym.hunter.flags.suffused and
+ --       ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 71 then
+ --       sym.hunter.send("suffuse")
+ --     elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
+ --       local to_combo =
+ --         {
+ --           ['symmetry'] = 'combo gutrend overpower',
+ --           ['flare'] = 'combo wound overpower',
+ --           ['eruption'] = 'combo rupture overpower',
+ --         }
+ --       sym.hunter.send(to_combo[stance] .. ' ' .. target)
+ --     else
+ --       if sym.hunter.flags.unstoppable == true then
+ --         local to_combo =
+ --           {
+ --             ['symmetry'] = 'combo gutrend slice',
+ --             ['flare'] = 'combo wound slice',
+ --             ['eruption'] = 'combo rupture slice',
+ --           }
+ --         sym.hunter.send(to_combo[stance] .. ' ' .. target)
+ --       else
+ --         if sym.hunter.flags.unstoppableready == true then
+ --           local to_combo =
+ --             {
+ --               ['symmetry'] = 'combo gutrend unstoppable',
+ --               ['flare'] = 'combo wound unstoppable',
+ --               ['eruption'] = 'combo hypertension unstoppable',
+ --             }
+ --           sym.hunter.send(to_combo[stance] .. ' ' .. target)
+ --         else
+ --           if not sym.hunter.flags.berserk and rage &gt; 10 then
+ --             local to_combo =
+ --               {
+ --                 ['symmetry'] = 'combo gutrend berserk',
+ --                 ['flare'] = 'combo wound deepstrike',
+ --                 ['eruption'] = 'combo rupture berserk',
+ --               }
+ --             sym.hunter.send(to_combo[stance] .. ' ' .. target)
+ --           else
+ --             local to_combo =
+ --               {
+ --                 ['symmetry'] = 'combo gutrend flyinglash',
+ --                 ['flare'] = 'combo wound deepstrike',
+ --                 ['eruption'] = 'combo rupture flyinglash',
+ --               }
+ --             sym.hunter.send(to_combo[stance] .. ' ' .. target)
+ --           end
+ --         end
+ --       end
+ --     end
+
+end</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>priorities</name>
+				<packageName></packageName>
+				<script>sym.hunter.priorities = sym.hunter.priorities or {}</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>locorin swamp</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['The Locorin Swamp'] = {
+  'a blacktooth coroxodon',
+  'a ruby-plumed eskama',
+  'a mossy shellback',
+  'a Grethen Silkmoth'
+}</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>golpur desert</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['Golpur Desert'] = {
+  'an enormous drakkafly',
+  'a flat balkrab',
+  'a giant black tarrak beetle'
+}</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>runner</name>
+				<packageName></packageName>
+				<script></script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>config</name>
+					<packageName></packageName>
+					<script>sym.hunter.runner.config = sym.hunter.runner.config or {}
+sym.hunter.runner.config.returnToStart = false
+sym.hunter.runner.config.calling = false
+sym.hunter.runner.config.party = 1</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>init</name>
+					<packageName></packageName>
+					<script>function sym.hunter.runner:init()
+	decho('&lt;0,128,128&gt;Genrunner mapping area from: &lt;128,128,0&gt;' .. getRoomAreaName(getRoomArea(gmcp.Room.Info.num))..'\n')
+	local rooms = getAreaRooms(getRoomArea(gmcp.Room.Info.num))
+	sym.hunter.runner.rooms = {}
+	sym.hunter.runner.reverse = {}
+	for _,vnum in pairs(rooms) do
+		if getPath(gmcp.Room.Info.num, vnum) then
+			sym.hunter.runner.rooms[vnum] = {}
+			local exits = getRoomExits(vnum)
+			for dir, toRoom in pairs(exits) do
+				sym.hunter.runner.rooms[vnum][toRoom] = {
+					dir = dir,
+				}
+			end
+		end
+	end
+	sym.hunter.runner.rooms[gmcp.Room.Info.num] = {}
+	local exits = getRoomExits(gmcp.Room.Info.num)
+	for dir, toRoom in pairs(exits) do
+		sym.hunter.runner.rooms[gmcp.Room.Info.num][toRoom] = {
+			dir = dir,
+		}
+	end
+	sym.hunter.runner.roomsLeft = {}
+	sym.hunter.runner.startRoom = gmcp.Room.Info.num
+	for vnum, exits in pairs(sym.hunter.runner.rooms) do
+		if vnum ~= sym.hunter.runner.startRoom then
+			sym.hunter.runner.roomsLeft[vnum] = true
+		end
+	end
+
+	sym.hunter.runner.walkingTo = gmcp.Room.Info.num
+
+	decho('&lt;128,128,0&gt;'..table.size(sym.hunter.runner.roomsLeft)..'&lt;0,128,128&gt; rooms mapped!\n')
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>start</name>
+					<packageName></packageName>
+					<script>function sym.hunter.runner:start()
+	sym.hunter.runner.enabled = true
+  sym.hunter.system.start()
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>abort</name>
+					<packageName></packageName>
+					<script>function sym.hunter.runner:abort()
+	mmp.stop()
+	sym.hunter.runner.walking = false
+	sym.hunter.runner.rooms = {}
+	sym.hunter.runner.walkingTo = 0
+	sym.hunter.runner.backtracking = false
+	sym.hunter.runner.enabled = false
+  sym.hunter.system.stop()
+	if sym.hunter.runner.config.returnToStart then
+		decho("&lt;0,128,128&gt;Returning you to your starting room!\n")
+    expandAlias('goto ' .. sym.hunter.runner.startRoom)
+	end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>room checks</name>
+					<packageName></packageName>
+					<script>function sym.hunter.checkroom()
+  if not sym.hunter.nextroom() then
+    sym.hunter.previousroom()
+  end
+end
+
+function sym.hunter.nextroom()
+	if not sym.hunter.runner.enabled then return false end
+
+	if sym.hunter.runner.walkingTo ~= gmcp.Room.Info.num then return false end
+
+	for vnum, roomInfo in pairs(sym.hunter.runner.rooms[gmcp.Room.Info.num]) do
+		if sym.hunter.runner.roomsLeft[vnum] then
+			sym.hunter.runner.walkingTo = vnum
+			table.insert(sym.hunter.runner.reverse, gmcp.Room.Info.num)
+      expandAlias('goto ' .. vnum)
+			return true
+		end
+	end
+
+  return false
+end
+
+function sym.hunter.previousroom()
+	sym.hunter.runner.backracking = true
+	if #sym.hunter.runner.reverse &gt; 0 then
+		sym.hunter.runner.walkingTo = table.remove(sym.hunter.runner.reverse)
+		expandAlias('goto '..sym.hunter.runner.walkingTo)
+	else
+		sym.hunter.runner.enabled = false
+    sym.hunter.system.stop()
+		decho('&lt;0,128,128&gt;Hunting completed!\n')
+	end
+end
+
+sym.registerevent('runner check', 'empty_room', 'sym.hunter.checkroom')</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>movement</name>
+					<packageName></packageName>
+					<script>function sym.hunter.movement()
+  if not sym.checkmodule('Hunting') then return end
+  if sym.hunter.runner.enabled then
+    if sym.hunter.runner.enabled and gmcp.Room.Info.num == sym.hunter.runner.walkingTo then
+      sym.hunter.runner.roomsLeft[gmcp.Room.Info.num] = nil
+    end
+  end
+  if sym.hunter.runner.moving_timer then killTimer(sym.hunter.runner.moving_timer) end
+  sym.hunter.runner.moving_timer = tempTimer(0.5 + getNetworkLatency(), function()
+    if #gmcp.Room.Players &gt; sym.hunter.runner.config.party then
+      decho('\n&lt;0,128,128&gt;Skipping room. Another player is here! &lt;128,128,0&gt;'..#gmcp.Room.Players..'\n')
+      raiseEvent('empty_room')
+    elseif not room_updated then
+      timeframe('room_updated', 0, 0.5)
+      raiseEvent('room_updated')
+    end
+  end)
+end
+
+sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>targetting</name>
+					<packageName></packageName>
+					<script>function sym.hunter.targetting()
+  if sym.hunter.runner.enabled and sym.hunter.runner.walkingTo ~= gmcp.Room.Info.num then
+    return false
+  end
+
+  local mob = sym.hunter.checktarget()
+
+  if mob then
+    local target = gmcp.Char.Status.target:match('%d+')
+    if target and mob.id == target then return end
+    sym.echo('&lt;0,128,128&gt;Next Target: &lt;128,128,0&gt;' .. mob.name .. '&lt;0,128,128&gt; (&lt;128,128,0&gt;' .. mob.id .. '&lt;0,128,128&gt;)\n')
+    enableTrigger('hunting balance')
+    send('st ' .. mob.id, false)
+    if sym.hunter.runner.config.calling then
+      send('crt Target: '..mob.id, false)
+    end
+  else
+    sym.echo('&lt;156,0,0&gt;There are no suitable targets left.\n')
+    disableTrigger('hunting balance')
+    if sym.hunter.runner.enabled then
+      if sym.hunter.runner.empty_timer then killTimer(sym.hunter.runner.empty_timer) end
+      sym.hunter.runner.empty_timer = tempTimer(3 + getNetworkLatency(), [[raiseEvent('empty_room')]])
+    end
+  end
+end
+
+sym.registerevent('hunter targetting', 'room_updated', 'sym.hunter.targetting')</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>utils</name>
+			<packageName></packageName>
+			<script></script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>cssman</name>
+				<packageName></packageName>
+				<script>-- CSSMan by Vadi. Public domain.
+CSSMan = {}
+CSSMan.__index = CSSMan
+
+function CSSMan.new(stylesheet)
+  local obj = {stylesheet = {}}
+  setmetatable(obj, CSSMan)
+  local trim = string.trim
+  assert(
+    type(stylesheet) == "string",
+    "CSSMan.new: no stylesheet provided. A possible error is that you might have used CSSMan.new, not CSSMan:new"
+  )
+  for line in stylesheet:gmatch("[^\r\n]+") do
+    local attribute, value = line:match("^(.-):(.-);$")
+    if attribute and value then
+      attribute, value = trim(attribute), trim(value)
+      obj.stylesheet[attribute] = value
+    end
+  end
+  return obj
+end
+
+function CSSMan:set(key, value)
+  self.stylesheet[key] = value
+end
+
+function CSSMan:get(key)
+  return self.stylesheet[key]
+end
+
+function CSSMan:getCSS(key)
+  local lines, concat = {}, table.concat
+  for k, v in pairs(self.stylesheet) do
+    lines[#lines + 1] = concat({k, ": ", v, ";"})
+  end
+  return concat(lines, "\n")
+end
+
+function CSSMan:gettable()
+  return self.stylesheet
+end
+
+function CSSMan:settable(tbl)
+  assert(type(tbl) == "table", "CSSMan:settable: table expected, got " .. type(tbl))
+  self.stylesheet = tbl
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>geyser additions</name>
+				<packageName></packageName>
+				<script>function Geyser.MiniConsole:clear()
+  clearWindow(self.name)
+end
+
+function Geyser.MiniConsole:append()
+  appendBuffer(self.name)
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>table additions</name>
+				<packageName></packageName>
+				<script>function table.keys(tbl)
+  local k = {}
+  for key, value in pairs(tbl) do
+    k[#k + 1] = key
+  end
+  return k
+end
+
+function round(num, numDecimalPlaces)
+  local mult = 10 ^ (numDecimalPlaces or 0)
+  return math.floor(num * mult + 0.5) / mult
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>register events</name>
+				<packageName></packageName>
+				<script>sym.events = sym.events or {}
+
+function sym.registerevent(name, event, func)
+  if not sym.events[name] then
+    sym.events[name] = registerAnonymousEventHandler(event, func)
+  end
+end
+
+function sym.killevent(name)
+  if sym.events[name] then
+    return killAnonymousEventHandler(sym.events[name])
+  end
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>skill checker</name>
+				<packageName></packageName>
+				<script>local ignore = {'Captaincy', 'Hacking', 'Art', 'Fashion', 'Cuisine', 'Jewelry', 'WeaponModding', 'ArmorModding', 'ShipModding', 'Furnishing', 'Mixology'}
+
+function sym.gmcpcharskillsgroups()
+  if not sym.skills then
+    sym.skills = {}
+    table.foreach(gmcp.Char.Skills.Groups, function(key, skillset)
+      if not table.contains(ignore, skillset.name) then
+        sendGMCP(string.format('Char.Skills.Get %s', yajl.to_string({group=skillset.name})))
+        sym.skills[skillset.name] = {
+          rank = tonumber(skillset.rank:match('(%d+)/%d+')),
+          maxrank = tonumber(skillset.rank:match('%d+/(%d+)')),
+          list = {}
+        }
+      end
+    end)
+  end
+end
+
+function sym.gmcpcharskillslist()
+  table.foreach(gmcp.Char.Skills.List.list, function(key, skill)
+    sendGMCP(string.format('Char.Skills.Get %s', yajl.to_string({
+      group = gmcp.Char.Skills.List.group:title(),
+      name = skill
+    })))
+  end)
+end
+
+function sym.gmcpcharskillsinfo()
+  local group = gmcp.Char.Skills.Info.group:title()
+  local skill = gmcp.Char.Skills.Info.skill:title()
+  local lessons = gmcp.Char.Skills.Info.info:match('(%d+) Lessons')
+  sym.skills[group].list[#sym.skills[group].list + 1] = {skill, tonumber(lessons)}
+  if #sym.skills[group].list == sym.skills[group].maxrank then
+    table.sort(sym.skills[group].list, function(a,b) return a[2] &lt; b[2] end)
+    local sorted_list = sym.skills[group].list
+    sym.skills[group].list = {}
+    table.foreach(sorted_list, function(key, value)
+      sym.skills[group].list[#sym.skills[group].list + 1] = value[1]
+    end)
+  end
+end
+
+function sym.haveskill(skill, skillset)
+  local rank = sym.skills[skillset].rank
+  local skill = table.index_of(sym.skills[skillset].list, skill)
+  return skill &lt;= rank
+end
+
+sym.registerevent('fetch groups', 'gmcp.Char.Skills.Groups', 'sym.gmcpcharskillsgroups')
+sym.registerevent('fetch skills', 'gmcp.Char.Skills.List', 'sym.gmcpcharskillslist')
+sym.registerevent('parse skills', 'gmcp.Char.Skills.Info', 'sym.gmcpcharskillsinfo')</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>table persistence</name>
+				<packageName></packageName>
+				<script>function sym.savetable(t)
+  assert(type(t) == 'string', 'sym.savetable: bad argument #1 type (string expected, got '..type(t)..')')
+  assert(#t &gt; 0, 'sym.savetable: string cannot be empty')
+
+  t = 'sym.' .. t
+  local sep = package.config:sub(1,1) == '/' and '/' or '\\'
+  local path = getMudletHomeDir() .. sep .. t
+  assert(loadstring('if '..t..' then table.save("'..path..'", '..t..') end'))()
+end
+
+function sym.loadtable(t)
+  assert(type(t) == 'string', 'sym.savetable: bad argument #1 type (string expected, got '..type(t)..')')
+  assert(#t &gt; 0, 'sym.savetable: string cannot be empty')
+
+  t = 'sym.' .. t
+  local sep = package.config:sub(1,1) == '/' and '/' or '\\'
+  local path = getMudletHomeDir() .. sep .. t
+  assert(loadstring('if not '..t..' then '..t..' = {}; if lfs.attributes("'..path..'") then table.load("'..path..'", '..t..') end end'))()
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>toboolean</name>
+				<packageName></packageName>
+				<script>function sym.toboolean(which)
+  if which == 'true' then return true end
+  if which == 'false' then return false end
+
+  return nil
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>echo</name>
+				<packageName></packageName>
+				<script>sym.echo = function(what)
+  decho('&lt;157,60,60&gt;(&lt;55,145,55&gt;Nightstalker&lt;157,60,60&gt;): &lt;62,245,62&gt;'..what..'\n')
+end</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>interface</name>
+			<packageName></packageName>
+			<script>sym.ui = sym.ui or {}</script>
+			<eventHandlerList />
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>setup</name>
+				<packageName></packageName>
+				<script></script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>stylesheet</name>
+					<packageName></packageName>
+					<script>function sym.ui.update_stylesheet()
+  local background_color = 'rgba(0, 20, 20, 100)'
+  local background_color_lighter = 'rgba(0, 40, 40, 100)'
+  local background_color_hover = 'rgba(0, 60, 60, 100)'
+  local border_color = 'rgba(40, 60, 60, 100)'
+  local border_color_hover = 'rgba(40, 60, 60)' 
+  local font_color = '#e5ae69'
+  local font_color_hover = '#faf3ea'
+  local border_radius_one = '5px';
+  local border_radius_two = '5px';
+  local font_size_settings = '13px';
+
+  setProfileStyleSheet([[
+    QMainWindow {
+      background: ]]..background_color_hover..[[;
+    }
+  
+    QToolBar {
+      background: ]]..background_color..[[;
+    }
+    
+    QWidget {
+      /*font-size: ]]..font_size_settings..[[;*/
+      color: ]]..font_color..[[;
+      background-color: ]]..background_color..[[;
+      selection-background-color: ]]..border_color..[[;	/* selected text bg-color */
+      /*selection-color: #eff0f1;*/	/* selected text color */
+      /*background-clip: border;*/
+      /*border-image: none;*/
+      border: 0px transparent ]]..border_color..[[;
+      /*outline: 0;*/
+    }
+    
+    QWidget:hover {
+      color: ]]..font_color_hover..[[;
+    }
+
+    QWidget:item {
+      background-color: ]]..background_color..[[;
+      color: ]]..font_color_hover..[[;
+    }
+
+    QWidget:item:hover {
+      background-color: ]]..background_color_hover..[[;
+      color: ]]..font_color_hover..[[;
+    }
+    
+    QWidget:item:selected {
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QLineEdit {
+      background-color: ]]..background_color..[[;
+      padding: 5px;
+      border-radius: ]]..border_radius_two..[[;
+    }
+
+    QLineEdit:hover,
+    QLineEdit:focus {
+      color: ]]..font_color..[[;
+      background-color: ]]..background_color_hover..[[;
+    }
+    
+    QGroupBox {
+      border: 1px solid ]]..background_color_hover..[[;
+      border-radius: ]]..border_radius_two..[[;
+      margin-top: 20px;
+    }
+
+    QGroupBox::title {
+      subcontrol-origin: margin;
+      subcontrol-position: top center;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 10px;
+    }
+
+  /*  QAbstractScrollArea {
+      border-radius: ]]..border_radius_two..[[;
+      background-color: ]]..background_color_lighter..[[;
+    }*/
+    
+
+    QPlainTextEdit {
+      border-top: 1px solid ]]..border_color..[[;
+      /*border-radius: ]]..border_radius_two..[[;*/
+      padding: 3px 8px;
+      background-color: rgb(0, 10, 10);
+    }
+
+    QSizeGrip {
+      background-color: ]]..border_color..[[;
+    }
+
+    QPushButton {
+      border-radius: ]]..border_radius_two..[[;
+    }
+
+    QPushButton:hover {
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QPushButton:disabled {
+      background-color: ]]..background_color_lighter..[[;
+    }
+
+
+    QComboBox {
+      background-color: ]]..background_color_lighter..[[;
+      border-radius: ]]..border_radius_two..[[;
+      padding: 5px; 
+    }
+
+    QComboBox:hover,
+    QComboBox:focus {
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QSpinBox {
+      background-color: ]]..background_color_lighter..[[;
+      padding: 5px;
+      border-radius: ]]..border_radius_two..[[;
+    }
+
+    QSpinBox:hover {
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QTabWidget::pane {
+      border: 0px solid ]]..background_color_hover..[[;
+      /*padding: 5px;*/
+      /*margin: 0px;*/
+    }
+
+    QTabWidget::tab-bar {
+      left: 10px;	
+    }
+
+    QTabBar {
+      qproperty-drawBase: 0;
+      border-bottom: 2px solid ]]..background_color_hover..[[;
+    }
+
+    QTabBar::tab:top {
+      color: ]]..font_color..[[;
+      border: 2px solid ]]..background_color_hover..[[;
+      background-color: ]]..background_color..[[;
+      padding: 5px;
+      margin-right: 5px;
+      min-width: 50px;
+      border-top-left-radius: ]]..border_radius_two..[[;
+      border-top-right-radius: ]]..border_radius_two..[[;
+    }
+    
+    QTabBar::tab:top:selected {
+      border-bottom: 2px solid ]]..border_color..[[;
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QTabBar::tab:top:!selected:hover {
+      color: ]]..font_color_hover..[[;
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QListView {
+      background-color: ]]..background_color_lighter..[[;
+      padding: 5px;
+      border-radius: ]]..border_radius_two..[[;
+    }
+
+    QListView::item {
+      background-color: ]]..background_color_lighter..[[;
+      color: ]]..font_color..[[;
+      border-radius: ]]..border_radius_two..[[;
+      margin: 2px;
+    }
+
+    QListView::item:!selected {
+      background-color: ]]..background_color_lighter..[[;
+      color: ]]..font_color..[[;
+    }
+
+    QListView::item:!selected:hover {
+      background-color: ]]..background_color_hover..[[;
+      color: ]]..font_color_hover..[[;
+    }
+
+    QToolButton {
+      background: ]]..background_color..[[;
+      border-style: solid;
+      border-width: 2px;
+      border-color: ]]..border_color..[[;
+      border-radius: ]]..border_radius_one..[[;
+      font-family: BigNoodleTitling;
+      color: ]]..font_color..[[;
+      margin: 2px;
+      font-size: 10pt;
+    }
+    
+    QToolButton:hover {
+      color: ]]..font_color..[[;
+      background: ]]..background_color_hover..[[;
+      border-color: ]]..border_color_hover..[[;
+      padding-top: 2px;
+    }
+    
+    QDockWidget {
+      color: ]]..font_color_hover..[[;
+      background: ]]..border_color..[[;
+    }
+
+    QDockWidget:hover {
+      color: ]]..font_color..[[;
+      background: ]]..background_color_hover..[[;
+      border-color: ]]..border_color_hover..[[;
+      padding-top: 2px;
+    }
+
+    QStatusBar {
+      background: ]]..border_color..[[;
+      color: ]]..font_color_hover..[[;
+    }
+
+    QStatusBar:hover {
+      color: ]]..font_color..[[;
+      background: ]]..background_color_hover..[[;
+      border-color: ]]..border_color_hover..[[;
+      padding-top: 2px;
+    }
+
+    QScrollBar:vertical {
+      background: ]]..background_color..[[;
+      width: 15px;
+      margin: 22px 0 22px 0;
+    }
+
+    QScrollBar::handle:vertical {
+      background-color: ]]..background_color..[[;
+      min-height: 20px;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-radius: 7px;
+    }
+
+    QScrollBar::add-line:vertical {
+      background-color: ]]..background_color..[[;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-bottom-left-radius: 7px;
+      border-bottom-right-radius: 7px;
+      height: 15px;
+      subcontrol-position: bottom;
+      subcontrol-origin: margin;
+    }
+    
+    QScrollBar::add-line:vertical:hover,
+    QScrollBar::sub-line:vertical:hover,
+    QScrollBar::handle:vertical:hover {
+      border-color: ]]..border_color_hover..[[;
+      background-color: ]]..background_color_hover..[[;
+    }
+
+    QScrollBar::sub-line:vertical {
+      background-color: ]]..background_color..[[;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-top-left-radius: 7px;
+      border-top-right-radius: 7px;
+      height: 15px;
+      subcontrol-position: top;
+      subcontrol-origin: margin;
+    }
+
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+      background: white;
+      width: 4px;
+      height: 3px;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+      background: none;
+    }
+    
+  /* horizontal scroll */
+    
+    QScrollBar:horizontal {
+      background: ]]..background_color..[[;
+      height: 25px;
+      margin: 0 22px 10px 22px;
+    }
+    
+    QScrollBar::handle:horizontal {
+      background-color: ]]..background_color..[[;
+      min-width: 20px;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-radius: 7px;
+    }
+    
+    QScrollBar::add-line:horizontal {
+      background-color: ]]..background_color..[[;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-top-right-radius: 7px;
+      border-bottom-right-radius: 7px;
+      height: 11px;
+      width: 15px;
+      subcontrol-position: right;
+      subcontrol-origin: margin;
+      margin-bottom: 10px;
+    }
+    
+    QScrollBar::sub-line:horizontal {
+      background-color: ]]..background_color..[[;
+      border-width: 2px;
+      border-style: solid;
+      border-color: ]]..border_color..[[;
+      border-top-left-radius: 7px;
+      border-bottom-left-radius: 7px;
+      height: 11px;
+      width: 15px;
+      subcontrol-position: left;
+      subcontrol-origin: margin;
+      margin-bottom: 10px;
+    }
+    
+    QScrollBar::add-line:horizontal:hover,
+    QScrollBar::sub-line:horizontal:hover,
+    QScrollBar::handle:horizontal:hover {
+      border-color: ]]..border_color_hover..[[;
+      background-color: ]]..background_color_hover..[[;
+    }
+    
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+      background: none;
+    }
+  ]])
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>set borders</name>
+					<packageName></packageName>
+					<script>function sym.ui.set_borders()
+  local w, h = getMainWindowSize()
+
+  sym.ui.border_left = w / 4
+  sym.ui.border_top = h / 19
+  sym.ui.border_bottom = h / 19
+  sym.ui.border_right = w / 4
+
+  setBorderLeft(sym.ui.border_left)
+  setBorderTop(sym.ui.border_top)
+  setBorderBottom(sym.ui.border_bottom)
+  setBorderRight(sym.ui.border_right)
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>create background</name>
+					<packageName></packageName>
+					<script>function sym.ui.create_background()
+  local backgroundcss = CSSMan.new([[ background-color: rgb(0,20,20); ]])
+  sym.ui.adj = sym.ui.adj or {} 
+  sym.ui.adj.top = Adjustable.Container:new({name = 'Module', x = '25%', y = 0, width = '50%', height = '5%', }) 
+  sym.ui.adj.bottom = Adjustable.Container:new({name = 'Gauges', x = '25%', y = '95%', width = '50%', height = '5%', }) 
+  sym.ui.adj.left = Adjustable.Container:new({name = 'Starchart', x = '25%', y = '5%', width = '15%', height = '25%', }) 
+  sym.ui.adj.right = Adjustable.Container:new({name = 'Beacon', x = '40%', y = '5%', width = '15%', height = '25%', }) 
+
+  sym.ui.left = Geyser.Label:new({ name = 'sym.ui.left', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.left)
+  sym.ui.left:setStyleSheet(backgroundcss:getCSS())
+
+  sym.ui.right = Geyser.Label:new({ name = 'sym.ui.right', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.right)
+  sym.ui.right:setStyleSheet(backgroundcss:getCSS())
+
+  sym.ui.top = Geyser.Label:new({ name = 'sym.ui.top', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.top)
+  sym.ui.top:setStyleSheet(backgroundcss:getCSS())
+
+  sym.ui.bottom = Geyser.Label:new({ name = 'sym.ui.bottom', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.bottom)
+  sym.ui.bottom:setStyleSheet(backgroundcss:getCSS())
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>create boxes</name>
+					<packageName></packageName>
+					<script>function sym.ui.create_boxes()
+  local boxcss = CSSMan.new([[
+    background-color: rgba(0,0,0,100);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: rgb(0,40,40);
+    margin: 2px;
+  ]])
+  sym.ui.adj = sym.ui.adj or {}  
+  sym.ui.adj.topright = Adjustable.Container:new({name = 'Chat', x = '75%', y = 0, width = '25%', height = '50%', }) 
+  sym.ui.adj.bottomright = Adjustable.Container:new({name = 'Room Info', x = '75%', y = '50%', width = '25%', height = '50%',}) 
+  sym.ui.adj.topleft = Adjustable.Container:new({name = 'Map', x = '0%', y = '0%', width = '25%', height = '75%', }) 
+  sym.ui.adj.bottomleft = Adjustable.Container:new({name = 'Mindsim', x = '0%', y = '75%', width = '25%', height = '25%', fontSize = 12}) 
+    
+    
+
+  sym.ui.topright = Geyser.Label:new({ name = 'sym.ui.topright', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.topright)
+  sym.ui.topright:setStyleSheet(boxcss:getCSS())
+
+  sym.ui.bottomright = Geyser.Label:new({ name = 'sym.ui.bottomright', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.bottomright)
+  sym.ui.bottomright:setStyleSheet(boxcss:getCSS())
+
+  sym.ui.topleft = Geyser.Label:new({ name = 'sym.ui.topleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = 11 }, sym.ui.adj.topleft)
+  sym.ui.topleft:setStyleSheet(boxcss:getCSS())
+
+  sym.ui.bottomleft = Geyser.Label:new({ name = 'sym.ui.bottomleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = 11 }, sym.ui.adj.bottomleft)
+  sym.ui.bottomleft:setStyleSheet(boxcss:getCSS())
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>create gauges</name>
+					<packageName></packageName>
+					<script>function sym.ui.create_gauges(class)
+  sym.ui.footer = Geyser.HBox:new({ name = "sym.ui.footer", x = 0, y = 0, width = "100%", height = "100%", }, sym.ui.bottom)
+
+  sym.ui.leftcolumn = Geyser.VBox:new({ name = "sym.ui.leftcolumn", }, sym.ui.footer)
+
+  if class == 'Nanoseer' then
+    sym.ui.middlecolumn = Geyser.VBox:new({ name = "sym.ui.middlecolumn", }, sym.ui.footer)
+  end
+
+  sym.ui.rightcolumn = Geyser.VBox:new({ name = "sym.ui.rightcolumn", }, sym.ui.footer)
+
+  local backcss = CSSMan.new([[
+    background-color: rgba(0,0,0,0);
+    border-style: solid;
+    border-color: grey;
+    border-width: 1px;
+    border-radius: 5px;
+    margin: 5px;
+  ]])
+
+  local frontcss = CSSMan.new([[
+    background-color: rgba(0,0,0,0);
+    border-style: solid;
+    border-color: grey;
+    border-width: 1px;
+    border-radius: 5px;
+    margin: 5px;
+  ]])
+
+  local function gauge(name, column, bgc)
+    sym.ui[name] = Geyser.Gauge:new({ name = 'sym.ui.'..name }, column)
+    sym.ui[name].back:setStyleSheet(backcss:getCSS())
+    frontcss:set('background-color', bgc)
+    sym.ui[name].front:setStyleSheet(frontcss:getCSS())
+    sym.ui[name]:setValue(100,100)
+  end
+
+  gauge('health', sym.ui.leftcolumn, 'brown')
+
+  if class == 'Nanoseer' then
+    gauge('nanites', sym.ui.middlecolumn, 'navy')
+    gauge('sanity', sym.ui.rightcolumn, 'purple')
+  elseif class == 'Engineer' then
+    gauge('parts', sym.ui.rightcolumn, 'blue')
+  elseif class == 'B.E.A.S.T.' then
+    gauge('plasma', sym.ui.rightcolumn, 'firebrick')
+  elseif class == 'Scoundrel' then
+    gauge('bullets', sym.ui.rightcolumn, 'orange')
+  elseif class == 'Fury' then
+    gauge('rage', sym.ui.rightcolumn, 'red')
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>gmcp additions</name>
+					<packageName></packageName>
+					<script>function sym.registergmcpadditions()
+  sendGMCP('Core.Supports.Add ["Comm.Channel 1"]')
+  sendGMCP('Core.Supports.Add ["IRE.Tasks 1"]')
+  sendGMCP('Core.Supports.Add ["IRE.Target 1"]')
+	sendGMCP('Comm.Channel.Players ""')
+end
+
+sym.registerevent('gmcp additions', 'gmcp.Char.Name', 'sym.registergmcpadditions')</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>mindsim interface</name>
+					<packageName></packageName>
+					<script>local function getSystemColour(amount)
+  amount = tonumber(amount)
+  if amount &gt; 92.5 then
+    return 'MistyRose'
+  elseif amount &gt; 70 then
+    return 'yellow'
+  elseif amount &gt; 30 then
+    return 'Orange'
+  else
+    return 'red'
+  end
+end
+
+function sym.ui.update_mindsim()
+  if not gmcp.Char.Vitals then return end
+
+  local class = gmcp.Char.Status.class
+
+  if not sym.ui.footer then sym.ui.create_gauges(class) end
+
+  sym.ui.health:setValue(tonumber(gmcp.Char.Vitals.hp), tonumber(gmcp.Char.Vitals.maxhp), '&lt;center&gt;&lt;font color="LightGrey"&gt;&lt;font color="LightGrey"&gt;Health: ' .. string.format('%s / %s', gmcp.Char.Vitals.hp, gmcp.Char.Vitals.maxhp))
+
+  if class == 'Nanoseer' then
+    sym.ui.nanites:setValue(tonumber(gmcp.Char.Vitals.nn), tonumber(gmcp.Char.Vitals.maxnn), '&lt;center&gt;&lt;font color="LightGrey"&gt;Nanites: ' .. gmcp.Char.Vitals.formatnn)
+    sym.ui.sanity:setValue(tonumber(gmcp.Char.Vitals.sa), tonumber(gmcp.Char.Vitals.maxsa), '&lt;center&gt;&lt;font color="LightGrey"&gt;Sanity: ' .. gmcp.Char.Vitals.formatsa)
+  elseif class == 'Engineer' then
+    sym.ui.parts:setValue(tonumber(gmcp.Char.Vitals.pt), tonumber(gmcp.Char.Vitals.maxpt), '&lt;center&gt;&lt;font color="LightGrey"&gt;Parts: ' .. gmcp.Char.Vitals.formatpt)
+  elseif class == 'B.E.A.S.T.' then
+    sym.ui.plasma:setValue(tonumber(gmcp.Char.Vitals.pl), tonumber(gmcp.Char.Vitals.maxpl), '&lt;center&gt;&lt;font color="LightGrey"&gt;Plasma: ' .. gmcp.Char.Vitals.formatpl)
+  elseif class == 'Scoundrel' then
+    sym.ui.bullets:setValue(tonumber(gmcp.Char.Vitals.bl), tonumber(gmcp.Char.Vitals.maxbl or 8), '&lt;center&gt;&lt;font color="LightGrey"&gt;Bullets: ' .. gmcp.Char.Vitals.formatbl)
+  elseif class == 'Fury' then
+    sym.ui.rage:setValue(tonumber(gmcp.Char.Vitals.rg), 1000, '&lt;center&gt;&lt;font color="LightGrey"&gt;Rage: ' .. gmcp.Char.Vitals.formatrg)
+  end
+
+if not (gmcp.Char.Vitals.ship_bearing == nil) then
+local vitals = gmcp.Char.Vitals
+local ship_dmg_cap = 100 - tonumber(vitals.ship_dmg_cap)
+local ship_dmg_engine = 100 - tonumber(vitals.ship_dmg_engine)
+local ship_dmg_sensor = 100 - tonumber(vitals.ship_dmg_sensor)
+local ship_dmg_shield = 100 - tonumber(vitals.ship_dmg_shield)
+local ship_dmg_sim = 100 - tonumber(vitals.ship_dmg_sim)
+local shields_perc = round(gmcp.Char.Vitals.ship_shield / gmcp.Char.Vitals.ship_shield_max * 100)
+local hull_perc = round(gmcp.Char.Vitals.ship_hull / gmcp.Char.Vitals.ship_hull_max * 100)
+if shields_perc &gt;= 100 then spacer1 = 3 elseif shields_perc &lt; 10 then spacer1 = 1 else spacer1 = 2 end
+if hull_perc &gt;= 100 then spacer2 = 3 elseif hull_perc &lt; 10 then spacer2 = 1 else spacer2 = 2 end
+sym.ui.bottomleft:echo([[
+    &lt;p align="left" style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="grey"&gt;ShipSim Interface:&lt;font color="gold"&gt; ]]..gmcp.Char.Vitals.ship_name..[[&lt;/font&gt;
+    &lt;/p&gt;
+    &lt;p style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&amp;nbsp;&lt;font color="gray"&gt;Name:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Name.name..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 10 - #gmcp.Char.Name.name)..[[ &lt;font color="grey"&gt;Capacitor:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_cap)..[["&gt;]]..ship_dmg_cap..[[&lt;/font&gt;&amp;nbsp;(]]..capacitor_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Level:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.level..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.level)..[[ &lt;font color="gray"&gt;Engine:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_engine)..[["&gt;]]..ship_dmg_engine..[[&lt;/font&gt;&amp;nbsp;(]]..engine_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Class:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..class..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #class)..[[ &lt;font color="gray"&gt;Sensor:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_sensor)..[["&gt;]]..ship_dmg_sensor..[[&lt;/font&gt;&amp;nbsp;(]]..sensor_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="moccasin"&gt;Marks&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.marks..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.marks)..[[ &lt;font color="gray"&gt;Shield:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_shield)..[["&gt;]]..ship_dmg_shield..[[&lt;/font&gt;&amp;nbsp;(]]..shield_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 1)..[[&lt;font color="gray"&gt;Health&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(hull_perc)..[["&gt;]]..hull_perc..[[&lt;/font&gt; ]]..[[&lt;font color = "cyan"&gt;(&lt;/font&gt;&lt;font color="]]..getSystemColour(shields_perc)..[["&gt;]]..shields_perc..[[&lt;/font&gt;&lt;font color = "cyan"&gt;)&lt;/font&gt;]]..string.rep('&amp;nbsp;', 5 - spacer1 + spacer2)..[[&lt;font color="gray"&gt;ShipSim:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_sim)..[["&gt;]]..ship_dmg_sim..[[&lt;/font&gt;&amp;nbsp;(]]..sim_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+    &lt;/p&gt;
+    &lt;p style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 4)..[[&lt;font color="gray"&gt;Your target is: &lt;font color="turquoise"&gt;]]..gmcp.Char.Status.target..(gmcp.IRE and gmcp.IRE.Target and type(gmcp.IRE.Target.Info) == 'table' and gmcp.IRE.Target.Info.hpperc ~= '' and  [[ &lt;font color="gray"&gt;HP:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.IRE.Target.Info.hpperc:gsub("%%", ""))..[["&gt;]]..gmcp.IRE.Target.Info.hpperc or '')..[[&lt;/font&gt;
+    &lt;/p&gt;
+    ]]
+    )
+else
+sym.ui.bottomleft:echo([[
+    &lt;p align="left" style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 13)..[[&lt;font color="grey"&gt;MindSim Interface&lt;/font&gt;
+    &lt;/p&gt;
+    &lt;p style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&amp;nbsp;&lt;font color="gray"&gt;Name:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Name.name..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 11 - #gmcp.Char.Name.name)..[[ &lt;font color="grey"&gt;Wetwiring:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.wetwiring)..[["&gt;]]..gmcp.Char.Vitals.wetwiring..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.wetwiring_efficacy)..[["&gt;]]..gmcp.Char.Vitals.wetwiring_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Level:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.level..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 12 - #gmcp.Char.Status.level)..[[ &lt;font color="gray"&gt;Muscular:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.muscular)..[["&gt;]]..gmcp.Char.Vitals.muscular..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.muscular_efficacy)..[["&gt;]]..gmcp.Char.Vitals.muscular_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Class:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..class..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 12 - #class)..[[ &lt;font color="gray"&gt;Internal:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.internal)..[["&gt;]]..gmcp.Char.Vitals.internal..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.internal_efficacy)..[["&gt;]]..gmcp.Char.Vitals.internal_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="moccasin"&gt;Marks&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.marks..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.marks)..[[ &lt;font color="gray"&gt;Sensory:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.sensory)..[["&gt;]]..gmcp.Char.Vitals.sensory..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.sensory_efficacy)..[["&gt;]]..gmcp.Char.Vitals.sensory_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+      ]]..string.rep('&amp;nbsp;', 27)..[[&lt;font color="gray"&gt;Mind:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.mind)..[["&gt;]]..gmcp.Char.Vitals.mind..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.mind_efficacy)..[["&gt;]]..gmcp.Char.Vitals.mind_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
+    &lt;/p&gt;
+    &lt;p style="font-family:'Consolas'"&gt;
+      ]]..string.rep('&amp;nbsp;', 4)..[[&lt;font color="gray"&gt;Your target is: &lt;font color="turquoise"&gt;]]..gmcp.Char.Status.target..(gmcp.IRE and gmcp.IRE.Target and type(gmcp.IRE.Target.Info) == 'table' and gmcp.IRE.Target.Info.hpperc ~= '' and  [[ &lt;font color="gray"&gt;HP:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.IRE.Target.Info.hpperc:gsub("%%", ""))..[["&gt;]]..gmcp.IRE.Target.Info.hpperc or '')..[[&lt;/font&gt;
+    &lt;/p&gt;
+  ]]
+  )
+ end
+end
+sym.registerevent('mindsim vitals', 'gmcp.Char.Vitals', 'sym.ui.update_mindsim')
+sym.registerevent('mindsim status', 'gmcp.Char.Status', 'sym.ui.update_mindsim')</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>modules</name>
+				<packageName></packageName>
+				<script>-- these modules may well be expanded upon in the future</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>list/status</name>
+					<packageName></packageName>
+					<script>sym.ui.modulelist = {'PVP', 'Hunting', 'Raiding', 'Mining', 'AFK'}
+sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>create modules</name>
+					<packageName></packageName>
+					<script>function sym.ui.create_modules()
+  sym.ui.header = Geyser.HBox:new({ name = 'sym.ui.header', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.top)
+
+  local activecss = CSSMan.new([[
+    background-color: rgba(0,0,0,100);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(0,80,40);
+    border-radius: 5px;
+    margin: 5px;
+    qproperty-wordWrap: true;
+  ]])
+
+  local inactivecss = CSSMan.new([[
+    background-color: rgba(0,0,0,100);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(0,40,40);
+    border-radius: 5px;
+    margin: 5px;
+    qproperty-wordWrap: true;
+  ]])
+
+  table.foreach(sym.ui.modulelist, function(key, module)
+    sym.ui['module'..module] = Geyser.Label:new({ name = 'sym.ui.module.'..module }, sym.ui.header)
+    sym.ui['module'..module]:setClickCallback('sym.setmodule', module)
+    sym.ui['module'..module]:setStyleSheet(inactivecss:getCSS())
+    sym.ui['module'..module]:echo('&lt;center&gt;F'..key..': '..module)
+    sym.ui.modulestatus[module] = false
+  end)
+
+  function sym.setmodule(module, status)
+    if type(status) == 'boolean' then
+      sym.ui.modulestatus[module] = status
+    else
+      sym.ui.modulestatus[module] = not sym.ui.modulestatus[module]
+    end
+    raiseEvent('sym.ui.module', module)
+    local css = (sym.ui.modulestatus[module] and activecss or inactivecss):getCSS()
+    sym.ui['module'..module]:setStyleSheet(css)
+  end
+
+  function sym.checkmodule(module)
+    return sym.ui.modulestatus[module]
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>tabbed chat</name>
+				<packageName></packageName>
+				<script>sym.ui.chat = sym.ui.chat or {}
+sym.ui.chat.use = true</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>config</name>
+					<packageName></packageName>
+					<script>sym.ui.chat.config = sym.ui.chat.config or {}
+
+sym.ui.chat.config.usetimestamp = 'HH:mm:ss'
+
+sym.ui.chat.config.timestampcustomcolour = false
+
+sym.ui.chat.config.timestampfg = 'white'
+
+sym.ui.chat.config.timestampbg = 'grey'
+
+sym.ui.chat.config.channels = { 'All', 'Clan', 'Crew', 'Dynasty', 'Faction', 'Local', 'Newbie' }
+
+sym.ui.chat.config.alltab = 'All'
+
+sym.ui.chat.config.blink = true
+
+sym.ui.chat.config.blinktime = 3
+
+sym.ui.chat.config.blinkfromall = false
+
+sym.ui.chat.config.fontsize = 9
+
+sym.ui.chat.config.preservebackground = true
+
+sym.ui.chat.config.gag = false
+
+sym.ui.chat.config.filterccc = false
+
+sym.ui.chat.config.activecolours = { r = 20, g = 60, b = 20 }
+
+sym.ui.chat.config.inactivecolours = { r = 60, g = 60, b = 60 }
+
+sym.ui.chat.config.windowcolours = { r = 0, g = 10, b = 10 }
+
+sym.ui.chat.config.activetabtext = 'orange'
+
+sym.ui.chat.config.inactivetabtext = 'white'
+
+sym.ui.chat.currenttab = sym.ui.chat.currenttab or sym.ui.chat.config.alltab or sym.ui.chat.config.channels[1]</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>creation</name>
+					<packageName></packageName>
+					<script>local activecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 50, 50, 100);
+  margin: 1px;
+]])
+
+local inactivecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 30, 30, 100);
+  margin: 1px;
+]])
+
+sym.ui.chat.tabstoblink = sym.ui.chat.tabstoblink or {}
+sym.ui.chat.tabs = sym.ui.chat.tabs or {}
+sym.ui.chat.windows = sym.ui.chat.windows or {}
+
+sym.ui.chat.switch = function(chat)
+  local r = sym.ui.chat.config.inactivecolours.r
+  local g = sym.ui.chat.config.inactivecolours.g
+  local b = sym.ui.chat.config.inactivecolours.b
+  local newr = sym.ui.chat.config.activecolours.r
+  local newg = sym.ui.chat.config.activecolours.g
+  local newb = sym.ui.chat.config.activecolours.b
+  local oldchat = sym.ui.chat.currenttab
+  if sym.ui.chat.currenttab ~= chat then
+    sym.ui.chat.windows[oldchat]:hide()
+    sym.ui.chat.tabs[oldchat]:setColor(r, g, b)
+    sym.ui.chat.tabs[oldchat]:echo(oldchat, sym.ui.chat.config.inactivetabtext, 'c')
+    sym.ui.chat.tabs[oldchat]:setStyleSheet(inactivecss:getCSS())
+    if sym.ui.chat.config.blink and sym.ui.chat.tabstoblink[chat] then
+      sym.ui.chat.tabstoblink[chat] = nil
+    end
+    if sym.ui.chat.config.blink and chat == sym.ui.chat.config.alltab then
+      sym.ui.chat.tabstoblink = {}
+    end
+  end
+  sym.ui.chat.tabs[chat]:setColor(newr, newg, newb)
+  sym.ui.chat.tabs[chat]:echo(chat, sym.ui.chat.config.activetabtext, 'c')
+	sym.ui.chat.tabs[chat]:setStyleSheet(activecss:getCSS())
+  sym.ui.chat.windows[chat]:show()
+  sym.ui.chat.currenttab = chat
+end
+
+function sym.ui.chat:resetUI()
+  sym.ui.chat.container = sym.ui.topright
+  sym.ui.chat.tabbox = Geyser.HBox:new({
+    name = 'sym.ui.chat.tabbox',
+    x = '5%', y = '4%',
+    width = '90%', height = '6%'
+  }, sym.ui.chat.container)
+end
+
+function sym.ui.chat:create()
+  sym.ui.chat:resetUI()
+
+  local r = sym.ui.chat.config.inactivecolours.r
+  local g = sym.ui.chat.config.inactivecolours.g
+  local b = sym.ui.chat.config.inactivecolours.b
+  local winr = sym.ui.chat.config.windowcolours.r
+  local wing = sym.ui.chat.config.windowcolours.g
+  local winb = sym.ui.chat.config.windowcolours.b
+
+  for i, tab in ipairs(sym.ui.chat.config.channels) do
+    sym.ui.chat.tabs[tab] = Geyser.Label:new({ name = string.format('chattab%s', tab) }, sym.ui.chat.tabbox)
+    sym.ui.chat.tabs[tab]:echo(tab, sym.ui.chat.config.inactivetabtext, 'c')
+    sym.ui.chat.tabs[tab]:setColor(r, g, b)
+    sym.ui.chat.tabs[tab]:setClickCallback('sym.ui.chat.switch', tab)
+    sym.ui.chat.tabs[tab]:setStyleSheet(inactivecss:getCSS())
+    sym.ui.chat.windows[tab] = Geyser.MiniConsole:new({
+      name = string.format('chatwin%s', tab),
+      x = '5%', y = '12%',
+      autoWrap = true,
+      fontSize = sym.ui.chat.config.fontsize,
+      width = '90%', height = '85%'
+    }, sym.ui.chat.container)
+    sym.ui.chat.windows[tab]:setColor(winr, wing, winb)
+    sym.ui.chat.windows[tab]:hide()
+  end
+
+  sym.ui.chat.switch(sym.ui.chat.config.alltab or sym.ui.chat.config.channels[1])
+  if sym.ui.chat.config.blink and not sym.ui.chat.blinktimerOn then
+    sym.ui.chat:blink()
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>echoes</name>
+					<packageName></packageName>
+					<script>function sym.ui.chat:append(chat)
+  local r = sym.ui.chat.config.windowcolours.r
+  local g = sym.ui.chat.config.windowcolours.g
+  local b = sym.ui.chat.config.windowcolours.b
+  selectCurrentLine()
+  local ofr, ofg, ofb = getFgColor()
+  local obr, obg, obb = getBgColor()
+  if sym.ui.chat.config.preservebackground then
+    setBgColor(r, g, b)
+  end
+  copy()
+  if sym.ui.chat.config.timestamp then
+    local timestamp = getTime(true, sym.ui.chat.config.timestamp)
+    local tsfg = {}
+    local tsbg = {}
+    local colourLeader = ''
+    if sym.ui.chat.config.timestampcustomcolour then
+      if type(sym.ui.chat.config.timestampfg) == 'string' then
+        tsfg = color_table[sym.ui.chat.config.timestampfg]
+      else
+        tsfg = sym.ui.chat.config.timestampfg
+      end
+      if type(sym.ui.chat.config.timestampbg) == 'string' then
+        tsbg = color_table[sym.ui.chat.config.timestampbg]
+      else
+        tsbg = sym.ui.chat.config.timestampbg
+      end
+      colourLeader = string.format('&lt;%s,%s,%s:%s,%s,%s&gt;', tsfg[1], tsfg[2], tsfg[3], tsbg[1], tsbg[2], tsbg[3])
+    else
+      colourLeader = string.format('&lt;%s,%s,%s:%s,%s,%s&gt;', ofr, ofg, ofb, obr, obg, obb)
+    end
+    local fullstamp = string.format('%s%s', colourLeader, timestamp)
+    sym.ui.chat.windows[chat]:decho(fullstamp)
+    sym.ui.chat.windows[chat]:echo(' ')
+    if sym.ui.chat.config.alltab then
+      sym.ui.chat.windows[sym.ui.chat.config.alltab]:decho(fullstamp)
+      sym.ui.chat.windows[sym.ui.chat.config.alltab]:echo(' ')
+    end
+  end
+  sym.ui.chat.windows[chat]:append()
+  if sym.ui.chat.config.gag then
+    deleteLine()
+    tempLineTrigger(1, 1, [[if isPrompt() then deleteLine() end]])
+  end
+  if sym.ui.chat.config.alltab then
+    appendBuffer(string.format('chatwin%s', sym.ui.chat.config.alltab))
+  end
+  if sym.ui.chat.config.blink and chat ~= sym.ui.chat.currenttab then
+    if (sym.ui.chat.config.alltab == sym.ui.chat.currenttab) and not sym.ui.chat.config.blinkonall then
+      return
+    else
+      sym.ui.chat.tabstoblink[chat] = true
+    end
+  end
+end
+
+function sym.ui.chat:blink()
+  if sym.ui.chat.blinkID then killTimer(sym.ui.chat.blinkID) end
+  if not sym.ui.chat.config.blink then
+    sym.ui.chat.blinktimerOn = false
+    return
+  end
+  if not sym.ui.chat.container.hidden then
+    for tab, _ in pairs(sym.ui.chat.tabstoblink) do
+      sym.ui.chat.tabs[tab]:flash()
+    end
+  end
+  sym.ui.chat.blinkID = tempTimer(sym.ui.chat.config.blinktime, function() sym.ui.chat:blink() end)
+end
+
+
+function sym.ui.chat:cecho(chat, message)
+  local alltab = sym.ui.chat.config.alltab
+  local blink = sym.ui.chat.config.blink
+  cecho(string.format('chatwin%s', chat), message)
+  if alltab and chat ~= alltab then
+    cecho(string.format('chatwin%s', alltab), message)
+  end
+  if blink and chat ~= sym.ui.chat.currenttab then
+    if (alltab == sym.ui.chat.currenttab) and not sym.ui.chat.config.blinkonall then
+      return
+    else
+      sym.ui.chat.tabstoblink[chat] = true
+    end
+  end
+end
+
+function sym.ui.chat:decho(chat, message)
+  local alltab = sym.ui.chat.config.alltab
+  local blink = sym.ui.chat.config.blink
+  decho(string.format('chatwin%s', chat), message)
+  if alltab and chat ~= alltab then
+    decho(string.format('chatwin%s', alltab), message)
+  end
+  if blink and chat ~= sym.ui.chat.currenttab then
+    if (alltab == sym.ui.chat.currenttab) and not sym.ui.chat.config.blinkonall then
+      return
+    else
+      sym.ui.chat.tabstoblink[chat] = true
+    end
+  end
+end
+
+function sym.ui.chat:hecho(chat, message)
+  local alltab = sym.ui.chat.config.alltab
+  local blink = sym.ui.chat.config.blink
+  hecho(string.format('chatwin%s', chat), message)
+  if alltab and chat ~= alltab then
+    hecho(string.format('chatwin%s', alltab), message)
+  end
+  if blink and chat ~= sym.ui.chat.currenttab then
+    if (alltab == sym.ui.chat.currenttab) and not sym.ui.chat.config.blinkonall then
+      return
+    else
+      sym.ui.chat.tabstoblink[chat] = true
+    end
+  end
+end
+
+function sym.ui.chat:echo(chat, message)
+  local alltab = sym.ui.chat.config.alltab
+  local blink = sym.ui.chat.config.blink
+  echo(string.format('chatwin%s', chat), message)
+  if alltab and chat ~= alltab then
+    echo(string.format('chatwin%s', alltab), message)
+  end
+  if blink and chat ~= sym.ui.chat.currenttab then
+    if (alltab == sym.ui.chat.currenttab) and not sym.ui.chat.config.blinkonall then
+      return
+    else
+      sym.ui.chat.tabstoblink[chat] = true
+    end
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>comms</name>
+					<packageName></packageName>
+					<script>function sym.ui.gmcpcommchanneltext()
+  local talker = gmcp.Comm.Channel.Text.talker
+
+  if sym.ui.chat.config.filterccc and (not gmcp.Comm.Channel.Players or (not table.contains(gmcp.Comm.Channel.Players, talker) and not (talker == gmcp.Char.Name.name))) then return end
+
+  local channels = sym.ui.chat.config.channels
+  local gmcpChannel = gmcp.Comm.Channel.Text.channel:lower()
+  local text = ansi2decho(gmcp.Comm.Channel.Text.text)
+  local raw = text:gsub('&lt;.-&gt;', '')
+  local r = sym.ui.chat.config.windowcolours.r
+  local g = sym.ui.chat.config.windowcolours.g
+  local b = sym.ui.chat.config.windowcolours.b
+
+  if sym.ui.chat.config.preservebackground then
+    text = text:gsub(':&gt;', string.format(':%s,%s,%s&gt;', r, g, b))
+  end
+
+  local to_channel = {
+    ['say'] = 'Local',
+    ['yell'] = 'Local',
+    ['ft'] = 'Faction',
+    ['clt'] = 'Clan',
+    ['dt'] = 'Dynasty',
+    ['ooc'] = 'Local',
+    ['emote'] = 'Local',
+    ['market'] = 'Clan',
+    ['conflict'] = 'Clan'
+  }
+
+  local channel = table.contains(channels, gmcpChannel:title()) and gmcpChannel:title() or to_channel[gmcpChannel]
+
+  if not channel then
+    if gmcpChannel:starts('tell') then
+      channel = 'Local'
+    else
+      cecho('\n&lt;red&gt;Unknown Channel: &lt;yellow&gt;' .. gmcpChannel)
+      return
+    end
+  end
+
+  sym.ui.chat:decho(channel, text .. '\n')
+
+  if sym.ui.chat.config.gag then
+    tempExactMatchTrigger(raw, function()
+      deleteLine()
+			tempLineTrigger(1, 1, [[if isPrompt() then deleteLine() end]])
+    end, 1)
+  end
+end
+
+sym.registerevent('gmcp comms', 'gmcp.Comm.Channel.Text', 'sym.ui.gmcpcommchanneltext')</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>mappers</name>
+				<packageName></packageName>
+				<script>sym.ui.mapper = sym.ui.mapper or {}
+sym.ui.mapper.use = true</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>config</name>
+					<packageName></packageName>
+					<script>sym.ui.mapper.config = sym.ui.mapper.config or {}
+
+sym.ui.mapper.config.maps = { 'Mudlet', 'Ground', 'Space', 'Hacking' }
+
+sym.ui.mapper.config.fontsize = 11
+
+sym.ui.mapper.config.preservebackground = true
+
+sym.ui.mapper.config.gag = true
+
+sym.ui.mapper.config.starchart = true
+
+sym.ui.mapper.config.activecolours = { r = 20, g = 60, b = 20 }
+
+sym.ui.mapper.config.inactivecolours = { r = 60, g = 60, b = 60 }
+
+sym.ui.mapper.config.windowcolours = { r = 0, g = 10, b = 10 }
+
+sym.ui.mapper.config.activetabtext = 'orange'
+
+sym.ui.mapper.config.inactivetabtext = 'white'
+
+sym.ui.mapper.currenttab = sym.ui.mapper.currenttab or sym.ui.mapper.config.maps[1]</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>creation</name>
+					<packageName></packageName>
+					<script>local activecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 50, 50, 100);
+  margin: 1px;
+]])
+
+local inactivecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 30, 30, 100);
+  margin: 1px;
+]])
+
+sym.ui.mapper.tabs = sym.ui.mapper.tabs or {}
+sym.ui.mapper.windows = sym.ui.mapper.windows or {}
+
+sym.ui.mapper.switch = function(map)
+  local r = sym.ui.mapper.config.inactivecolours.r
+  local g = sym.ui.mapper.config.inactivecolours.g
+  local b = sym.ui.mapper.config.inactivecolours.b
+  local newr = sym.ui.mapper.config.activecolours.r
+  local newg = sym.ui.mapper.config.activecolours.g
+  local newb = sym.ui.mapper.config.activecolours.b
+  local oldmap = sym.ui.mapper.currenttab
+  if sym.ui.mapper.currenttab ~= map then
+    sym.ui.mapper.windows[oldmap]:hide()
+    sym.ui.mapper.tabs[oldmap]:setColor(r, g, b)
+    sym.ui.mapper.tabs[oldmap]:echo(oldmap, sym.ui.mapper.config.inactivetabtext, 'c')
+    sym.ui.mapper.tabs[oldmap]:setStyleSheet(inactivecss:getCSS())
+  end
+  sym.ui.mapper.tabs[map]:setColor(newr, newg, newb)
+  sym.ui.mapper.tabs[map]:echo(map, sym.ui.mapper.config.activetabtext, 'c')
+	sym.ui.mapper.tabs[map]:setStyleSheet(activecss:getCSS())
+  sym.ui.mapper.windows[map]:show()
+  sym.ui.mapper.currenttab = map
+end
+
+function sym.ui.mapper:resetUI()
+  sym.ui.mapper.container = sym.ui.topleft
+  sym.ui.mapper.tabbox = Geyser.HBox:new({
+    name = 'sym.ui.mapper.tabbox',
+    x = '5%', y = '3%',
+    width = '90%', height = '5%'
+  }, sym.ui.mapper.container)
+end
+
+function sym.ui.mapper:create()
+  sym.ui.mapper:resetUI()
+
+  local r = sym.ui.mapper.config.inactivecolours.r
+  local g = sym.ui.mapper.config.inactivecolours.g
+  local b = sym.ui.mapper.config.inactivecolours.b
+  local winr = sym.ui.mapper.config.windowcolours.r
+  local wing = sym.ui.mapper.config.windowcolours.g
+  local winb = sym.ui.mapper.config.windowcolours.b
+
+  for i, tab in ipairs(sym.ui.mapper.config.maps) do
+    sym.ui.mapper.tabs[tab] = Geyser.Label:new({ name = string.format('maptab%s', tab) }, sym.ui.mapper.tabbox)
+    sym.ui.mapper.tabs[tab]:echo(tab, sym.ui.mapper.config.inactivetabtext, 'c')
+    sym.ui.mapper.tabs[tab]:setColor(r, g, b)
+    sym.ui.mapper.tabs[tab]:setClickCallback('sym.ui.mapper.switch', tab)
+    sym.ui.mapper.tabs[tab]:setStyleSheet(inactivecss:getCSS())
+    if tab == 'Mudlet' then
+      sym.ui.mapper.windows[tab] = Geyser.Mapper:new({
+        name = string.format('mapwin%s', tab),
+        x = '5%', y = '9%',
+        width = '90%', height = '89%'
+      }, sym.ui.mapper.container)
+    else
+      sym.ui.mapper.windows[tab] = Geyser.MiniConsole:new({
+        name = string.format('mapwin%s', tab),
+        x = '5%', y = '9%',
+        fontSize = sym.ui.mapper.config.fontsize,
+        width = '90%', height = '89%'
+      }, sym.ui.mapper.container)
+      if not (tab == 'Space') then
+        sym.ui.mapper.windows[tab]:setColor(winr, wing, winb)
+      else
+        sym.ui.mapper.windows[tab]:setColor(0, 0, 0)
+-- use this if you want to change the font of the SpaceMap         
+--        sym.ui.mapper.windows[tab]:setFont("square")
+      end
+    end
+    sym.ui.mapper.windows[tab]:hide()
+  end
+
+  sym.ui.mapper.switch(sym.ui.mapper.config.maps[1])
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>echoes</name>
+					<packageName></packageName>
+					<script>function sym.ui.mapper:append(map)
+  local r = sym.ui.mapper.config.windowcolours.r
+  local g = sym.ui.mapper.config.windowcolours.g
+  local b = sym.ui.mapper.config.windowcolours.b
+  selectCurrentLine()
+  local ofr, ofg, ofb = getFgColor()
+  local obr, obg, obb = getBgColor()
+  if sym.ui.mapper.config.preservebackground and not (map == 'Space') then
+    setBgColor(r, g, b)
+  end
+  copy()
+  sym.ui.mapper.windows[map]:append()
+  if sym.ui.mapper.config.gag then
+    deleteLine()
+    tempLineTrigger(1, 1, [[if isPrompt() then deleteLine() end]])
+  end
+end
+
+function sym.ui.mapper:decho(tab, message)
+  local r = sym.ui.mapper.config.windowcolours.r
+  local g = sym.ui.mapper.config.windowcolours.g
+  local b = sym.ui.mapper.config.windowcolours.b
+
+  if sym.ui.mapper.config.preservebackground and not (tab == 'Space') then
+    decho(string.format('mapwin%s', tab), string.format('&lt;:%s,%s,%s&gt;%s', r,g,b, message))
+  else
+    decho(string.format('mapwin%s', tab), message)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+			</ScriptGroup>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>information</name>
+				<packageName></packageName>
+				<script>sym.ui.info = sym.ui.info or {}
+sym.ui.info.use = true</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>config</name>
+					<packageName></packageName>
+					<script>sym.ui.info.config = sym.ui.info.config or {}
+
+sym.ui.info.config.types = { 'Room', 'Tasks' }
+
+sym.ui.info.config.fontsize = 11
+
+sym.ui.info.config.tasklimit = 24
+
+sym.ui.info.config.preservebackground = true
+
+sym.ui.info.config.gag = true
+
+sym.ui.info.config.displayIDs = false
+
+sym.ui.info.config.activecolours = { r = 20, g = 60, b = 20 }
+
+sym.ui.info.config.inactivecolours = { r = 60, g = 60, b = 60 }
+
+sym.ui.info.config.windowcolours = { r = 0, g = 10, b = 10 }
+
+sym.ui.info.config.activetabtext = 'orange'
+
+sym.ui.info.config.inactivetabtext = 'white'
+
+sym.ui.info.currenttab = sym.ui.info.currenttab or sym.ui.info.config.types[1]</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>creation</name>
+					<packageName></packageName>
+					<script>local activecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 50, 50, 100);
+  margin: 1px;
+]])
+
+local inactivecss = CSSMan.new([[
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 30, 30, 100);
+  margin: 1px;
+]])
+
+sym.ui.info.tabs = sym.ui.info.tabs or {}
+sym.ui.info.windows = sym.ui.info.windows or {}
+
+sym.ui.info.switch = function(tab)
+  local r = sym.ui.info.config.inactivecolours.r
+  local g = sym.ui.info.config.inactivecolours.g
+  local b = sym.ui.info.config.inactivecolours.b
+  local newr = sym.ui.info.config.activecolours.r
+  local newg = sym.ui.info.config.activecolours.g
+  local newb = sym.ui.info.config.activecolours.b
+  local oldtab = sym.ui.info.currenttab
+  if sym.ui.info.currenttab ~= tab then
+    sym.ui.info.windows[oldtab]:hide()
+    sym.ui.info.tabs[oldtab]:setColor(r, g, b)
+    sym.ui.info.tabs[oldtab]:echo(oldtab, sym.ui.info.config.inactivetabtext, 'c')
+    sym.ui.info.tabs[oldtab]:setStyleSheet(inactivecss:getCSS())
+  end
+  sym.ui.info.tabs[tab]:setColor(newr, newg, newb)
+  sym.ui.info.tabs[tab]:echo(tab, sym.ui.info.config.activetabtext, 'c')
+	sym.ui.info.tabs[tab]:setStyleSheet(activecss:getCSS())
+  sym.ui.info.windows[tab]:show()
+  sym.ui.info.currenttab = tab
+end
+
+function sym.ui.info:resetUI()
+  sym.ui.info.container = sym.ui.bottomright
+  sym.ui.info.tabbox = Geyser.HBox:new({
+    name = 'sym.ui.info.tabbox',
+    x = '5%', y = '4%',
+    width = '90%', height = '6%'
+  }, sym.ui.info.container)
+end
+
+function sym.ui.info:create()
+  sym.ui.info:resetUI()
+
+  local r = sym.ui.info.config.inactivecolours.r
+  local g = sym.ui.info.config.inactivecolours.g
+  local b = sym.ui.info.config.inactivecolours.b
+  local winr = sym.ui.info.config.windowcolours.r
+  local wing = sym.ui.info.config.windowcolours.g
+  local winb = sym.ui.info.config.windowcolours.b
+
+  for i, tab in ipairs(sym.ui.info.config.types) do
+    sym.ui.info.tabs[tab] = Geyser.Label:new({ name = string.format('infotab%s', tab) }, sym.ui.info.tabbox)
+    sym.ui.info.tabs[tab]:echo(tab, sym.ui.info.config.inactivetabtext, 'c')
+    sym.ui.info.tabs[tab]:setColor(r, g, b)
+    sym.ui.info.tabs[tab]:setClickCallback('sym.ui.info.switch', tab)
+    sym.ui.info.tabs[tab]:setStyleSheet(inactivecss:getCSS())
+    sym.ui.info.windows[tab] = Geyser.MiniConsole:new({
+      name = string.format('infowin%s', tab),
+      x = '5%', y = '12%',
+      autoWrap = true,
+      fontSize = sym.ui.info.config.fontsize,
+      width = '90%', height = '85%'
+    }, sym.ui.info.container)
+    sym.ui.info.windows[tab]:setColor(winr, wing, winb)
+    sym.ui.info.windows[tab]:hide()
+  end
+
+  sym.ui.info.switch(sym.ui.info.config.types[1])
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>echoes</name>
+					<packageName></packageName>
+					<script>function sym.ui.info:append(tab)
+  local r = sym.ui.info.config.windowcolours.r
+  local g = sym.ui.info.config.windowcolours.g
+  local b = sym.ui.info.config.windowcolours.b
+  selectCurrentLine()
+  local ofr, ofg, ofb = getFgColor()
+  local obr, obg, obb = getBgColor()
+  if sym.ui.info.config.preservebackground then
+    setBgColor(r, g, b)
+  end
+  copy()
+  sym.ui.info.windows[tab]:append()
+  if sym.ui.info.config.gag then
+    deleteLine()
+    tempLineTrigger(1, 1, [[if isPrompt() then deleteLine() end]])
+  end
+end
+
+function sym.ui.info:cecho(tab, message)
+  cecho(string.format('infowin%s', tab), message)
+end
+
+function sym.ui.info:decho(tab, message)
+  local r = sym.ui.info.config.windowcolours.r
+  local g = sym.ui.info.config.windowcolours.g
+  local b = sym.ui.info.config.windowcolours.b
+
+  if sym.ui.info.config.preservebackground then
+    decho(string.format('infowin%s', tab), string.format('&lt;:%s,%s,%s&gt;%s', r,g,b, message))
+  else
+    decho(string.format('infowin%s', tab), message)
+  end
+end
+
+function sym.ui.info:dechoLink(tab, message, command, hint)
+  local r = sym.ui.info.config.windowcolours.r
+  local g = sym.ui.info.config.windowcolours.g
+  local b = sym.ui.info.config.windowcolours.b
+
+  if sym.ui.info.config.preservebackground then
+    dechoLink(string.format('infowin%s', tab), string.format('&lt;:%s,%s,%s&gt;%s', r,g,b, message), command, hint, true)
+  else
+    dechoLink(string.format('infowin%s', tab), message, command, hint, true)
+  end
+end
+
+function sym.ui.info:hecho(tab, message)
+  hecho(string.format('infowin%s', tab), message)
+end
+
+function sym.ui.info:echo(tab, message)
+  local alltab = sym.ui.info.config.AllTab
+  local blink = sym.ui.info.config.Blink
+  echo(string.format('infowin%s', tab), message)
+  if alltab and tab ~= alltab then
+    echo(string.format('infowin%s', alltab), message)
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
+				<ScriptGroup isActive="yes" isFolder="yes">
+					<name>tasks</name>
+					<packageName></packageName>
+					<script>sym.ui.tasklist = sym.ui.tasklist or {}</script>
+					<eventHandlerList />
+					<Script isActive="yes" isFolder="no">
+						<name>update</name>
+						<packageName></packageName>
+						<script>function sym.ui.update_tasks()
+  local taskList = sym.ui.tasklist
+
+  clearWindow('infowinTasks')
+
+  local function colour(col)
+    return '&lt;'..table.concat(color_table[col], ',')..'&gt;'
+  end
+
+  local c = 0
+  for _, task in ipairs(taskList) do
+    sym.ui.info:dechoLink('Tasks', string.format('\n%s[%s%s%s] %s%s',
+      colour('yellow'),
+      task.status == '0' and '' or colour('green'),
+      task.status == '0' and ' ' or 'X',
+      colour('yellow'),
+      colour('ghost_white'),
+      task.name
+    ), 'send("'..task.cmd..'")', task.desc)
+    c = c + 1
+    if c == sym.ui.info.config.tasklimit then break end
+  end
+end</script>
+						<eventHandlerList />
+					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>events</name>
+						<packageName></packageName>
+						<script>function sym.ui.gmcpiretaskslist()
+  sym.ui.tasklist = gmcp.IRE.Tasks.List
+  sym.ui.update_tasks()
+end
+
+function sym.ui.gmcpiretasksupdate()
+  local updated = gmcp.IRE.Tasks.Update
+  for key, task in ipairs(sym.ui.tasklist) do
+    if task.id == updated.id then
+      sym.ui.tasklist[key] = updated
+      break
+    end
+  end
+  sym.ui.update_tasks()
+end
+
+sym.registerevent('task list', 'gmcp.IRE.Tasks.List', 'sym.ui.gmcpiretaskslist')
+sym.registerevent('task update', 'gmcp.IRE.Tasks.Update', 'sym.ui.gmcpiretasksupdate')
+sym.registerevent('task completed', 'gmcp.IRE.Tasks.Completed')</script>
+						<eventHandlerList />
+					</Script>
+				</ScriptGroup>
+				<ScriptGroup isActive="yes" isFolder="yes">
+					<name>room</name>
+					<packageName></packageName>
+					<script>sym.ui.roomplayers = sym.ui.roomplayers or {}
+sym.ui.roommobs = sym.ui.roommobs or {}
+sym.ui.roomitems = sym.ui.roomitems or {}
+sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
+					<eventHandlerList />
+					<Script isActive="yes" isFolder="no">
+						<name>update</name>
+						<packageName></packageName>
+						<script>function sym.ui.update_room()
+  clearWindow('infowinRoom')
+
+  local r = sym.ui.info.config.windowcolours.r
+  local g = sym.ui.info.config.windowcolours.g
+  local b = sym.ui.info.config.windowcolours.b
+
+  local function colour(col)
+    return '&lt;'..table.concat(color_table[col] or col, ',')..'&gt;'
+  end
+
+  sym.ui.info:decho('Room', string.format('\n%sPlayers', colour('SlateBlue')))
+  local c = 0
+  for _, player in ipairs(sym.ui.roomplayers) do
+    if c % 3 == 0 then sym.ui.info:decho('Room', string.format('\n %s- ', colour('SlateBlue'))) end
+    sym.ui.info:decho('Room', string.format('%s%-12s', colour('CornflowerBlue'), player.name))
+    c = c + 1
+  end
+
+  sym.ui.roommobs = {}
+
+  local roomItems = {mobs = {}, items = {}, itemIDs = {}}
+
+  for _, item in ipairs(sym.ui.roomitems) do
+    if item.attrib and item.attrib:find('m', 1, true) then
+      sym.ui.roommobs[#sym.ui.roommobs + 1] = item
+    else
+      roomItems.items[item.name] = roomItems.items[item.name] or {}
+      roomItems.items[item.name].count = (roomItems.items[item.name].count or 0) + 1
+      roomItems.items[item.name].id = item.id
+    end
+  end
+
+  for filter, func in pairs(sym.ui.roomfilters) do
+    sym.ui.roommobs = func(sym.ui.roommobs)
+  end
+
+  sym.ui.info:decho('Room', string.format('\n\n%sMobs', colour('SlateBlue')))
+  for _, entity in pairs(sym.ui.roommobs)  do
+    local isTarget = (entity.id == sym.target)
+    local noTarget = entity.attrib:find('x', 1, true)
+    local ignoring = sym.hunter.ignore[entity.name]
+    local exception = sym.hunter.exceptions[entity.name]
+    local colours = isTarget and {'maroon', 'MediumVioletRed'} or {'SlateBlue', noTarget and 'CornflowerBlue' or 'LightBlue'}
+
+    sym.ui.info:decho('Room', string.format('\n %s-%s %s',
+      colour(colours[1]),
+      isTarget and '&gt;' or '',
+      sym.ui.info.config.displayIDs and string.format('%s%d ', colour(isTarget and 'IndianRed' or 'MediumSlateBlue'), entity.id) or ''
+    ))
+
+    setFgColor('infowinRoom', unpack(color_table[colours[2]]))
+    setBgColor('infowinRoom', r, g, b)
+    if ignoring then setStrikeOut('infowinRoom', true) end
+    echoPopup('infowinRoom', entity.name, {
+      [[send('st ]]..entity.id..[[', false)]],
+      [[send('probe ]]..entity.id..[[', false)]],
+      [[sym.hunter.setignore(']]..entity.name..[[')]],
+      [[sym.hunter.setexception(']]..entity.name..[[')]]
+    }, {'target', 'probe', ignoring and 'unignore' or 'ignore', exception and 'remove exception' or 'add exception'}, true)
+  end
+
+  resetFormat()
+
+  sym.ui.info:decho('Room', string.format('\n\n%sItems', colour('SlateBlue')))
+  for entity, data in pairs(roomItems.items) do
+    sym.ui.info:decho('Room', string.format('\n %s- %s%s%s%s',
+      colour('SlateBlue'),
+      sym.ui.info.config.displayIDs and string.format('%s%d ', colour('MediumSlateBlue'), data.id) or '',
+      colour('CornflowerBlue'), entity,
+      data.count &gt; 1 and string.format(' (x%d)', data.count) or ''
+    ))
+  end
+end</script>
+						<eventHandlerList />
+					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>item events</name>
+						<packageName></packageName>
+						<script>function sym.ui.gmcpcharitemslist()
+  local list = gmcp.Char.Items.List
+  if list.location == 'room' then
+    sym.ui.roomitems = list.items
+    sym.ui.update_room()
+  end
+end
+
+function sym.ui.gmcpcharitemsadd()
+  local list = gmcp.Char.Items.Add
+  if list.location == 'room' then
+    table.insert(sym.ui.roomitems, list.item)
+    sym.ui.update_room()
+  end
+end
+
+function sym.ui.gmcpcharitemsremove()
+  local list = gmcp.Char.Items.Remove
+  if list.location == 'room' then
+    for key, item in ipairs(sym.ui.roomitems) do
+      if item.id == list.item.id then
+        table.remove(sym.ui.roomitems, key)
+        if item.id == sym.target then
+          sym.targetindex = 0
+        end
+        break
+      end
+    end
+    sym.ui.update_room()
+    if sym.checkmodule('Hunting') then raiseEvent('room_updated') end
+  end
+end
+
+sym.registerevent('items list', 'gmcp.Char.Items.List', 'sym.ui.gmcpcharitemslist')
+sym.registerevent('items add', 'gmcp.Char.Items.Add', 'sym.ui.gmcpcharitemsadd')
+sym.registerevent('items remove', 'gmcp.Char.Items.Remove', 'sym.ui.gmcpcharitemsremove')</script>
+						<eventHandlerList />
+					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>player events</name>
+						<packageName></packageName>
+						<script>function sym.ui.gmcproomplayers()
+  local list = gmcp.Room.Players
+  sym.ui.roomplayers = list
+  sym.ui.update_room()
+end
+
+function sym.ui.gmcproomaddplayer()
+  local player = gmcp.Room.AddPlayer
+  table.insert(sym.ui.roomplayers, player)
+  sym.ui.update_room()
+end
+
+function sym.ui.gmcproomremoveplayer()
+  local removed = gmcp.Room.RemovePlayer
+  for key, player in ipairs(sym.ui.roomplayers) do
+    if player.name == removed then
+      table.remove(sym.ui.roomplayers, key)
+      break
+    end
+  end
+  sym.ui.update_room()
+end
+
+sym.registerevent('room players', 'gmcp.Room.Players', 'sym.ui.gmcproomplayers')
+sym.registerevent('room addplayer', 'gmcp.Room.AddPlayer', 'sym.ui.gmcproomaddplayer')
+sym.registerevent('room removeplayer', 'gmcp.Room.RemovePlayer', 'sym.ui.gmcproomremoveplayer')</script>
+						<eventHandlerList />
+					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>target events</name>
+						<packageName></packageName>
+						<script>function sym.ui.gmcproominfo()
+  if oldnum ~= gmcp.Room.Info.num then
+    sym.targetindex = 0
+    oldnum = gmcp.Room.Info.num
+  end
+end
+
+function sym.ui.gmcpiretargetset()
+  sym.target = gmcp.IRE.Target.Set
+  sym.ui.update_room()
+
+  if sym.checkmodule('Hunting') and gmcp.Char.Vitals.bal == '1' then
+    sym.hunter.class[gmcp.Char.Status.class](sym.target)
+  end
+end
+
+sym.registerevent('target info', 'gmcp.Room.Info', 'sym.ui.gmcproominfo')
+sym.registerevent('target set', 'gmcp.IRE.Target.Set', 'sym.ui.gmcpiretargetset')</script>
+						<eventHandlerList />
+					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>rotate target</name>
+						<packageName></packageName>
+						<script>function sym.ui.rotateroomtarget()
+  local ignore = sym.hunter.ignore
+
+  if sym.targetindex == #sym.ui.roommobs then
+    sym.targetindex = 0
+  end
+
+  while sym.targetindex &lt; #sym.ui.roommobs do
+    sym.targetindex = sym.targetindex + 1
+
+    local mob = sym.ui.roommobs[sym.targetindex]
+    if not mob.attrib:find('x', 1, true) and not ignore[mob.name] then
+      send('st '..mob.id, false)
+      return
+    end
+  end
+
+  cecho("&lt;red&gt;There's nothing here, mate.\n")
+end</script>
+						<eventHandlerList />
+					</Script>
+				</ScriptGroup>
+			</ScriptGroup>
+			<Script isActive="yes" isFolder="no">
+				<name>initialise</name>
+				<packageName></packageName>
+				<script>function sym.ui.loadthis(event, package)
+  if event == 'sysInstall' then
+    return
+  end
+  if sym.loadtimer then
+    killTimer(sym.loadtimer)
+  end
+  sym.loadtimer =
+    tempTimer(
+      0,
+      function()
+        sym.ui.update_stylesheet()
+        sym.ui.set_borders()
+        sym.ui.create_background()
+        sym.ui.create_boxes()
+        sym.ui.create_modules()
+        sym.ui.adj.top:show()
+        sym.ui.adj.bottom:show()
+        sym.ui.adj.topright:show()
+        sym.ui.adj.bottomright:show()
+        sym.ui.adj.topleft:show()
+        sym.ui.adj.bottomleft:show()
+        OnShip = false
+        capacitor_bf = "No"
+        engine_bf = "No"
+        sensor_bf = "No"
+        shield_bf = "No"
+        sim_bf = "No"
+        if sym.ui.chat.use then
+          sym.ui.chat:create()
+        end
+        if sym.ui.mapper.use then
+          sym.ui.mapper:create()
+        end
+        if sym.ui.info.use then
+          sym.ui.info:create()
+        end
+        raiseEvent('sym.ui.loaded')
+      end
+    )
+end
+
+sym.registerevent('ui installed', 'sysInstall', 'sym.ui.loadthis', 'sysLuaInstallModule')
+sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.loadthis', 'sysLuaInstallModule')</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
+	</ScriptPackage>
 	<KeyPackage />
 	<HelpPackage>
 		<helpURL></helpURL>
