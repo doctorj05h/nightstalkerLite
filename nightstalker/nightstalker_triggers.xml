@@ -802,6 +802,27 @@ sym.loadtable('hunter.exceptions')</script>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>auto repair</name>
+				<script>sendAll("weapon repair all confirm", "armor repair all confirm")
+sym.echo("Hey, uh, you might want to take a break and repair your stuff. Like.. soonish?")</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>.+ your .+ has reached (.+)\% health\.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Windups</name>
 				<script></script>
@@ -1745,7 +1766,8 @@ sym.hunter.flags.repeating = true</script>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>ship</name>
-			<script></script>
+			<script>sym.ships = sym.ships or {}
+sym.ships.flags = sym.ships.flags or {}</script>
 			<triggerType>0</triggerType>
 			<conditonLineDelta>0</conditonLineDelta>
 			<mStayOpen>0</mStayOpen>
@@ -1759,9 +1781,150 @@ sym.hunter.flags.repeating = true</script>
 			<regexCodeList />
 			<regexCodePropertyList />
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>missile counter</name>
+				<script>if not sym.space.flags.countermeasures and not sym.space.flags.missilesinbound then
+  local firetime = matches[2] * .85
+  sym.space.flags.missilesinbound = true
+  tempTimer(
+    firetime,
+    function()
+      send('ship countermeasures')
+      sym.space.flags.missilesinbound = false
+    end
+  )
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Missile launch detected from .+, ETA (.+)\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>countermeasures</name>
+				<script>sym.space.flags.countermeasures = true</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ffaa00</mFgColor>
+				<mBgColor>#550000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>The ship shoots countermeasures around its hull.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>reload</name>
+				<script>send("ship weapon reload "..matches[2])</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^.+\#(\d+) has 0 ammunition loaded\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>countermeasures cooldown</name>
+				<script>sym.space.flags.countermeasures = false</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ffaa00</mFgColor>
+				<mBgColor>#550000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>The ship is again ready to fire countermeasures.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>weapon autoassign module</name>
+				<script>if matches[3] == "Interdictor Beam" then
+  send('ship module alias ' .. matches[2] .. ' iterdict')
+elseif
+  matches[3] == "Laser Beam I" or matches[3] == "Laser Beam II" or matches[3] == "Laser Beam III"
+then
+  send('ship module alias ' .. matches[2] .. ' lasers')
+elseif
+  matches[3] == "Targeted Missile I" or
+  matches[3] == "Targeted Missile II" or
+  matches[3] == "Targeted Missile III"
+then
+  send('ship module alias ' .. matches[2] .. ' missiles')
+elseif
+  matches[3] == "Massive Cannon I" or
+  matches[3] == "Massive Cannon II" or
+  matches[3] == "Massive Cannon III"
+then
+  send('ship module alias ' .. matches[2] .. ' mcannons')
+elseif matches[3] == "Cannon I" or matches[3] == "Cannon II" or matches[3] == "Cannon III" then
+  send('ship module alias ' .. matches[2] .. ' cannons')
+elseif matches[3] == "Slicekit" then
+  send('ship module alias ' .. matches[2] .. ' slicer')
+elseif matches[3] == "Cap Drainer" then
+  send('ship module alias ' .. matches[2] .. ' drainer')
+else
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Module #(\d+) - \b(.+)\b\s+(Active|Inactive)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>backfire tracking</name>
 				<script>if matches[3] ~= "No" and (tonumber(gmcp.Char.Vitals.ship_shield) &gt; 0) then
-  send("ship restart " .. matches[2])
+  if not sym.space.restart then 
+  sym.space.restart = tempTimer(5, function()
+    send("ship restart " .. matches[2])
+    sym.echo("Restarting " ..matches[2])
+    sym.space.restart = nil
+  end)
+end
 end
 if matches[2] == "Engine" then
   engine_bf = matches[3]
@@ -1792,12 +1955,107 @@ end</script>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>astromechs</name>
+				<script>sym.space.flags.astromechs = true
+deleteLine()
+cecho('\n&lt;blue:black&gt;Astromechs:&lt;white&gt; Beginning repairs of the &lt;yellow&gt;'..matches[2].. ' system&lt;white&gt;.. Standby.')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#0055ff</mFgColor>
+				<mBgColor>#00007f</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You order the astromechs towards the (\w+)\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>astromechs cooldown</name>
+				<script>sym.space.flags.astromechs = false
+deleteLine()
+cecho('\n&lt;blue:black&gt;Astromechs:&lt;white&gt; The &lt;red&gt;'..matches[2].. ' system&lt;white&gt; has been fully repaired.')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#0055ff</mFgColor>
+				<mBgColor>#00007f</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^The (\w+) has been fully repaired\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>vitals gag</name>
+				<name>repairs needed</name>
+				<script>sym.shiprepair()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^The damage tears through .+ system\, bringing it to .+\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>partial repair completed</name>
+				<script>sym.hunter.flags.astromechs = false
+deleteLine()
+cecho('\n&lt;blue:black&gt;Astromechs:&lt;white&gt; The &lt;red&gt;'..matches[2].. ' system&lt;orange&gt; has completed partial repairs.')
+sym.shiprepair()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Astromechs plug into the ship's mainframe and run complex quantum subroutines on the (.+)\, repairing some damage\.$</string>
+					<string>^Astromechs crawl through the (.) armed with hydrospanners and sonic screwdrivers\, repairing some damage\.$</string>
+					<string>^Astromechs clank and skitter through the ship's maintenance ducts while working on the (.+) generators\, repairing some damage\.$</string>
+					<string>^Astromechs weld patch panels to the ship's (.+) plates\, repairing some damage\.$</string>
+					<string>^Astromechs re-attach wires and reorient arrays in the ship's (.+) system\, repairing some damage\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>1</integer>
+					<integer>1</integer>
+					<integer>1</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>space gag</name>
 				<script>deleteLine()</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>14</mStayOpen>
+				<mStayOpen>0</mStayOpen>
 				<mCommand></mCommand>
 				<packageName></packageName>
 				<mFgColor>#ff0000</mFgColor>
@@ -1806,153 +2064,36 @@ end</script>
 				<colorTriggerFgColor>#000000</colorTriggerFgColor>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
+					<string>Keying a switch on your navigation console, you do a scan of the surrounding area.</string>
+					<string>You cannot trigger that module again so soon.</string>
+					<string>The ship's targeting systems are already attempting to lock onto a target.</string>
+					<string>Your target has left your targeting cone.</string>
+					<string>There is no such target anywhere nearby.</string>
+					<string>There is no such weapon on the ship.</string>
+					<string>^.+ requires a lock on the target\.$</string>
+					<string>That weapon cannot be used against organic targets.</string>
+					<string>The ship's rotational thrusters</string>
+					<string>The ship continues</string>
+					<string>The ship's inertial stabilizers </string>
 					<string>^-- .+ \((\w+)\) -- Damage .+-----------------------------$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>missile counter</name>
-				<script>if not sym.hunter.flags.countermeasures and tonumber(matches[2]) &gt; 2.4 then
-  tempTimer(
-    2,
-    function()
-      send('ship countermeasures')
-    end
-  )
-elseif not sym.hunter.flags.countermeasures and tonumber(matches[2]) &lt;= 2.4 then
-  send('ship countermeasures')
-else
-end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^Missile launch detected from .+, ETA (.+)\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>countermeasures</name>
-				<script>sym.hunter.flags.countermeasures = true</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ffaa00</mFgColor>
-				<mBgColor>#550000</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>The ship shoots countermeasures around its hull.</string>
+					<string>There is no cargo in that direction.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>3</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>countermeasures cooldown</name>
-				<script>sym.hunter.flags.countermeasures = false</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ffaa00</mFgColor>
-				<mBgColor>#550000</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>The ship is again ready to fire countermeasures.</string>
-				</regexCodeList>
-				<regexCodePropertyList>
+					<integer>3</integer>
+					<integer>3</integer>
+					<integer>3</integer>
+					<integer>3</integer>
+					<integer>3</integer>
+					<integer>1</integer>
+					<integer>3</integer>
+					<integer>2</integer>
+					<integer>2</integer>
+					<integer>2</integer>
+					<integer>1</integer>
 					<integer>3</integer>
 				</regexCodePropertyList>
 			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>weapon autoassign module</name>
-				<script>if matches[3] == "Interdictor Beam" then
-  send('ship module alias ' ..matches[2].. ' iterdict')
-elseif matches[3] == "Laser Beam I" or matches[3] == "Laser Beam II" or matches[3] == "Laser Beam III" then
-  send('ship module alias ' ..matches[2].. ' lasers')
-elseif matches[3] == "Targeted Missile I" or matches[3] == "Targeted Missile II" or matches[3] == "Targeted Missile III" then
-  send('ship module alias ' ..matches[2].. ' missiles')
-elseif matches[3] == "Massive Cannon I" or matches[3] == "Massive Cannon II" or matches[3] == "Massive Cannon III" then
-  send('ship module alias ' ..matches[2].. ' mcannons')
-elseif matches[3] == "Cannon I" or matches[3] == "Cannon II" or matches[3] == "Cannon III" then
-  send('ship module alias ' ..matches[2].. ' cannons')
-elseif matches[3] == "Slicekit" then
-  send('ship module alias ' ..matches[2].. ' slicer')
-elseif matches[3] == "Cap Drainer" then
-  send('ship module alias ' ..matches[2].. ' drainer')
-else
-end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^Module #(\d+) - \b(.+)\b\s+(Active|Inactive)$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>mining</name>
-				<script></script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList />
-				<regexCodePropertyList />
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>auto tether</name>
-					<script>send('ship tether asteroid')</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>^.+ halts gracefully to avoid collision with asteroid\.$</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>1</integer>
-					</regexCodePropertyList>
-				</Trigger>
-			</TriggerGroup>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>empty beacon gag</name>
 				<script>deleteLine()</script>
@@ -1998,6 +2139,31 @@ end</script>
 				<script>if OnShip == true then
   deleteLine()
 else
+  local vitals = gmcp.Char.Vitals
+  local sym_ww = (vitals.ww == "1" and true or false)
+  local efficacy =
+    {
+      "wetwiring_efficacy",
+      "mind_efficacy",
+      "muscular_efficacy",
+      "internal_efficacy",
+      "sensory_efficacy",
+    }
+  local systems = {"wetwiring", "mind", "muscular", "internal", "sensory"}
+  if not sym_ww then
+    return
+  end
+  for _, system in pairs(systems) do
+    local value = math.floor(tonumber(vitals[system]))
+    local evalue = tonumber(vitals[efficacy[_]])
+    if value &lt;= 92.5 and evalue &gt;= 85 then
+      sym.echo('You should mend your ' .. system .. ' system')
+      canmend = true
+      break
+    else
+      canmend = false
+    end
+  end
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -2016,6 +2182,880 @@ end</script>
 					<integer>3</integer>
 				</regexCodePropertyList>
 			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>shields broken (self)</name>
+				<script>-- immediately prep repairs to hull in case they are using mixed ammo
+send('ship repair hull')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Your shield has been shattered!</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>mining</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>auto tether</name>
+					<script>send('ship tether asteroid')</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^.+ halts gracefully to avoid collision with asteroid\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>how much refined</name>
+					<script>cechoLink('&lt;dark_salmon&gt; '..(matches[3] / 5).. ' refined', [[send('refinery queue '..(matches[3] / 5)..' '..matches[2])]], "click to refine", true)</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^raw.+ Raw(.+)  (\d+)   .+$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>store tech</name>
+					<script>if gmcp.Room.Info.environment == 'bridge' then send('cargo store all ' ..matches[2].. '_tech') end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^(\w+)_tech .+ Salvaged .+</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>research tech</name>
+					<script>local sendtotal = matches[3]
+local tech = matches[2]
+for i=1, sendtotal, 1 do
+  send("workshop re " ..tech)
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^(.+)  Salvaged .+ (\d+)      0                 .+ Station$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+			</TriggerGroup>
+		</TriggerGroup>
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>alerts</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>aggro track</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^.+ moves in to attack you\.$</string>
+					<string>^.+ leaps into aggressive action\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>junk</name>
+				<script>send("sell junk")</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^A heap of rusty equipment indicates a JUNK shop here.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>critical hits</name>
+				<script>deleteLine()
+local hit = matches[2]
+if hit == "CRITICAL" then
+cecho("\n &lt;ansi_075&gt;._.-._.-&lt;white&gt; CRITICAL HIT &lt;ansi_075&gt;-._.-._.")
+cecho('\n ')
+--cecho(cgradient("\n_.-._.-._.- CRITICAL HIT -._.-._.-._", {0,0,250}, {255,255,255}, {0,0,250}))
+else
+cecho("\n &lt;ansi_075&gt;&lt;light_sea_green&gt;&lt;medium_spring_green&gt;&lt;light_sea_green&gt;.&lt;ansi_075&gt;_&lt;light_sea_green&gt;.-&lt;medium_spring_green&gt;*&lt;light_sea_green&gt;-&lt;white&gt; CRUSHING CRITICAL HIT &lt;light_sea_green&gt;-&lt;medium_spring_green&gt;*&lt;light_sea_green&gt;-&lt;ansi_075&gt;&lt;light_sea_green&gt;.&lt;ansi_075&gt;_&lt;light_sea_green&gt;.&lt;medium_spring_green&gt;&lt;light_sea_green&gt;&lt;ansi_075&gt;")
+cecho('\n ')
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You have scored a (.+) hit\!</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>doors and corners</name>
+				<script>sendAll("open door " ..matches[2], 'open door')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^A closed door is in the way\. You need to OPEN DOOR (.+) first\.$</string>
+					<string>^A door prevents you from dashing in that direction\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>crystal harvest</name>
+				<script>send("harvest crystal")</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#aaffff</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>After meticulous and exacting labor, you finish polishing a faintly glowing Ta-Deth crystal, and it drops free into your hand, pulsing with a soft, internal glow.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>wilderness mapping on</name>
+				<script>last_wilderness = gmcp.Room.Info.area
+expandAlias("map create on")
+expandAlias("area delete "..gmcp.Room.Info.area)
+expandAlias("rlc v"..gmcp.Room.Info.num.." 0 0 0")
+expandAlias("area add "..gmcp.Room.Info.area)
+expandAlias("room area "..gmcp.Room.Info.area)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ffaa7f</mFgColor>
+				<mBgColor>#550000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You enter the wilderness.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>wilderness mapping off</name>
+				<script>expandAlias("map create on")
+expandAlias("area delete "..last_wilderness)
+expandAlias("map create off")</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ffaa7f</mFgColor>
+				<mBgColor>#550000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You leave the wilderness.</string>
+					<string>With a cry of relief, you find the exit from the cache and dive out, evading your attackers.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>yellowhighlight</name>
+				<script>selectCurrentLine()
+setFgColor(255,255,25)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Congratulations, you have advanced to the rank of </string>
+					<string>Denizen sale:</string>
+					<string>You have successfully primed the demolition charge here.</string>
+					<string>Ishvana              No</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>0</integer>
+					<integer>3</integer>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>pinkhighlight</name>
+				<script>selectCurrentLine()
+setFgColor(225,25,255)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Song                 No</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>bluehighlight</name>
+				<script>selectCurrentLine()
+setFgColor(0,90,255)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Celestine            No</string>
+					<string>Space junk selling</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>brownhighlight</name>
+				<script>selectCurrentLine()
+setFgColor(110,50,5)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Scatterhome          No</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>greenhighlight</name>
+				<script>selectCurrentLine()
+setFgColor(125,255,5)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#aaff7f</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Your amorphous restoratives soothe you\, regenerating .+ health\.$</string>
+					<string>7    Ishvana</string>
+					<string>Market sale.</string>
+					<string>Your drones return to their docking bay as they cannot find any more gas.</string>
+					<string>Task count: </string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>0</integer>
+					<integer>0</integer>
+					<integer>3</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>percent highlights (maybe)</name>
+				<script>local percents = tonumber(matches[2])
+if percents &gt;= 92.5 then
+  local red = 150
+  local green = 250
+  local blue = 100
+  selectString(percents, 1)
+  setFgColor(red, green, blue)
+  resetFormat()
+  deselect()
+elseif percents &gt;= 70 then
+  local red = 255
+  local green = 255
+  local blue = 0
+  selectString(percents, 1)
+  setFgColor(red, green, blue)
+  resetFormat()
+  deselect()
+elseif percents &gt;= 30 then
+  local red = 255
+  local green = 150
+  local blue = 20
+  selectString(percents, 1)
+  setFgColor(red, green, blue)
+  resetFormat()
+  deselect()
+else
+  local red = 200
+  local green = 0
+  local blue = 0
+  selectString(percents, 1)
+  setFgColor(red, green, blue)
+  resetFormat()
+  deselect()
+end
+echo(getTime(true, "mm:ss:z"))</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>\|(\d+)%</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+		</TriggerGroup>
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>pvp</name>
+			<script>sym.pvp = sym.pvp or {}
+sym.pvp.flags = sym.pvp.flags or {}</script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>targetting highlight</name>
+				<script>deleteLine()
+sym.echo("\n&lt;gray&gt;Targetting: &lt;dodger_blue&gt;&lt;&lt;green&gt;"..matches[2].."&lt;green&gt;&gt;")
+target = matches[2]
+local class = gmcp.Char.Status.class
+if class == "Nanoseer" then
+sym.pvp.flags.rattle = false
+sym.pvp.flags.sluggish = false
+sym.pvp.flags.distracted = false
+sym.pvp.flags.mindaff = 0
+elseif class == "Engineer" then
+sym.pvp.currentstatic = 0
+sym.pvp.currentshards = 0
+enableTimer('static')
+sym.pvp.flags.worming = false
+cecho('\n ')
+cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..current_static)
+cecho('\n&lt;ansi_light_red&gt;     Current Shards: '..current_shards)
+cecho('\n ')
+else
+end
+</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Your target is now\: (.+) \(.+\)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>damage dealt track</name>
+				<script>deleteLine()
+sym.echo("\nDamage Dealt: &lt;white&gt;"..matches[2].. " " ..matches[3].." - &lt;light_goldenrod&gt;"..matches[4].."&lt;green&gt;")
+if matches[3] == "electric" then
+  sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
+  cecho('\n ')
+  cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
+  cecho('\n ')
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#aaffff</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Damage Dealt: (\d+) (.+), (.+)</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>i mended</name>
+				<script>canmend = false</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#aaff7f</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Through your bio-interface\, you instruct your wetwiring to perform a mending operation on your .+ subsystem\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Location report</name>
+				<script>local r = gmcp.Room.Info
+send(string.format("crt (v%s) I am at %s in %s", r.num, r.name, r.area))</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>(Crew):</string>
+					<string>\w+ says, "Loc</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Loc report mmpechoside</name>
+				<script>--loc[multimatches[2][2]] = multimatches[2][3]
+
+selectString('v'..multimatches[2][3], 1)
+setLink([[mmp.gotoRoom(]]..multimatches[2][3]..[[)]], "Go to "..multimatches[2][3].."!")
+deselect()
+mmp.locateAndEchoSide(multimatches[2][4])
+cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]..[[")]], "Path Track "..multimatches[2][3].."!",true)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>(Crew):</string>
+					<string>(\w+) says, "\(v(\d+)\) I am at (.+) in</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>scoundrel</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>bug gag</name>
+					<script>deleteFull()</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Your bug notifies you that a </string>
+						<string>Your bug notifies you that Tase Sjoerd has left The churning, neon-lit interior of Malice.</string>
+						<string>Your bug notifies you that Tase Sjoerd has entered The churning, neon-lit interior of Malice.</string>
+						<string>Your bug notifies you that Rihax Pi has entered The churning, neon-lit interior of Malice.</string>
+						<string>Your bug notifies you that Rihax Pi has left The churning, neon-lit interior of Malice.</string>
+						<string>Your bug notifies you that Hoyt Nobu has entered A central habitat chamber in New Dikamazi.</string>
+						<string>Your bug notifies you that Hoyt Nobu has left A central habitat chamber in New Dikamazi.</string>
+						<string>Your bug notifies you that an aggressively malfunctioning drone has entered The churning, neon-lit interior of Malice.</string>
+						<string>Your bug notifies you that an aggressively malfunctioning drone has left The churning, neon-lit interior of Malice.</string>
+						<string>A rapidly scrolling alert is projected across the lenses of your goggles as your swarm reports a </string>
+						<string>A rapidly scrolling alert is projected across the lenses of your goggles as your swarm reports an</string>
+						<string>An alarm flashes across the HUD of your goggles, your swarm sending you an urgent signal that a </string>
+						<string>An alarm flashes across the HUD of your goggles, your swarm sending you an urgent signal that an</string>
+						<string>The alert status of your swarm shifts to a different subroutine, changing the readout across your goggles to suggest that a</string>
+						<string>The alert status of your swarm shifts to a different subroutine, changing the readout across your goggles to suggest that an</string>
+						<string>You unlink the</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>2</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>3</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>bug highlight</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ffff00</mFgColor>
+					<mBgColor>#000000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Your bug notifies you that .+$</string>
+						<string>^Your mindsim chimes gently .+$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>gunslinging afflictions</name>
+					<script>deleteLine()
+cecho("\n&lt;white&gt; -&lt;ansi_075&gt;Affliction: &lt;light_goldenrod&gt;" ..matches[2])</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#f4ab00</mFgColor>
+					<mBgColor>#000000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Your shot strikes home with a satisfying accuracy\, afflicting .+ with (.+)\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>bug toggle</name>
+					<script>--deleteLine()
+local toggle = matches[3]
+if toggle == "Yes" then
+  cechoLink(
+    "&lt;cyan&gt;" .. matches[2] .. " press &lt;brown:white&gt;me!",
+    function()
+      send('guile bug tuneout ' .. matches[2])
+    end,
+    "On/Off",
+    true
+  )
+else
+      send('guile bug tunein ' .. matches[2])
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^ (\d+) .+ (\w+)$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>ambush follow</name>
+					<script>local c = gmcp.Char.Status
+if c.name ~= matches[2] then
+  sym.pvp.flags.ambushed = true
+  tempTimer(
+    6,
+    function()
+      sym.pvp.flags.ambushed = false
+    end
+  )
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^(\w+)\: Gun Ambush -&gt; .+ \.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>nanoseer</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>engineer</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>beast</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>fury</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+			</TriggerGroup>
 		</TriggerGroup>
 	</TriggerPackage>
 	<TimerPackage />
