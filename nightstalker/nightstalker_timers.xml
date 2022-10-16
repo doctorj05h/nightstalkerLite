@@ -13,6 +13,7 @@
 				<name>beacon</name>
 				<script>if OnShip then
   sendAll("ship details damage", "ship beacon")
+  sym.shiprepair()
 end</script>
 				<command></command>
 				<packageName></packageName>
