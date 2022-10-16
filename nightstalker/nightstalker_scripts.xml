@@ -2386,6 +2386,44 @@ sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.loadthis', 'sysLuaInstall
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>ships</name>
+			<packageName></packageName>
+			<script>sym.space = sym.space or {}
+sym.space.flags = sym.space.flags or {}</script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>manual ship repair</name>
+				<packageName></packageName>
+				<script>function sym.shiprepair()
+  local vitals = gmcp.Char.Vitals
+  local shields_perc = round(gmcp.Char.Vitals.ship_shield / gmcp.Char.Vitals.ship_shield_max * 100)
+  local hull_perc = round(gmcp.Char.Vitals.ship_hull / gmcp.Char.Vitals.ship_hull_max * 100)
+  local systems =
+    {
+      ["ship_dmg_cap"] = "capacitor",
+      ["ship_dmg_sim"] = "shipsim",
+      ["ship_dmg_sensor"] = "sensor",
+      ["ship_dmg_engine"] = "engine",
+      ["ship_dmg_shield"] = "shields",
+    }
+  if sym.space.flags.astromechs then
+    return
+  end
+  for system, value in pairs(systems) do
+    if math.floor(100 - tonumber(vitals[system])) &lt; 100 and hull_perc &gt;= 100 then
+      send("ship repair " .. value, false)
+      break
+    elseif math.floor(100 - tonumber(vitals[system])) &lt; 100 and hull_perc &lt; 100 then
+      send("ship repair hull", false)
+      break
+    else
+    end
+  end
+end</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
 	</ScriptPackage>
 	<KeyPackage />
 	<HelpPackage>
