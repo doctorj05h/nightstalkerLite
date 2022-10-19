@@ -2813,8 +2813,10 @@ echo(getTime(true, "mm:ss:z"))</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^HP: (\d+)</string>
+					<string>^Health: (\d+)</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>1</integer>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>

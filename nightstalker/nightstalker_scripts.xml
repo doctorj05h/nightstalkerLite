@@ -810,12 +810,12 @@ end</script>
   local background_color_lighter = 'rgba(0, 40, 40, 100)'
   local background_color_hover = 'rgba(0, 60, 60, 100)'
   local border_color = 'rgba(40, 60, 60, 100)'
-  local border_color_hover = 'rgba(40, 60, 60)' 
+  local border_color_hover = 'rgba(40, 90, 90)' 
   local font_color = '#e5ae69'
   local font_color_hover = '#faf3ea'
   local border_radius_one = '5px';
   local border_radius_two = '5px';
-  local font_size_settings = '13px';
+  local font_size_settings = '12px';
 
   setProfileStyleSheet([[
     QMainWindow {
@@ -1150,22 +1150,22 @@ end</script>
 end</script>
 					<eventHandlerList />
 				</Script>
-				<Script isActive="yes" isFolder="no">
+				<Script isActive="no" isFolder="no">
 					<name>set borders</name>
 					<packageName></packageName>
-					<script>function sym.ui.set_borders()
-  local w, h = getMainWindowSize()
+					<script>--function sym.ui.set_borders()
+--  local w, h = getMainWindowSize()
 
-  sym.ui.border_left = w / 4
-  sym.ui.border_top = h / 19
-  sym.ui.border_bottom = h / 19
-  sym.ui.border_right = w / 4
+  --sym.ui.border_left = w / 4
+  --sym.ui.border_top = h / 19
+  --sym.ui.border_bottom = h / 19
+  --sym.ui.border_right = w / 4
 
-  setBorderLeft(sym.ui.border_left)
-  setBorderTop(sym.ui.border_top)
-  setBorderBottom(sym.ui.border_bottom)
-  setBorderRight(sym.ui.border_right)
-end</script>
+  --setBorderLeft(sym.ui.border_left)
+  --setBorderTop(sym.ui.border_top)
+  --setBorderBottom(sym.ui.border_bottom)
+  --setBorderRight(sym.ui.border_right)
+--end</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -1202,9 +1202,9 @@ function sym.ui.create_boxes()
     background-color: rgba(0,0,0,100);
     border-style: solid;
     border-width: 1px;
-    border-radius: 10px;
+    border-radius: 1px;
     border-color: rgb(0,40,40);
-    margin: 2px;
+    margin: 1px;
   ]])
   sym.ui.adj = sym.ui.adj or {} 
    
@@ -1252,7 +1252,7 @@ end</script>
     border-color: grey;
     border-width: 1px;
     border-radius: 5px;
-    margin: 5px;
+    margin: 1px;
   ]])
 
   local frontcss = CSSMan.new([[
@@ -1261,7 +1261,7 @@ end</script>
     border-color: grey;
     border-width: 1px;
     border-radius: 5px;
-    margin: 5px;
+    margin: 1px;
   ]])
 
   local function gauge(name, column, bgc)
@@ -1413,8 +1413,8 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     background-color: rgba(0,0,0,100);
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(0,80,40);
-    border-radius: 5px;
+    border-color: rgb(0,110,40);
+    border-radius: 1px;
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1424,7 +1424,7 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     border-style: solid;
     border-width: 1px;
     border-color: rgb(0,40,40);
-    border-radius: 5px;
+    border-radius: 1px;
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1509,19 +1509,19 @@ sym.ui.chat.currenttab = sym.ui.chat.currenttab or sym.ui.chat.config.alltab or 
 					<name>creation</name>
 					<packageName></packageName>
 					<script>local activecss = CSSMan.new([[
-  border-radius: 3px;
+  border-radius: 0px;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(0, 50, 50, 100);
-  margin: 1px;
+  border-color: rgba(0, 50, 50, 130);
+  margin: 5px;
 ]])
 
 local inactivecss = CSSMan.new([[
-  border-radius: 3px;
+  border-radius: 0px;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(0, 30, 30, 100);
-  margin: 1px;
+  border-color: rgba(0, 30, 30, 130);
+  margin: 5px;
 ]])
 
 sym.ui.chat.tabstoblink = sym.ui.chat.tabstoblink or {}
@@ -1559,8 +1559,8 @@ function sym.ui.chat:resetUI()
   sym.ui.chat.container = sym.ui.topright
   sym.ui.chat.tabbox = Geyser.HBox:new({
     name = 'sym.ui.chat.tabbox',
-    x = '5%', y = '4%',
-    width = '90%', height = '6%'
+    x = 0, y = 0,
+    width = '100%', height = '7%'
   }, sym.ui.chat.container)
 end
 
@@ -1582,10 +1582,10 @@ function sym.ui.chat:create()
     sym.ui.chat.tabs[tab]:setStyleSheet(inactivecss:getCSS())
     sym.ui.chat.windows[tab] = Geyser.MiniConsole:new({
       name = string.format('chatwin%s', tab),
-      x = '5%', y = '12%',
+      x = 0, y = '7%',
       autoWrap = true,
       fontSize = sym.ui.chat.config.fontsize,
-      width = '90%', height = '85%'
+      width = '100%', height = '93%'
     }, sym.ui.chat.container)
     sym.ui.chat.windows[tab]:setColor(winr, wing, winb)
     sym.ui.chat.windows[tab]:hide()
@@ -1815,7 +1815,7 @@ sym.ui.mapper.config.gag = true
 
 sym.ui.mapper.config.starchart = true
 
-sym.ui.mapper.config.activecolours = { r = 20, g = 60, b = 20 }
+sym.ui.mapper.config.activecolours = { r = 20, g = 100, b = 20 }
 
 sym.ui.mapper.config.inactivecolours = { r = 60, g = 60, b = 60 }
 
@@ -1834,17 +1834,19 @@ sym.ui.mapper.currenttab = sym.ui.mapper.currenttab or sym.ui.mapper.config.maps
 					<script>local activecss = CSSMan.new([[
   border-radius: 3px;
   border-style: solid;
-  border-width: 1px;
-  border-color: rgba(0, 50, 50, 100);
-  margin: 1px;
+  font: bold 16pt "OCR A Extended";
+  border-width: 3px;
+  border-color: rgba(0, 50, 50, 250);
+  margin: 3px;
 ]])
 
 local inactivecss = CSSMan.new([[
   border-radius: 3px;
   border-style: solid;
-  border-width: 1px;
-  border-color: rgba(0, 30, 30, 100);
-  margin: 1px;
+  font: bold 16pt "OCR A Extended";
+  border-width: 3px;
+  border-color: rgba(0, 30, 30, 150);
+  margin: 3px;
 ]])
 
 sym.ui.mapper.tabs = sym.ui.mapper.tabs or {}
@@ -1875,8 +1877,8 @@ function sym.ui.mapper:resetUI()
   sym.ui.mapper.container = sym.ui.topleft
   sym.ui.mapper.tabbox = Geyser.HBox:new({
     name = 'sym.ui.mapper.tabbox',
-    x = '5%', y = '3%',
-    width = '90%', height = '5%'
+    x = 0, y = 0,
+    width = '100%', height = '7%'
   }, sym.ui.mapper.container)
 end
 
@@ -1894,30 +1896,28 @@ function sym.ui.mapper:create()
     sym.ui.mapper.tabs[tab] = Geyser.Label:new({ name = string.format('maptab%s', tab) }, sym.ui.mapper.tabbox)
     sym.ui.mapper.tabs[tab]:echo(tab, sym.ui.mapper.config.inactivetabtext, 'c')
     sym.ui.mapper.tabs[tab]:setColor(r, g, b)
+    sym.ui.mapper.tabs[tab]:setFontSize(13)
     sym.ui.mapper.tabs[tab]:setClickCallback('sym.ui.mapper.switch', tab)
     sym.ui.mapper.tabs[tab]:setStyleSheet(inactivecss:getCSS())
     if tab == 'Mudlet' then
       sym.ui.mapper.windows[tab] = Geyser.Mapper:new({
         name = string.format('mapwin%s', tab),
-        x = '5%', y = '9%',
-        width = '90%', height = '89%'
+        x = 0, y = '7%',
+        width = '100%', height = '93%'
       }, sym.ui.mapper.container)
     else
       sym.ui.mapper.windows[tab] = Geyser.MiniConsole:new({
         name = string.format('mapwin%s', tab),
-        x = '5%', y = '9%',
-        --x = 0, y = 0,
+        x = 0, y = '7%',
         fontSize = sym.ui.mapper.config.fontsize,
-        width = '90%', height = '89%'
-        --width = '100', height = '100%'
+        width = '100%', height = '93%'
       }, sym.ui.mapper.container)
       if not (tab == 'Space') then
         sym.ui.mapper.windows[tab]:setColor(winr, wing, winb)
       else
         sym.ui.mapper.windows[tab]:setColor(0, 0, 0)
--- use this if you want to change the font of the SpaceMap         
+        -- use this if you want to change the font of the space map         
         sym.ui.mapper.windows[tab]:setFont("square")
---        sym.ui.mapper.windows[tab]:setFontSize("8")
       end
     end
     sym.ui.mapper.windows[tab]:hide()
@@ -2425,7 +2425,7 @@ end</script>
       0,
       function()
         sym.ui.update_stylesheet()
-        sym.ui.set_borders()
+--        sym.ui.set_borders()
         sym.ui.create_background()
         sym.ui.create_boxes()
         sym.ui.create_modules()
