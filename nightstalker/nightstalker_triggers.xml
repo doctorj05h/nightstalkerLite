@@ -2493,6 +2493,219 @@ end</script>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>bounty readout</name>
+				<script>--code curtesty of Morgan
+xenoMobsList =
+  {
+    ["a ruby-plumed eskama"] = {loc = "The Locorin Swamp", vnum = "4139"},
+    ["a scruffy stray goredog"] = {loc = "Zephyr, a colony on Selubir", vnum = "5947"},
+    ["a snarling goredog"] = {loc = "Zephyr, a colony on Selubir", vnum = "5947"},
+    ["a water skipper"] = {loc = "Mirror Lake", vnum = "2571"},
+    ["a two-headed zhubeast"] = {loc = "Ishbi Canyon", vnum = "1110"},
+    ["a foraging zhubeast"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a giant black tarak beetle"] = {loc = "Ishbi Canyon", vnum = "1110"},
+    ["a flat balkrab"] = {loc = "Golpur Desert", vnum = "2162"},
+    ["a nightstalker"] = {loc = "The Kashitir Jungle", vnum = "895"},
+    ["a fat-bodied horned merova"] =
+      {loc = "Tuskiriz, the northern fringe of Narisiriz", vnum = "2272"},
+    ["a juvenile heik-il vine"] = {loc = "Lowtown, a slum of Narisiriz", vnum = "2272"},
+    ["a thrashing heik-il vine"] = {loc = "Lowtown, a slum of Narisiriz", vnum = "2272"},
+    ["a sickly heik-il vine"] = {loc = "Lowtown, a slum of Narisiriz", vnum = "2272"},
+    ["a saffron algerion"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["a coral algerion"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["an azure algerion"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["a ravenous tigrid"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a brown-scaled tigrid"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a juvenile Rapasu worm"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4523"},
+    ["an alert giant springer"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a giant springer"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["an overfed skulf"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a large hairy skulf"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a lean-ribbed skulf"] = {loc = "The Siva River on Benu Wen", vnum = "2754"},
+    ["an immense alpha skulf"] = {loc = "The Siva River on Benu Wen", vnum = "2754"},
+    ["a spot-scaled tridactyl"] = {loc = "The Siva River on Benu Wen", vnum = "2754"},
+    ["a venomous tridactyl"] = {loc = "The Siva River on Benu Wen", vnum = "2754"},
+    ["a roosting Tosmarian condor"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["an immense reptilian predator"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a sleek shadow fox"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a pack of small sharp-toothed reptiles"] =
+      {loc = "The Saksar Jungle on Hororeon", vnum = "3133"},
+    ["a coiling skilth snake"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a wind snake"] = {loc = "The Fields of Oranc", vnum = "417"},
+    ["a tundra snake"] = {loc = "The Tosmar Hunting Preserve", vnum = "8757"},
+    ["a feathered grass snake"] = {loc = "Suiko", vnum = "Fly Here"},
+    ["a blue-furred primate"] = {loc = "The Saksar Jungle on Hororeon", vnum = "3133"},
+    ["a scale-feathered scorpion bird"] = {loc = "The Saksar Jungle on Hororeon", vnum = "3133"},
+    ["a sharp-toothed raptor"] = {loc = "The Saksar Jungle on Hororeon", vnum = "3133"},
+    ["a miniature Kronish Cross rockhopper"] =
+      {loc = "Marle, a Scatterhome Asteroid", vnum = "1321"},
+    ["a stunted Kronish Cross rockhopper"] = {loc = "Marle, a Scatterhome Asteroid", vnum = "1321"},
+    ["a jumbo Kronish Cross rockhopper"] = {loc = "Marle, a Scatterhome Asteroid", vnum = "1321"},
+    ["a large Kronish Cross rockhopper"] = {loc = "Marle, a Scatterhome Asteroid", vnum = "1321"},
+    ["a Kronish Cross rockhopper"] = {loc = "Marle, a Scatterhome Asteroid", vnum = "1321"},
+    ["a horrifically mutated rodent"] = {loc = "Tabby Outpost", vnum = "2679"},
+    ["a sly cania"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a rabid cania"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a Grethen silkmoth"] = {loc = "The Locorin Swamp", vnum = "4139"},
+    ["an indigo malaca"] = {loc = "The Kashitir Jungle", vnum = "895"},
+    ["a blacktooth coroxodon"] = {loc = "The Locorin Swamp", vnum = "4139"},
+    ["a lurking blacktooth coroxodon"] = {loc = "Northern Wilds of Usum Usutti", vnum = "4440"},
+    ["a mossy shellback"] = {loc = "The Locorin Swamp", vnum = "4139"},
+    ["a crowned lizard"] = {loc = "Zeta Deck Hydroponics", vnum = "3963"},
+    ["a glass-winged needleback"] = {loc = "Zeta Deck Hydroponics", vnum = "3963"},
+    ["a blue-bellied digger"] = {loc = "The Urbanity of Hox", vnum = "4226"},
+    ["a Shaadryan scissorbill"] = {loc = "The Urbanity of Hox", vnum = "4226"},
+    ["an iridescent opal beetle"] =
+      {loc = "Whittler's Hollow, a Scatterhome asteroid", vnum = "999"},
+    ["a great strider"] = {loc = "The Fields of Oranc", vnum = "417"},
+    ["a blue-crested ratika"] = {loc = "The Fields of Oranc", vnum = "417"},
+    ["a stealthy poison-tooth"] = {loc = "The Fields of Oranc", vnum = "417"},
+    ["a green-scaled varrana"] = {loc = "The Fields of Oranc", vnum = "417"},
+    ["a luminous eel"] = {loc = "The Greenwilds", vnum = "4273"},
+    ["a sparkling eel"] = {loc = "Mirror Lake", vnum = "2571"},
+    ["a giant sparkling eel"] = {loc = "Mirror Lake", vnum = "2571"},
+    ["a grime-slick eel"] = {loc = "Scrapston, a borough of Litharge", vnum = "5644"},
+    ["a poisonous eel"] = {loc = "Scrapston, a borough of Litharge", vnum = "5644"},
+    ["a needle-mouthed eel"] = {loc = "The Siva River on Benu Wen", vnum = "2754"},
+    ["a giant guerilla beetle"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["an enormous guerilla beetle"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a small arboreal lizard"] = {loc = "Mirror Lake", vnum = "2571"},
+    ["a hulking arboreal lizard"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a female tangutan"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a king tangutan"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a great white eagle"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a crested great white eagle"] = {loc = "The Greenwilds", vnum = "4283"},
+    ["a caliginous eagle"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a carnivorous black eagle"] = {loc = "The Anemoi Desert, on Delphi", vnum = "1498"},
+    ["a somnolent selakki"] = {loc = "Prugita Breeding Colony", vnum = "4713"},
+    ["a sluggish atzaparaki"] = {loc = "Arrizuri Quarry", vnum = "1966"},
+    ["a ferocious atzaparaki"] = {loc = "Arrizuri Quarry", vnum = "1966"},
+    ["a sickly atzaparaki"] = {loc = "Arrizuri Quarry", vnum = "1966"},
+    ["a lumbering lasama"] = {loc = "Arrizuri Quarry", vnum = "1966"},
+    ["a needle-clawed moss lizard"] = {loc = "Thait, a colony on Prosabel II", vnum = "4952"},
+    ["a ferociously toothed moss lizard"] = {loc = "Thait, a colony on Prosabel II", vnum = "4952"},
+    ["a horned lapine"] = {loc = "The Coriolis Mountains", vnum = "5730"},
+    ["a three-eyed rosewing"] = {loc = "Thait, a colony on Prosabel II", vnum = "4952"},
+    ["a brittleback spider"] = {loc = "Arrizuri Quarry", vnum = "1966"},
+    ["an enormous drakkafly"] = {loc = "Golpur Desert", vnum = "2162"},
+    ["a venomous copper flitwing"] = {loc = "Zephyr, a colony on Selubir", vnum = "9631"},
+    ["a hungry simian batcatcher"] = {loc = "The Coriolis Mountains", vnum = "5780"},
+    ["a ravenous batcatcher"] = {loc = "The Coriolis Mountains", vnum = "5780"},
+    ["a vicious haerbist"] = {loc = "The Tosmar Hunting Preserve", vnum = "8757"},
+    ["a meaty terraworm"] = {loc = "Whittler's Hollow, a Scatterhome asteroid", vnum = "999"},
+    ["a fat terraworm"] = {loc = "Whittler's Hollow, a Scatterhome asteroid", vnum = "999"},
+    ["a grotesquely mutated bird"] = {loc = "Tabby Outpost", vnum = "2681"},
+    ["a red-backed water bug"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a yellow-feathered spiderax"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a spotted mouse"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a tentacle-finned hookmaw"] = {loc = "Exile's Beach", vnum = "6215"},
+    ["a slow-moving hunk of living coral"] = {loc = "Exile's Beach", vnum = "6215"},
+    ["a delicately bulbous blinkfish"] = {loc = "The Fogbound Marshes", vnum = "6276"},
+    ["a poison-spitting treefog"] = {loc = "The Fogbound Marshes", vnum = "6276"},
+    ["a swarm of ettorax"] = {loc = "Ostari, capital of Hororeon, Ry'nari homeworld", vnum = "3367"},
+    ["a blue-shelled ice crab"] = {loc = "The Thill Shipyards on Uycheon III", vnum = "2987"},
+    ["a salt-crusted quartz creeper"] = {loc = "The Ixsei Desert", vnum = "5014"},
+    ["an axropod"] = {loc = "Bodean, a Scatterhome asteroid", vnum = "5111"},
+    ["a small loam leech"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["a large loam leech"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["an oversized loam leech"] = {loc = "Goribar Farm", vnum = "1219"},
+    ["a medium-sized tentacle"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a submerged tentacle"] = {loc = "Southern Wilds of Usum Usutti", vnum = "5567"},
+    ["a mangy feracht"] = {loc = "Groshoul District", vnum = "3186"},
+    ["an algae-covered calciburr"] = {loc = "Exile's Beach", vnum = "6215"},
+    ["a depthless puddle of black liquid"] = {loc = "The Fogbound Marshes", vnum = "6276"},
+    ["a tentacle-limbed shapeshifter"] = {loc = "Tranquility Deepness", vnum = "8263"},
+    ["a crystal-clawed rock giant"] = {loc = "The Ixsei Desert", vnum = "5014"},
+    ["a cyborg leech orchid"] = {loc = "New Dikamazi", vnum = "7592"},
+    ["an iridescent snail"] = {loc = "Sabiak, capital city of Atria", vnum = "1563"},
+    ["a miniature mauve rodent"] = {loc = "The Dregs of Litharge", vnum = "5524"},
+    ["a ravenous red rodent"] = {loc = "The Dregs of Litharge", vnum = "5524"},
+    ["a vicious vermilion rodent"] = {loc = "The Dregs of Litharge", vnum = "5524"},
+    ["a hairless vermilion rodent"] = {loc = "The Dregs of Litharge", vnum = "5524"},
+    ["a green-spotted zemani"] = {loc = "Folly Fault Path Wilderness", vnum = "79"},
+    ["a speckle-scaled sophilian"] = {loc = "Folly Fault Path Wilderness", vnum = "79"},
+    ["a bioluminescent irktin"] = {loc = "The Fields of Oranc Wilderness", vnum = "452"},
+    ["a tough-skinned nesihorn"] = {loc = "The Fields of Oranc Wilderness", vnum = "452"},
+    ["a many-legged bosoth snake"] = {loc = "Ishbi Canyon Wilderness", vnum = "1128"},
+    ["a fleshy-headed indigo morkwing"] = {loc = "Ishbi Canyon Wilderness", vnum = "1128"},
+    ["a spiral-horned kegri"] = {loc = "The Anemoi Desert Wilderness", vnum = "1519"},
+    ["a fleshy-crested denghoof"] = {loc = "The Tosmar Hunting Preserve Wilderness", vnum = "3026"},
+    ["a bilious-feathered malentu"] = {loc = "The Greenwilds Wilderness", vnum = "4278"},
+    ["a diamond-backed scorptail"] = {loc = "The Anemoi Desert Wilderness", vnum = "1519"},
+    ["a spike-headed kusowo"] = {loc = "The Tosmar Hunting Preserve Wilderness", vnum = "3026"},
+    ["a stalk-eyed mayaki"] = {loc = "Arrizuri Quarry Wilderness", vnum = "4944"},
+    ["a spot-pelted kumta"] = {loc = "The Saksar Jungle on Hororeon Wilderness", vnum = "3150"},
+    ["a fleshy-spined echidna"] = {loc = "Arrizuri Quarry Wilderness", vnum = "4944"},
+    ["a ruby-pincered skitter"] = {loc = "The Saksar Jungle on Hororeon Wilderness", vnum = "3150"},
+    ["a feathered draken lizard"] = {loc = "The Locorin Swamp Wilderness", vnum = "6516"},
+    ["a spike-shouldered tau"] = {loc = "Northern Wilds of Usum Usutti Wilderness", vnum = "4479"},
+    ["an eight-eyed hagda"] = {loc = "The Locorin Swamp Wilderness", vnum = "6516"},
+    ["a skeleton-headed gemra"] = {loc = "Northern Wilds of Usum Usutti Wilderness", vnum = "4479"},
+    ["a dark-furred and floating fleel"] = {loc = "The Fogbound Marshes Wilderness", vnum = "6302"},
+    ["a silver-scaled spinehusk"] = {loc = "The Ixsei Desert Wilderness", vnum = "8781"},
+    ["a leathery-winged okrot"] = {loc = "Northern Wilds of Usum Usutti Wilderness", vnum = "4479"},
+    ["a long-necked tuu"] = {loc = "The Siva River on Benu Wen, Wilderness", vnum = "2749"},
+    ["a crystal-headed tolma"] = {loc = "The Ixsei Desert Wilderness", vnum = "8781"},
+    ["a stinger-footed hiver"] = {loc = "Prugita Breeding Colony Wilderness", vnum = "4677"},
+    ["a tangle-bodied tentacla"] =
+      {loc = "Jelle, a disaster area on Jerzah's Wilderness", vnum = "4686"},
+    ["a bone-crested sohemuu"] = {loc = "The Fogbound Marshes Wilderness", vnum = "6302"},
+    ["a spine-carapaced hari"] = {loc = "The Fogbound Marshes Wilderness", vnum = "6302"},
+    ["an electric-yellow niamp"] = {loc = "The Coriolis Mountains Wilderness", vnum = "5304"},
+    ["a carmine-shelled xuy beetle"] = {loc = "The Greenwilds Wilderness", vnum = "4278"},
+    ["a star-nosed burrower"] = {loc = "Thait, a colony on Prosabel II Wilderness", vnum = "8945"},
+    ["a broad-horned stripeback"] = {loc = "Golpur Desert Wilderness", vnum = "2147"},
+    ["a spine-winged hirune"] = {loc = "The Coriolis Mountains Wilderness", vnum = "5304"},
+    ["a twiggy naxel"] = {loc = "The Greenwilds Wilderness", vnum = "4278"},
+    ["a green-fronded prulan"] = {loc = "Northern Wilds of Usum Usutti Wilderness", vnum = "4479"},
+    ["a scoop-tusked gliven"] = {loc = "Prugita Breeding Colony Wilderness", vnum = "4677"},
+    ["a four-eared remes rat"] = {loc = "Prugita Breeding Colony Wilderness", vnum = "4677"},
+    ["a purple-spotted fadeti"] = {loc = "Thait, a colony on Prosabel II Wilderness", vnum = "8945"},
+    ["a swarm of treplings"] = {loc = "Zephyr, a colony on Selubir", vnum = "9631"},
+    ["a buzzing lake darter"] = {loc = "Zephyr, a colony on Selubir", vnum = "9631"},
+    ["a fawn-feathered grass snake"] = {loc = "Suiko, Pi Station, Flying Only", vnum = "4302"},
+    ["a long-legged trisurde"] = {loc = "Suiko Wilderness, Pi Station, Flying Only", vnum = "4302"},
+    ["a twin-headed henizu"] = {loc = "Suiko Wilderness, Pi Station, Flying Only", vnum = "4302"},
+    ["a metallic-furred fuber"] = {loc = "Suiko Wilderness, Pi Station, Flying Only", vnum = "4302"},
+    ["a terrifying mekmavaur"] =
+      {loc = "Deisk Underground, Lekknis Station, Flying Only", vnum = "4565"},
+    ["a goo-bodied blithu"] =
+      {loc = "Deisk Underground Wilderness, Lekknis Station, Flying Only", vnum = "4565"},
+    ["a corkscrewing giant gilworm"] =
+      {loc = "Deisk Underground Wilderness, Lekknis Station, Flying Only", vnum = "4565"},
+      ["an army of ants"] = {loc = "The Urbanity of Hox, [buy glass of ants, throw it east].", vnum = "4251"},
+    ["a mutated strangler fern"] = {loc = "New Dikamazi Wilderness, [touch teleporter to reach]", vnum = "8631"}
+  }
+if table.contains(xenoMobsList, matches[2]) then
+  xenovnum = xenoMobsList[matches[2]].vnum
+  cecho("\n&lt;royal_blue&gt;Bounty Location: &lt;white&gt;   " .. xenoMobsList[matches[2]].loc)
+  cechoLink(
+    "&lt;white&gt; (v&lt;u&gt;" .. xenoMobsList[matches[2]].vnum .. "&lt;/u&gt;)",
+    function()
+      send("path track " .. xenovnum)
+    end,
+    "Path track to general location.",
+    true
+  )
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Current Bounty:     (.+)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>junk</name>
 				<script>send("sell junk")</script>
 				<triggerType>0</triggerType>
