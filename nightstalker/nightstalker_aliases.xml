@@ -26,7 +26,7 @@
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>launch ship</name>
-				<script>OnShip = true
+				<script>sym.space.boarded = true
 sendAll("ship launch", 'say activate all')
 expandAlias("shipart")
 enableTimer("ships")</script>
@@ -36,7 +36,7 @@ enableTimer("ships")</script>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>dock ship</name>
-				<script>OnShip = false
+				<script>sym.space.boarded = false
 send("ship dock")
 disableTimer("ships")
 sym.ui.adj.right:hide()

@@ -3,7 +3,7 @@
 <MudletPackage version="1.001">
 	<TriggerPackage />
 	<TimerPackage>
-		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+		<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 			<name>ships</name>
 			<script></script>
 			<command></command>
@@ -11,13 +11,13 @@
 			<time>00:00:00.000</time>
 			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>beacon</name>
-				<script>if OnShip then
+				<script>if sym.space.boarded then
   sendAll("ship details damage", "ship beacon")
   sym.shiprepair()
 end</script>
 				<command></command>
 				<packageName></packageName>
-				<time>00:00:06.000</time>
+				<time>00:00:04.000</time>
 			</Timer>
 		</TimerGroup>
 	</TimerPackage>

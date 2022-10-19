@@ -9,7 +9,8 @@
 		<Script isActive="yes" isFolder="no">
 			<name>namespace</name>
 			<packageName></packageName>
-			<script>sym = sym or {}</script>
+			<script>sym = sym or {}
+</script>
 			<eventHandlerList />
 		</Script>
 		<ScriptGroup isActive="yes" isFolder="yes">
@@ -25,79 +26,96 @@ sym.loadtable('hunter.exceptions')</script>
 			<Script isActive="yes" isFolder="no">
 				<name>core</name>
 				<packageName></packageName>
-				<script>sym.hunter.send = function(cmd)
-  if debug.traceback():find('Trigger', 1, true) then
-    decho(' &lt;51,0,255&gt;(&lt;242,234,233&gt;'..cmd..'&lt;51,0,255&gt;)')
-  end
-  send(cmd, false)
-end
-
-sym.hunter.triggy = function(class)
-  class = class:lower()
-
-  local clist = {'b.e.a.s.t.', 'scoundrel', 'nanoseer', 'engineer', 'fury'}
-
-  for _, c in ipairs(clist) do
-    (c == class and enableTrigger or disableTrigger)('oh-'..c)
-  end
-end
-
-sym.hunter.setignore = function(name)
-  sym.hunter.ignore[name] = not sym.hunter.ignore[name]
-  -- and because my ocd can't handle it
-  if not sym.hunter.ignore[name] then sym.hunter.ignore[name] = nil end
-  sym.savetable('hunter.ignore')
-  sym.ui.update_room()
-end
-
-sym.hunter.setexception = function(name)
-  sym.hunter.exceptions[name] = not sym.hunter.exceptions[name]
-  -- it's actually necessary here, though
-  if not sym.hunter.exceptions[name] then sym.hunter.exceptions[name] = nil end
-  sym.savetable('hunter.exceptions')
-  sym.ui.update_room()
-end
-
-sym.hunter.checktarget = function()
-  local area = gmcp.Room.Info.area
-  local prios = sym.hunter.priorities[area]
-  local ignore = sym.hunter.ignore
-  local exceptions = table.keys(sym.hunter.exceptions)
-  local mobs = {}
-
-  table.foreach(sym.ui.roommobs, function(i, mob)
-    if not mob.attrib:find('x', 1, true) and (not mob.name:find('[A-Z]') or table.contains(exceptions, mob.name)) and not ignore[mob.name] then
-      mobs[mob.name] = mob
+				<script>sym.hunter.send =
+  function(cmd)
+    if debug.traceback():find('Trigger', 1, true) then
+      decho(' &lt;51,0,255&gt;(&lt;242,234,233&gt;' .. cmd .. '&lt;51,0,255&gt;)')
     end
-  end)
-
-  if prios then
-    for _, mob in ipairs(prios) do
-      if mobs[mob] then return mobs[mob] end
+    send(cmd, false)
+  end
+sym.hunter.triggy =
+  function(class)
+    class = class:lower()
+    local clist = {'b.e.a.s.t.', 'scoundrel', 'nanoseer', 'engineer', 'fury'}
+    for _, c in ipairs(clist) do
+      (c == class and enableTrigger or disableTrigger)('oh-' .. c)
     end
   end
-
-  if next(mobs) then
-    return select(2, next(mobs))
+sym.hunter.setignore =
+  function(name)
+    sym.hunter.ignore[name] = not sym.hunter.ignore[name]
+    -- and because my ocd can't handle it
+    if not sym.hunter.ignore[name] then
+      sym.hunter.ignore[name] = nil
+    end
+    sym.savetable('hunter.ignore')
+    sym.ui.update_room()
   end
-
-  return false
-end
+sym.hunter.setexception =
+  function(name)
+    sym.hunter.exceptions[name] = not sym.hunter.exceptions[name]
+    -- it's actually necessary here, though
+    if not sym.hunter.exceptions[name] then
+      sym.hunter.exceptions[name] = nil
+    end
+    sym.savetable('hunter.exceptions')
+    sym.ui.update_room()
+  end
+sym.hunter.checktarget =
+  function()
+    local area = gmcp.Room.Info.area
+    local prios = sym.hunter.priorities[area]
+    local ignore = sym.hunter.ignore
+    local exceptions = table.keys(sym.hunter.exceptions)
+    local mobs = {}
+    table.foreach(
+      sym.ui.roommobs,
+      function(i, mob)
+        if
+          not mob.attrib:find('x', 1, true) and
+          (not mob.name:find('[A-Z]') or table.contains(exceptions, mob.name)) and
+          not ignore[mob.name]
+        then
+          mobs[mob.name] = mob
+        end
+      end
+    )
+    if prios then
+      for _, mob in ipairs(prios) do
+        if mobs[mob] then
+          return mobs[mob]
+        end
+      end
+    end
+    if next(mobs) then
+      return select(2, next(mobs))
+    end
+    return false
+  end
 
 function checkSystems()
-	local vitals = gmcp.Char.Vitals
-	local sym_ww = (vitals.ww == "1" and true or false)
-  local efficacy = {"wetwiring_efficacy", "muscular_efficacy", "mind_efficacy", "internal_efficacy", "sensory_efficacy"}
-	local systems = {"wetwiring", "muscular", "mind", "internal", "sensory"}
-	if not sym_ww then return end
-	for _, system in pairs(systems) do
-		local value = math.floor(tonumber(vitals[system]))
+  local vitals = gmcp.Char.Vitals
+  local sym_ww = (vitals.ww == "1" and true or false)
+  local efficacy =
+    {
+      "wetwiring_efficacy",
+      "muscular_efficacy",
+      "mind_efficacy",
+      "internal_efficacy",
+      "sensory_efficacy",
+    }
+  local systems = {"wetwiring", "muscular", "mind", "internal", "sensory"}
+  if not sym_ww then
+    return
+  end
+  for _, system in pairs(systems) do
+    local value = math.floor(tonumber(vitals[system]))
     local evalue = tonumber(vitals[efficacy[_]])
-		if value &lt;= 92.5 and evalue &gt;= 85 then
-			send("ww mend "..system,false)
-			break
-		end
-	end
+    if value &lt;= 92.5 and evalue &gt;= 85 then
+      send("ww mend " .. system, false)
+      break
+    end
+  end
 end</script>
 				<eventHandlerList />
 			</Script>
@@ -159,6 +177,10 @@ end</script>
 					<packageName></packageName>
 					<script>sym.hunter.class['B.E.A.S.T.'] = function()
   local target = sym.target
+  if sym.hunter.flags.channeling then
+    sym.hunter.send('plasma flash '..target)
+    sym.hunter.flags.channeling = false
+  else
   if not sym.hunter.flags.contingency then
     sym.hunter.send('contingency')
   end
@@ -168,6 +190,7 @@ end</script>
     sym.hunter.send('suit backhand '..target)
   else
     sym.hunter.send('mwp wristblade '..target)
+    end
   end
 end</script>
 					<eventHandlerList />
@@ -178,6 +201,13 @@ end</script>
 					<script>sym.hunter.class['Scoundrel'] = function()
   local target = sym.target
   local bullets = tonumber(gmcp.Char.Vitals.bl)
+      if sym.hunter.flags.channeling and bullets &gt; 0 then
+      sym.hunter.send('gun pointblank '..target)
+      sym.hunter.flags.channeling = false
+      elseif sym.hunter.flags.channeling and bullets == 0 then
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.flags.channeling = false
+    else
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
   elseif bullets == 0 then
@@ -196,6 +226,7 @@ end</script>
     sym.hunter.send('gun rapidfire '..target)
   else
     sym.hunter.send('gun crackshot '..target)
+    end
   end
 end</script>
 					<eventHandlerList />
@@ -203,17 +234,23 @@ end</script>
 				<Script isActive="yes" isFolder="no">
 					<name>nanoseer</name>
 					<packageName></packageName>
-					<script>sym.hunter.class['Nanoseer'] = function(target)
-  if not sym.hunter.flags.embraces and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
-    sym.hunter.send('void embrace')
-  elseif not sym.hunter.flags.multistrike and sym.haveskill('Multistrike', 'Nanotech') then
-    sym.hunter.send('nano multistrike '..target)
-  elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') then
-    sym.hunter.send('void freeze '..target)
-  else
-    sym.hunter.send('nano swarm '..target)
-  end
-end</script>
+					<script>sym.hunter.class['Nanoseer'] =
+  function(target)
+    if sym.hunter.flags.channeling then
+      sym.hunter.send('nano eyestrike')
+      sym.hunter.flags.channeling = false
+    else
+      if not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+        sym.hunter.send('void embrace')
+      elseif not sym.hunter.flags.multistrike and sym.haveskill('Multistrike', 'Nanotech') then
+        sym.hunter.send('nano multistrike ' .. target)
+      elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') then
+        sym.hunter.send('void freeze ' .. target)
+      else
+        sym.hunter.send('nano swarm ' .. target)
+      end
+    end
+  end</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -222,6 +259,10 @@ end</script>
 					<script>sym.hunter.class['Engineer'] = function()
   local target = sym.target
   local sym_name = gmcp.Char.Name.name
+      if sym.hunter.flags.channeling then
+      sym.hunter.send('gadget shock '..target)
+      sym.hunter.flags.channeling = false
+    else
   if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjectors', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('stimjector ' .. sym_name)
   elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
@@ -232,6 +273,7 @@ end</script>
     sym.hunter.send('gadget shock '..target)
   else
     sym.hunter.send('bot claw '..target)
+    end
   end
 end</script>
 					<eventHandlerList />
@@ -243,13 +285,17 @@ end</script>
   local target = sym.target
   local stance = gmcp.Char.Vitals.st:lower()
   local rage = tonumber(gmcp.Char.Vitals.rg)
-  
+    if sym.hunter.flags.channeling then
+      sym.hunter.send('nano eyestrike')
+      sym.hunter.flags.channeling = false
+    else
 if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
   sym.hunter.send("suffuse")
  elseif sym.haveskill('Burn', 'Fulmination') then
   sym.hunter.send("kith burn " .. target)
  else
    sym.hunter.send("kill " .. target)
+   end
 end
         
   -- for later when you have all yours skills, one way to do a bashing route for fury
@@ -334,6 +380,30 @@ end</script>
   'a flat balkrab',
   'a giant black tarrak beetle'
 }</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>exile's beach</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['Exile\'s Beach'] = {
+  'a tentacle-finned hookmaw',
+  'an algae-covered calciburr',
+  'a wounded DDC volunteer',
+  'a slow-moving hunk of living coral'
+}</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>anemoi desert</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['The Anemoi Desert, on Delphi'] = {
+    'a rabid cania',
+    'a ravenous tigrid',
+    'a carnivorous black eagle',
+    'a sly cania',
+    'a caliginous eagle',
+    'a brown-scaled tigrid'
+  }</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -508,7 +578,7 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
     disableTrigger('hunting balance')
     if sym.hunter.runner.enabled then
       if sym.hunter.runner.empty_timer then killTimer(sym.hunter.runner.empty_timer) end
-      sym.hunter.runner.empty_timer = tempTimer(3 + getNetworkLatency(), [[raiseEvent('empty_room')]])
+      sym.hunter.runner.empty_timer = tempTimer(1 + getNetworkLatency(), [[raiseEvent('empty_room')]])
     end
   end
 end
@@ -1156,7 +1226,7 @@ function sym.ui.create_boxes()
 
   local fontsize = sym.ui.mapper.config.fontsize - 2
   beaconMini = beaconMini or Geyser.MiniConsole:new({name = "beacon",  x=0, y=0,  autoWrap = true,  color = "black", fontSize = fontsize,  width="100%", height="100%",}, sym.ui.adj.right)
-  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black", fontSize = fontsize -1,  width="100%", height="100%",}, sym.ui.adj.left)
+  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black", fontSize = fontsize-2,  width="100%", height="100%",}, sym.ui.adj.left)
 
 end</script>
 					<eventHandlerList />
@@ -1736,7 +1806,7 @@ sym.ui.mapper.use = true</script>
 
 sym.ui.mapper.config.maps = { 'Mudlet', 'Ground', 'Space', 'Hacking' }
 
-sym.ui.mapper.config.fontsize = 11
+sym.ui.mapper.config.fontsize = 10
 
 sym.ui.mapper.config.preservebackground = true
 
@@ -1835,8 +1905,10 @@ function sym.ui.mapper:create()
       sym.ui.mapper.windows[tab] = Geyser.MiniConsole:new({
         name = string.format('mapwin%s', tab),
         x = '5%', y = '9%',
+        --x = 0, y = 0,
         fontSize = sym.ui.mapper.config.fontsize,
         width = '90%', height = '89%'
+        --width = '100', height = '100%'
       }, sym.ui.mapper.container)
       if not (tab == 'Space') then
         sym.ui.mapper.windows[tab]:setColor(winr, wing, winb)
@@ -1844,6 +1916,7 @@ function sym.ui.mapper:create()
         sym.ui.mapper.windows[tab]:setColor(0, 0, 0)
 -- use this if you want to change the font of the SpaceMap         
         sym.ui.mapper.windows[tab]:setFont("square")
+--        sym.ui.mapper.windows[tab]:setFontSize("8")
       end
     end
     sym.ui.mapper.windows[tab]:hide()
@@ -2361,7 +2434,7 @@ end</script>
         sym.ui.adj.bottomright:show()
         sym.ui.adj.topleft:show()
         sym.ui.adj.bottomleft:show()
-        OnShip = false
+        sym.space.boarded = false
         capacitor_bf = "No"
         engine_bf = "No"
         sensor_bf = "No"
