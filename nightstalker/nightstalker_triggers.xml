@@ -3064,9 +3064,9 @@ currentcover = nil</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>enemy regen</name>
-				<script>if matches[2] == sym.target then
+				<script>--if matches[2] == sym.target then
 --  windupcheck = 1
-end</script>
+--end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>

@@ -25,25 +25,63 @@
 				<regex>^myloc$</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
-				<name>launch ship</name>
-				<script>sym.space.boarded = true
-sendAll("ship launch", 'say activate all')
-expandAlias("shipart")
-enableTimer("ships")</script>
+				<name>xenoScan</name>
+				<script>send("xenozoology scan "..matches[2])</script>
 				<command></command>
 				<packageName></packageName>
-				<regex>^(say|ship) launch$</regex>
+				<regex>^xs (.+)</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
-				<name>dock ship</name>
-				<script>sym.space.boarded = false
-send("ship dock")
-disableTimer("ships")
-sym.ui.adj.right:hide()
-sym.ui.adj.left:hide()</script>
+				<name>mcolors</name>
+				<script>wrap = 0
+for i,v in pairs(color_table) do
+   if string.find(i,'%u') == nil then
+      fg(i)
+      echo (i .. string.rep(" ",22-string.len(i)))
+      resetFormat()
+      if wrap == 5 then 
+         wrap = 0
+         echo("\n")
+      else 
+         wrap = wrap + 1 
+      end
+   end
+end</script>
 				<command></command>
 				<packageName></packageName>
-				<regex>^ship dock$</regex>
+				<regex>mcolors</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>^wwr</name>
+				<script>sym.hunter.send('CLEARQUEUE')
+send ('wetwiring regenerate')
+</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^wwr</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>flight</name>
+				<script>local class = gmcp.Char.Status.class
+if class == 'Nanoseer' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('void levitate'.. matches[2])
+elseif class == 'Engineer' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('operate hoverboard'.. matches[2])
+elseif class == 'B.E.A.S.T.' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('fire jumpjets'.. matches[2])
+elseif class == 'Scoundrel' then
+    sym.hunter.send('CLEARQUEUE')
+    sym.hunter.send('fly'.. matches[2])
+elseif class == 'Fury' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('kith flight'.. matches[2])
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^fly(.+)$</regex>
 			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">
@@ -76,6 +114,1428 @@ sym.echo('&lt;0,128,128&gt;Party Size: &lt;128,128,0&gt;' .. sym.hunter.runner.c
 				<packageName></packageName>
 				<regex>^hps(?: (\d+))?$</regex>
 			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>calling</name>
+				<script>local cancall = matches[2]
+if cancall == 'on' then
+  sym.hunter.runner.config.calling = true
+  sym.echo('Hunt calling: enabled')
+else
+  sym.hunter.runner.config.calling = false
+  sym.echo('Hunt calling: disabled')
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^hcall (on|off)$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>targetting</name>
+				<script>send('st '..matches[2])
+if sym.hunter.runner.config.calling then
+send('crt Target: '..matches[2], false)
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^t(?: (\w+))?$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>interrupt2</name>
+				<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+local class = gmcp.Char.Status.class
+if class == 'Nanoseer' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('nano eyestrike ' .. target)
+elseif class == 'Engineer' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('gadget shock ' .. target)
+elseif class == 'B.E.A.S.T.' then
+  sym.hunter.send('CLEARQUEUE')
+  if tonumber(gmcp.Char.Vitals.pl) &gt; 50 then
+    sym.hunter.send('plasma flash ' .. target)
+    send('assess ' .. target)
+  else
+    sym.hunter.send('mwp netlaunch ' .. target)
+    send('assess ' .. target)
+  end
+elseif class == 'Scoundrel' then
+  if bullets == 0 then
+    sym.hunter.send('CLEARQUEUE')
+    sym.hunter.send('guile pocketsand ' .. target)
+    send('assess ' .. target)
+  else
+    sym.hunter.send('CLEARQUEUE')
+    sym.hunter.send('gun pointblank ' .. target)
+    send('assess ' .. target)
+  end
+elseif class == 'Fury' then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('kith fever ' .. target)
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^int$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>wilderness list</name>
+				<script>-- code curtesy of Morgan 
+cecho(
+  "&lt;dark_orchid&gt;-- &lt;cornflower_blue&gt;Wilderness List &lt;dark_orchid&gt;------------------------------------------------------"
+)
+cecho(
+  "\nThis is a list of all wilderness locations, along with if they are in factional or neutral space. Please note, Deisk and Suiko must be flown to."
+)
+cecho("\n")
+cecho("\n&lt;medium_orchid&gt;Song")
+cecho("\n")
+cecho("\nTabby Outpost                    - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;260&lt;/u&gt;)",
+  function()
+    send("path track 260")
+  end,
+  "Path track to v260.",
+  true
+)
+cecho("\nThe Greenwilds                   - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4278&lt;/u&gt;)",
+  function()
+    send("path track 4278")
+  end,
+  "Path track to v4278.",
+  true
+)
+cecho("\nArrizuri Quarry                  - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4944&lt;/u&gt;)",
+  function()
+    send("path track 4944")
+  end,
+  "Path track to v4944.",
+  true
+)
+cecho("\nThe Anemoi Desert, on Delphi     - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;1519&lt;/u&gt;)",
+  function()
+    send("path track 1519")
+  end,
+  "Path track to v1519.",
+  true
+)
+cecho("\n")
+cecho("\n&lt;saddle_brown&gt;Scatterhome")
+cecho("\n")
+cecho("\nIshbi, a Scatterhome asteroid    - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;1128&lt;/u&gt;)",
+  function()
+    send("path track 1128")
+  end,
+  "Path track to v1128.",
+  true
+)
+cecho("\nThe Locorin Swamp                - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;6516&lt;/u&gt;)",
+  function()
+    send("path track 6516")
+  end,
+  "Path track to v6516.",
+  true
+)
+cecho("\nGolpur Desert                    - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;2147&lt;/u&gt;)",
+  function()
+    send("path track 2147")
+  end,
+  "Path track to v2147.",
+  true
+)
+cecho("\n")
+cecho("\n&lt;medium_blue&gt;Celestine")
+cecho("\n")
+cecho("\nThe Siva River on Benu Wen       - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;2749&lt;/u&gt;)",
+  function()
+    send("path track 2749")
+  end,
+  "Path track to v2749.",
+  true
+)
+cecho("\nThe Saksar Jungle on Hororeon    - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;3150&lt;/u&gt;)",
+  function()
+    send("path track 3150")
+  end,
+  "Path track to v3150.",
+  true
+)
+cecho("\nJelle, a disaster area on Jerzah - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4686&lt;/u&gt;)",
+  function()
+    send("path track 4686")
+  end,
+  "Path track to v4686.",
+  true
+)
+cecho("\nThe Fields of Oranc              - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;452&lt;/u&gt;)",
+  function()
+    send("path track 452")
+  end,
+  "Path track to v452.",
+  true
+)
+cecho("\n")
+cecho("\n&lt;green&gt;Neutral")
+cecho("\n")
+cecho("\nIxsei Desert                     - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;8781&lt;/u&gt;)",
+  function()
+    send("path track 8781")
+  end,
+  "Path track to v8781.",
+  true
+)
+cecho("\nThe Coriolis Mountains           - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;5304&lt;/u&gt;)",
+  function()
+    send("path track 5304")
+  end,
+  "Path track to v5304.",
+  true
+)
+cecho("\nThe Tosmar Hunting Preserve      - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;3026&lt;/u&gt;)",
+  function()
+    send("path track 3026")
+  end,
+  "Path track to v3026.",
+  true
+)
+cecho("\nPrugita Breeding Colony          - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4677&lt;/u&gt;)",
+  function()
+    send("path track 4677")
+  end,
+  "Path track to v4677.",
+  true
+)
+cecho("\nThe Fogbound Marshes             - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;6302&lt;/u&gt;)",
+  function()
+    send("path track 6302")
+  end,
+  "Path track to v6302.",
+  true
+)
+cecho("\nFolly Fault Path                 - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;79&lt;/u&gt;)",
+  function()
+    send("path track 79")
+  end,
+  "Path track to v79.",
+  true
+)
+cecho("\nNorthern Wilds of Usum Usutti    - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4479&lt;/u&gt;)",
+  function()
+    send("path track 4479")
+  end,
+  "Path track to v4479.",
+  true
+)
+cecho("\nThait, a colony on Prosabel II   - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;8945&lt;/u&gt;)",
+  function()
+    send("path track 8945")
+  end,
+  "Path track to v8945.",
+  true
+)
+cecho("\nSuiko, Pi Station, Fly Only      - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4302&lt;/u&gt;)",
+  function()
+    send("path track 4302")
+  end,
+  "Path track to v4302.",
+  true
+)
+cecho("\nDeisk, Lekknis Station, Fly Only - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;4302&lt;/u&gt;)",
+  function()
+    send("path track 4302")
+  end,
+  "Path track to v4565.",
+  true
+)
+cecho("\n&lt;dark_orchid&gt;-------------------------------------------------------------------------")</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^wildernesslist$</regex>
+			</Alias>
+		</AliasGroup>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>ships</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<Alias isActive="yes" isFolder="no">
+				<name>launch ship</name>
+				<script>sym.space.boarded = true
+sendAll("ship launch", 'say activate all')
+expandAlias("shipart")
+enableTimer("ships")</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^(say|ship) launch$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>dock ship</name>
+				<script>sym.space.boarded = false
+send("ship dock")
+disableTimer("ships")
+sym.ui.adj.right:hide()
+sym.ui.adj.left:hide()</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^ship (dock|eva)$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>cargoRecovery</name>
+				<script>sendAll('cargo recover n', 'cargo recover ne', 'cargo recover nw', 'cargo recover w', 'cargo recover sw', 'cargo recover s', 'cargo recover se', 'cargo recover e')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^car$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>ship artifacts</name>
+				<script>send("artifact link ship_anonymity here")
+send("artifact link ship_beacon_3 here")
+send("artifact link ship_improved_scoops here")
+send("artifact link ship_message_beacon here")
+send("artifact link ship_homewarp here")
+send("artifact link ship_free_voidgate here")
+send("artifact link ship_cargo_recover here")
+send("artifact link ship_hyperscan_1 here")
+send("artifact link ship_anonymity here")
+send("artifact link stationlink here")
+send("artifact link ship_illusion here")
+send("artifact link ship_weapon_falloff here")
+send("artifact link ship_weapon_range here")
+send("artifact link quantum_cargo_nets here")
+send('artifact link sector_scanner here')
+send("artifact link ship_voidgate_hopper here")
+
+
+--do this smarter someday</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^shipart</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>autofire all</name>
+				<script>sendAll(
+  'ship target ' .. target,
+  'ship weapon autofire mcannons ' .. target,
+  'ship weapon autofire cannons ' .. target,
+  'ship weapon autofire lasers ' .. target,
+  'ship weapon autofire missiles ' .. target,
+  'ship weapon autofire slicer ' .. target,
+  'ship weapon autofire drainer ' .. target,
+  'ship weapon autofire interdict ' .. target
+)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^shipaf$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>shipfire all</name>
+				<script>local target = gmcp.Char.Status.target:match('%w+')
+sendAll(
+  'ship target ' .. target,
+  'ship weapon fire lasers ' .. target,
+  'ship weapon fire mcannons ' .. target,
+  'ship weapon fire cannons ' .. target,
+  'ship weapon fire missiles ' .. target,
+  'ship weapon fire slicer ' .. target,
+  'ship weapon fire drainer ' .. target,
+  'ship weapon fire tractor ' .. target,
+  'ship weapon fire interdict ' .. target
+)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^shipf$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>manual web</name>
+				<script>send('ship weapon fire webs '..sym.target)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^web$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>rl kinetic</name>
+				<script>sendAll(
+  'ship weapon ammo mcannons kinetic',
+  'ship weapon ammo cannons kinetic',
+  'ship weapon ammo missiles kinetic',
+  'say reloading Kinetic'
+)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^rlk$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>rl thermal</name>
+				<script>  sendAll('ship weapon ammo mcannons thermal',
+          'ship weapon ammo cannons thermal',
+          'ship weapon ammo missiles thermal',
+          'say reloading Thermal')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^rlt$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>rl em</name>
+				<script>  sendAll('ship weapon ammo mcannons em',
+          'ship weapon ammo cannons em',
+          'ship weapon ammo missiles em',
+          'say reloading EM')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^rle$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>rl gravitic</name>
+				<script>  sendAll('ship weapon ammo mcannons gravitic',
+          'ship weapon ammo cannons gravitic',
+          'ship weapon ammo missiles gravitic',
+          'say reloading Gravtic')</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^rlg$</regex>
+			</Alias>
+		</AliasGroup>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>pvp</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>beast pvp</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>beast muscular damage</name>
+					<script>local target = sym.target
+  if sym.hunter.flags.channeling then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('suit support')
+  elseif not sym.hunter.flags.dualshot then
+    sym.hunter.send('mwp dualshot '..target)
+    send('assess '..target)
+  elseif sym.hunter.flags.dualshot and not sym.hunter.flags.combust then
+    sym.hunter.send('plasma combust '..target)
+    send('assess '..target)
+  else
+    send('railshot')
+    send('assess ' ..target)
+    end
+  else
+  sym.hunter.send('plasma sear '..target)
+  sym.hunter.flags.channeling = false
+end
+</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^55</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>beast muscular delay</name>
+					<script>local target = sym.target
+if sym.hunter.flags.channeling then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('suit support')
+  elseif not sym.hunter.flags.dualshot then
+    sym.hunter.send('mwp dualshot ' .. target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.routine and not sym.hunter.flags.airshot then
+    sym.hunter.send('mwp airshot ' .. target)
+    sym.hunter.send('suit routine ' .. target .. ' armvice legclamp boot')
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.airshot then
+    sym.hunter.send('mwp airshot ' .. target)
+    sym.hunter.send('mwp hobble ' .. target)
+    send('assess ' .. target)
+  else
+    sym.hunter.send('mwp hobble ' .. target)
+    send('assess ' .. target)
+  end
+else
+  sym.hunter.send('plasma sear ' .. target)
+  sym.hunter.flags.channeling = false
+end </script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^66</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>beast burn rotation</name>
+					<script>local target = sym.target
+if sym.hunter.flags.channeling then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('suit support')
+  elseif not sym.hunter.flags.dualshot then
+    sym.hunter.send('mwp dualshot '..target)
+    send('assess '..target)
+  elseif sym.hunter.flags.dualshot and tonumber(gmcp.Char.Vitals.pl) &gt; 930 then
+    sym.hunter.send('plasma douse '..target)
+    send('assess '..target)
+  elseif sym.hunter.flags.dualshot and tonumber(gmcp.Char.Vitals.pl) &lt; 900 then
+    sym.hunter.send('plasma burn '..target)
+    send('assess ' ..target)
+    else
+      send('legclamp')
+      send('assess ' ..target)
+    end
+  else
+  sym.hunter.send('plasma sear '..target)
+  sym.hunter.flags.channeling = false
+end
+</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^77</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>musc sunder rush</name>
+					<script>local target = sym.target
+if sym.hunter.flags.channeling then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('suit support')
+  elseif not sym.hunter.flags.dualshot then
+    sym.hunter.send('mwp dualshot ' .. target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.routine and sym.hunter.flags.overclock then
+    sym.hunter.send('suit routine ' .. target .. ' pound pound pound')
+    sym.hunter.send('suit overclock')
+    sym.hunter.send('mwp hooknet ' .. target)
+    sym.hunter.send('suit pound ' .. target)    
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.routine then
+    sym.hunter.send('suit routine ' .. target .. ' armvice legclamp legclamp')
+  elseif not sym.hunter.flags.airshot then
+    sym.hunter.send('mwp airshot ' .. target)
+    sym.hunter.send('suit armvice ' .. target)
+    send('assess ' .. target)
+  else
+    sym.hunter.send('suit legclamp ' .. target)
+    send('assess ' .. target)
+  end
+else
+  sym.hunter.send('plasma sear ' .. target)
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^88$</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>scoundrel pvp</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>mind</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+if
+  not sym.hunter.flags.stimmed and
+  sym.haveskill('Stim', 'Guile') and
+  ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and
+  not sym.hunter.flags.channeling
+then
+  sym.hunter.send('guile stim')
+  elseif canmend then
+    checkSystems()
+elseif bullets == 0 then
+  if sym.haveskill('Fling', 'Improvisation') then
+    if not sym.hunter.flags.meltered then
+      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+    else
+      sym.hunter.send('ied fling wiring distorter at ' .. target)
+    end
+    sym.hunter.send('assess ' .. target)
+    if caneject == true then
+      send("gun eject")
+    end
+  else
+    sym.hunter.send('gun spin')
+  end
+elseif bullets == 0 and sym.hunter.flags.channeling then
+  sym.hunter.send('guile pocketsand ' .. target)
+  sym.hunter.flags.channeling = false
+elseif
+  not sym.hunter.flags.rapidfire and
+  sym.haveskill('Rapidfire', 'Gunslinging') and
+  bullets &gt;= 2
+then
+  send("switch impairing random")
+  sym.hunter.send('gun rapidfire ' .. target)
+  sym.hunter.send('assess ' .. target)
+elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+  send("switch impairing random")
+  sym.hunter.send('gun ambush ' .. target)
+  sym.hunter.send('assess ' .. target)
+elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 then
+  send("switch impairing random")
+  sym.hunter.send('gun crackshot ' .. target)
+  sym.hunter.send('assess ' .. target)
+else
+  sym.hunter.send('gun pointblank ' .. target)
+  sym.hunter.send('assess ' .. target)
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^22</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>internal</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+ if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and windupcheck == 0 then
+    sym.hunter.send('guile stim')
+  elseif canmend then
+    checkSystems()
+  elseif bullets == 0 and windupcheck == 0 then
+    send("switch weakening random")
+    sym.hunter.send('ied fling shrapnel piercer at '..target)
+     if caneject then
+      send("gun eject")
+     end
+  
+  elseif bullets == 0 and windupcheck == 1 then
+      send("switch weakening random")
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.send('assess ' .. target)
+      windupcheck = 0
+  
+  elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+    send("switch weakening random")
+    sym.hunter.send('gun ambush '..target)
+    sym.hunter.send('assess ' .. target)
+  
+  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
+    sym.hunter.send('gun rapidfire '..target)
+    sym.hunter.send('assess ' .. target)
+    
+  elseif caneject and bullets &gt; 3 then
+    send('gun eject')
+  
+  elseif bullets &gt;= 1 then
+    sym.hunter.send('gun crackshot '..target)
+    sym.hunter.send('assess ' .. target)
+  
+  else
+    sym.hunter.send('gun pointblank '..target)
+    windupcheck = 0
+ end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^33</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>sensory</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and windupcheck == 0 then
+  sym.hunter.send('guile stim')
+elseif canmend then
+    checkSystems()
+
+elseif bullets == 0 and windupcheck == 0 then
+  if sym.haveskill('Fling', 'Improvisation') then
+    if not sym.hunter.flags.meltered then
+      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+      send('assess ' .. target)
+      if caneject == true then
+        send("gun eject")
+      end
+  else
+    --      sym.hunter.send('gun spin')
+    sym.hunter.send('ied fling shrapnel blinder at ' .. target)
+    end
+  end
+elseif bullets == 0 and windupcheck == 1 then
+  sym.hunter.send('guile pocketsand ' .. target)
+  windupcheck = 0
+elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+  send("switch disrupting random")
+  sym.hunter.send('gun ambush ' .. target)
+  send('assess ' .. target)
+elseif
+  not sym.hunter.flags.rapidfire and
+  sym.haveskill('Rapidfire', 'Gunslinging') and
+  bullets &gt;= 2 and
+  windupcheck == 0
+then
+  send("switch disrupting random")
+  sym.hunter.send('gun rapidfire ' .. target)
+  send('assess ' .. target)
+elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 and windupcheck == 0 then
+  sym.hunter.send('guile haymaker ' .. target .. ' head')
+  sym.hunter.send('assess ' .. target)
+  if caneject == true then
+    send("gun eject")
+  end
+else
+  sym.hunter.send('gun pointblank ' .. target)
+  windupcheck = 0
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^44</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>damage2</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+if windupcheck == 0 then
+  if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('guile stim')
+  elseif canmend then
+    checkSystems()
+  elseif bullets == 0 then
+    if sym.haveskill('Fling', 'Improvisation') then
+      send("switch amplifying choking")
+      sym.hunter.send('ied fling shrapnel ripper at ' .. target)
+      if caneject == true and bullets &gt; 3 then
+        send("gun eject")
+      end
+     end
+  elseif
+    not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2
+  then
+    sym.hunter.send('gun rapidfire ' .. target)
+  else
+    sym.hunter.send('gun crackshot ' .. target)
+    if caneject == true and bullets &gt; 3 then
+      send("gun eject")
+    end
+  end
+else
+  if bullets == 0 then
+    sym.hunter.send('guile pocketsand ' .. target)
+    windupcheck = 0
+    if caneject == true and bullets &gt; 3 then
+      send("gun eject")
+    end
+  else
+    sym.hunter.send('gun pointblank ' .. target)
+    windupcheck = 0
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^ff$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>piercer</name>
+					<script>send("trigger shrapnel piercer")
+send("multibomb shrapnel piercer")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^ppp</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>trip bind</name>
+					<script>local bullets = tonumber(gmcp.Char.Vitals.bl)
+
+if bullets &gt; 0 and not sym.hunter.flags.trip then
+  send("guile trip")
+else
+  sym.hunter.send('fling sleeper')
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^gg</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>haymaker</name>
+					<script>send('guile haymaker')
+send('assess ' .. target)</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^aa$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>huntextend</name>
+					<script>local target = sym.target
+    local bullets = tonumber(gmcp.Char.Vitals.bl)
+    if windupcheck == 0 then
+      if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 71 then
+        sym.hunter.send('guile stim')
+      elseif canmend then
+        checkSystems()
+      elseif bullets == 0 then
+        if sym.haveskill('Fling', 'Improvisation') then
+          send("switch weakening random")
+          sym.hunter.send('ied fling shrapnel ripper at ' .. target)
+          sym.hunter.send('assess ' .. target)
+          if caneject == true and bullets &gt; 3 then
+            send("gun eject")
+          end
+         end
+      elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+        sym.hunter.send('gun ambush ' .. target)
+        sym.hunter.send('assess ' .. target)
+        if caneject == true and bullets &gt; 3 then
+          send("gun eject")
+        end
+      elseif
+        not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2
+      then
+        sym.hunter.send('gun rapidfire ' .. target)
+        sym.hunter.send('assess ' .. target)
+        if caneject == true and bullets &gt; 3 then
+          send("gun eject")
+        end
+      else
+   --     sym.hunter.send('gun crackshot ' .. target)
+          sym.hunter.send('guile haymaker ' .. target)
+          sym.hunter.send('assess ' .. target)
+        if caneject == true and bullets &gt; 3 then
+          send("gun eject")
+        end
+      end
+    else
+      if bullets == 0 then
+        sym.hunter.send('guile pocketsand ' .. target)
+        windupcheck = 0
+        if caneject == true and bullets &gt; 3 then
+          send("gun eject")
+        end
+      else
+        sym.hunter.send('gun pointblank ' .. target)
+        windupcheck = 0
+      end
+    end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^he$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>interrupt encroachment</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+if bullets == 0 then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('guile pocketsand ' .. target)
+else
+  sym.hunter.send('CLEARQUEUE')
+  send('switch impairing encroachment')
+  sym.hunter.send('gun pointblank ' .. target)
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^ee</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>facesmash</name>
+					<script>send('guile facesmash ' ..sym.target.. ' seat')</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^fs$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>damage1</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+if windupcheck == 0 then
+  if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('guile stim')
+  elseif canmend then
+    checkSystems()
+  elseif bullets == 0 then
+    if sym.haveskill('Fling', 'Improvisation') then
+      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+      if caneject == true and bullets &gt; 3 then
+        send("gun eject")
+      end
+     end
+  elseif
+    not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2
+  then
+    sym.hunter.send('gun rapidfire ' .. target)
+  else
+    sym.hunter.send('gun crackshot ' .. target)
+    if caneject == true and bullets &gt; 3 then
+      send("gun eject")
+    end
+  end
+else
+  if bullets == 0 then
+    sym.hunter.send('guile pocketsand ' .. target)
+    windupcheck = 0
+    if caneject == true and bullets &gt; 3 then
+      send("gun eject")
+    end
+  else
+    sym.hunter.send('gun pointblank ' .. target)
+    windupcheck = 0
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^dd</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>hinder</name>
+					<script>local target = sym.target
+local bullets = tonumber(gmcp.Char.Vitals.bl)
+ if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 and windupcheck == 0 then
+    sym.hunter.send('guile stim')
+  elseif canmend then
+    checkSystems()
+  elseif bullets &gt; 0 and not sym.hunter.flags.trip and not sym.hunter.flags.prone and not sym.hunter.flags.bind then
+    send("guile trip")
+  elseif bullets == 0 and not sym.hunter.flags.sleep and not sym.hunter.flags.prone and not sym.hunter.flags.bind then
+    send("switch weakening staggering")
+    sym.hunter.send('fling sleeper')
+  elseif sym.hunter.flags.prone and not sym.hunter.flags.bind then
+    sym.hunter.send('guile bind')
+  elseif bullets == 0 and windupcheck == 0 then
+    send("switch weakening staggering")
+    --sym.hunter.send('ied fling wiring piercer at '..target)
+    sym.hunter.send('gun spin')
+  
+  elseif bullets == 0 and windupcheck == 1 then
+      send("switch weakening staggering")
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.send('assess ' .. target)
+      windupcheck = 0
+  
+  elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') and windupcheck == 0 then
+    sym.hunter.send('gun ambush '..target)
+    sym.hunter.send('assess ' .. target)
+  
+  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 and windupcheck == 0 then
+    sym.hunter.send('gun rapidfire '..target)
+    sym.hunter.send('assess ' .. target)
+    
+  elseif caneject and bullets &gt; 3 then
+    send('gun eject')
+  
+  elseif bullets &gt;= 1 and windupcheck == 0 then
+    sym.hunter.send('gun crackshot '..target)
+    sym.hunter.send('assess ' .. target)
+  
+  else
+    sym.hunter.send('gun pointblank '..target)
+    windupcheck = 0
+ end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^hinder$</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>engineer pvp</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>heartbreaker route</name>
+					<script>local target = sym.target
+local sym_name = gmcp.Char.Name.name
+if not sym.hunter.flags.channeling then
+  if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('stimjector ' .. sym_name)
+  elseif not sym.hunter.flags.stimjected and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 55 then
+    sym.hunter.send('stimjector ' .. sym_name)
+    sym.hunter.flags.autoheal = false
+  elseif not sym.hunter.flags.turretpower then
+    sym.hunter.send('turret qpcboost')
+  elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
+    send('airdrop')
+  elseif not sym.hunter.flags.gaussfield then
+  sym.hunter.send('operate gaussfield')
+  sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.repeated then
+    sym.hunter.send('bot repeat disrupt ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.worming then
+    sym.hunter.send('bot worm ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.gaussify and not sym.hunter.flags.degauss then
+    sym.hunter.send('operate degauss '..target..' taser')
+    sym.hunter.send('assess ' .. target)
+  elseif sym.hunter.flags.degauss then
+    sym.hunter.send('operate gaussify '..target)
+    sym.hunter.send('assess ' .. target)
+  elseif sym.hunter.flags.repeating then
+    sym.hunter.send('gadget shock ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.harassed and not sym.hunter.flags.airdrop then
+    sym.hunter.send('bot harass '..target)
+    sym.hunter.send('assess ' .. target)
+  elseif canmend then
+    checkSystems()
+  else
+    sym.hunter.send('bot disrupt ' .. target)
+    sym.hunter.send('assess ' .. target)
+  end
+else
+  sym.hunter.send('gadget shock ' .. target)
+  sym.hunter.send('assess ' .. target)
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^heart</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>musc route</name>
+					<script>local target = sym.target
+local sym_name = gmcp.Char.Name.name
+if not sym.hunter.flags.channeling then
+  if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('stimjector ' .. sym_name)
+  elseif not sym.hunter.flags.stimjected and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 55 then
+    sym.hunter.send('stimjector ' .. sym_name)
+    sym.hunter.flags.autoheal = false
+  elseif not sym.hunter.flags.turretpower then
+    sym.hunter.send('turret qpcboost')
+  elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
+    send('airdrop')
+  elseif not sym.hunter.flags.harassed and not sym.hunter.flags.airdrop then
+    sym.hunter.send('bot harass '..target)
+    sym.hunter.send('assess ' .. target)
+  elseif canmend then
+    checkSystems()
+  elseif current_shards &gt; 5 then
+    sym.hunter.send('operate magnetize ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.spike then
+    sym.hunter.send('bot spike ' .. target)
+    sym.hunter.send('assess ' .. target)
+  else
+    sym.hunter.send('operate junkjet ' .. target)
+    sym.hunter.send('assess ' .. target)
+  end
+else
+  sym.hunter.send('gadget shock ' .. target)
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^junk$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Highlight QPC</name>
+					<script>-- code curtesy of Thorne
+local roomID = getPlayerRoom()
+if matches[2] then
+  unHighlightRoom(roomID)
+else
+  highlightRoom(roomID, 0, 255, 0, 0, 0, 255, 1, 255, 255)
+end
+local nearbyRooms = {}
+nearbyRooms[1] = {}
+nearbyRooms[2] = {}
+nearbyRooms[3] = {}
+for exit, room in pairs(getRoomExits(roomID)) do
+  nearbyRooms[1][room] = true
+end
+for roomID, _ in pairs(nearbyRooms[1]) do
+  for exit, room in pairs(getRoomExits(roomID)) do
+    nearbyRooms[2][room] = true
+  end
+end
+for roomID, _ in pairs(nearbyRooms[2]) do
+  for exit, room in pairs(getRoomExits(roomID)) do
+    nearbyRooms[3][room] = true
+  end
+end
+local roomsInRadius = {}
+for _, roomlist in ipairs(nearbyRooms) do
+  for roomID, _ in pairs(roomlist) do
+    roomsInRadius[roomID] = true
+  end
+end
+display(roomsInRadius)
+for roomID, _ in pairs(roomsInRadius) do
+  if matches[2] then
+    unHighlightRoom(roomID)
+  else
+    highlightRoom(roomID, 100, 100, 0, 100, 0, 150, 1, 255, 255)
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^hlqpc(o)?$</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>nanoseer pvp</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>frenzy</name>
+					<script>if tonumber(gmcp.Char.Vitals.sa) &gt;= 350 and not sym.hunter.flags.frenzy and not sym.hunter.flags.frenzyCD then
+  send('oblivion frenzy')
+ end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^frenzy$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>mind route</name>
+					<script>local target = sym.target
+if not sym.hunter.flags.embraced and
+  ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 80 and not sym.hunter.flags.channeling then
+  sym.hunter.send('void embrace')
+  elseif canmend then
+  checkSystems()
+elseif tonumber(sym.hunter.flags.mindaff) &gt; 5 then
+  sym.hunter.send('void minddrain ' .. target)
+elseif sym.hunter.flags.rattle then
+  sym.hunter.send('nano confound ' .. target)
+  
+elseif sym.hunter.flags.sluggish then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('void rattle ' .. target)
+  
+elseif sym.hunter.flags.distracted then
+  sym.hunter.send('CLEARQUEUE')
+  sym.hunter.send('nano sluggish ' .. target)
+elseif tonumber(sym.hunter.flags.mindaff) &gt; 3 then
+  sym.hunter.send('nano distract ' .. target)
+  
+elseif not sym.hunter.flags.mindswap then
+  sym.hunter.send('nano mindswap ' .. target)
+  sym.hunter.send('assess')
+  
+elseif sym.hunter.flags.mindswap then
+  sym.hunter.send('nano confound ' .. target)
+  sym.hunter.send('assess')
+  
+else
+  sym.hunter.send('eyestrike')
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^mind$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>nano defences</name>
+					<script>if not sym.hunter.flags.architect and not sym.hunter.flags.conqueror then
+  sym.hunter.send('oblivion channel architect')
+  sym.hunter.flags.architect = true
+   elseif sym.hunter.flags.architect and not sym.hunter.flags.miniaturization then
+   sym.hunter.send('nano miniaturization')
+   elseif sym.hunter.flags.architect and sym.hunter.flags.miniaturization and not sym.hunter.flags.protect then
+   sym.hunter.send('nano protect')
+   elseif sym.hunter.flags.architect and sym.hunter.flags.miniaturization and sym.hunter.flags.protect and not sym.hunter.flags.rush then
+   sym.hunter.send('nano rush')
+   elseif sym.hunter.flags.architect and sym.hunter.flags.miniaturization and sym.hunter.flags.protect and sym.hunter.flags.rush and not sym.hunter.flags.alertness then
+   sym.hunter.send('nano alertness')
+   elseif sym.hunter.flags.architect and sym.hunter.flags.miniaturization and sym.hunter.flags.protect and sym.hunter.flags.rush and sym.hunter.flags.alertness then
+   sym.hunter.send('oblivion swap traveller')
+   sym.hunter.flags.architect = false
+   sym.hunter.send('oblivion affinity conqueror')
+   elseif not sym.hunter.flags.architect and sym.hunter.flags.miniaturization and sym.hunter.flags.protect and sym.hunter.flags.rush and sym.hunter.flags.alertness and sym.hunter.flags.conqueror and not sym.hunter.flags.progenitor then
+   sym.hunter.send('oblivion affinity progenitor')
+   else
+   sym.hunter.send('oblivion negation')
+   echo('DEFUP COMPLETE - DONT FORGET PROGENITOR')
+   end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^nanodefup</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>damage route</name>
+					<script>    local target = sym.target
+  if not sym.hunter.flags.embraced and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and not sym.hunter.flags.channeling then
+    sym.hunter.send('void embrace')
+  elseif canmend then
+    checkSystems()
+  elseif not sym.hunter.flags.roomdrain and windupcheck == 0 then
+    expandAlias('frenzy')
+    sym.hunter.send('void roomdrain')
+    sym.hunter.send('assess')
+  elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') and windupcheck == 0 then
+    expandAlias('frenzy')
+    sym.hunter.send('void freeze '..target)
+    sym.hunter.send('assess')
+  else
+    sym.hunter.send('eyestrike')
+    sym.hunter.flags.channeling = false
+  end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^free$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>defup</name>
+					<script>sym.hunter.send('oblivion channel architect')
+tempTimer(3, [[sym.hunter.send('nano miniaturization')]])
+tempTimer(7, [[sym.hunter.send('nano protect')]])
+tempTimer(11, [[sym.hunter.send('nano rush')]])
+tempTimer(14.5, [[sym.hunter.send('nano alertness')]])
+tempTimer(18, [[sym.hunter.send('oblivion swap traveller')]])
+tempTimer(18, [[sym.hunter.send('oblivion affinity conqueror')]])
+tempTimer(21.5, [[sym.hunter.send('oblivion affinity progenitor')]])
+tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^ndef$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>mind damage route</name>
+					<script>  local target = sym.target
+  if not sym.hunter.flags.embraced and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and not sym.hunter.flags.channeling then
+    sym.hunter.send('void embrace')
+  elseif canmend then
+    checkSystems()
+  elseif not sym.hunter.flags.affinitied and tonumber(gmcp.Char.Vitals.nn) &gt; 150 then
+    expandAlias('frenzy')
+    sym.hunter.send('nano affinity '..target)
+    sym.hunter.send('assess')
+  elseif sym.hunter.flags.affinitied and not sym.hunter.flags.multistrike then
+    expandAlias('frenzy')
+    sym.hunter.send('nano multistrike '.. target)
+    sym.hunter.send('assess')
+  elseif sym.hunter.flags.affinitied and sym.hunter.flags.multistrike then
+    expandAlias('frenzy')
+    sym.hunter.send('nano swarm '.. target)
+    sym.hunter.send('assess')
+  else
+    sym.hunter.send('freeze')
+    sym.hunter.flags.channeling = false
+  end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^swarm$</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>fury pvp</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>bleed1</name>
+					<script>local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 71 then
+    sym.hunter.send("suffuse")
+  elseif canmend and not sym.hunter.flags.unstoppable then
+    checkSystems()
+  else if sym.hunter.flags.unstoppable then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo gutrend overwhelm',
+          ['flare'] = 'combo wound overwhelm',
+          ['eruption'] = 'combo hypertension overwhelm',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    else if sym.hunter.flags.unstoppableready then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo gutrend unstoppable',
+            ['flare'] = 'combo wound unstoppable',
+            ['eruption'] = 'combo hypertension unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else if not sym.hunter.flags.berserk and rage &gt;= 5 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend berserk',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo hypertension berserk',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend flyinglash',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo hypertension flyinglash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^bl1</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>bleed2damage</name>
+					<script>local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if
+    not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75
+  then
+    sym.hunter.send("suffuse")
+  elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
+    local to_combo =
+      {
+        ['symmetry'] = 'combo gutrend overpower',
+        ['flare'] = 'combo wound overpower',
+        ['eruption'] = 'combo bloodburn overpower',
+      }
+    sym.hunter.send(to_combo[stance] .. ' ' .. target)
+  else
+    if sym.hunter.flags.unstoppable == true then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo gutrend slice',
+          ['flare'] = 'combo wound slice',
+          ['eruption'] = 'combo bloodsinge slice',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    elseif canmend then
+      checkSystems()
+    else
+      if sym.hunter.flags.unstoppableready == true then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo gutrend unstoppable',
+            ['flare'] = 'combo wound unstoppable',
+            ['eruption'] = 'combo hypertension unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else
+        if not sym.hunter.flags.berserk and rage &gt; 10 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend berserk',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo rupture berserk',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend flyinglash',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo rupture flyinglash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^bl2</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>musc1</name>
+					<script>local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if
+    not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75
+  then
+    sym.hunter.send("suffuse")
+  elseif canmend and not sym.hunter.flags.unstoppable then
+    checkSystems()
+  else
+    if sym.hunter.flags.unstoppable then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo swiftcut overwhelm',
+          ['ember'] = 'combo assail overwhelm',
+          ['blaze'] = 'combo barrage overwhelm',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    else
+      if sym.hunter.flags.unstoppableready then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo swiftcut unstoppable',
+            ['ember'] = 'combo assail unstoppable',
+            ['blaze'] = 'combo barrage unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else
+        if not sym.hunter.flags.resistant and rage &gt; 10 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut resistant',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo barrage resistant',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut upperlash',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo barrage upperlash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  sym.hunter.flags.channeling = false
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>ml1</regex>
+				</Alias>
+			</AliasGroup>
 		</AliasGroup>
 	</AliasPackage>
 	<ActionPackage />

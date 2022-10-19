@@ -10,7 +10,8 @@
 			<name>namespace</name>
 			<packageName></packageName>
 			<script>sym = sym or {}
-</script>
+sym.pvp = sym.pvp or {}
+sym.pvp.flags = sym.pvp.flags or {}</script>
 			<eventHandlerList />
 		</Script>
 		<ScriptGroup isActive="yes" isFolder="yes">
