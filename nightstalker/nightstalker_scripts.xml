@@ -807,10 +807,10 @@ end</script>
 					<packageName></packageName>
 					<script>function sym.ui.update_stylesheet()
   local background_color = 'rgba(0, 20, 20, 100)'
-  local background_color_lighter = 'rgba(0, 40, 40, 100)'
-  local background_color_hover = 'rgba(0, 60, 60, 100)'
+  local background_color_lighter = 'rgba(0, 40, 40, 130)'
+  local background_color_hover = 'rgba(0, 60, 60, 180)'
   local border_color = 'rgba(40, 60, 60, 100)'
-  local border_color_hover = 'rgba(40, 90, 90)' 
+  local border_color_hover = 'rgba(40, 120, 120)' 
   local font_color = '#e5ae69'
   local font_color_hover = '#faf3ea'
   local border_radius_one = '5px';
@@ -1150,24 +1150,6 @@ end</script>
 end</script>
 					<eventHandlerList />
 				</Script>
-				<Script isActive="no" isFolder="no">
-					<name>set borders</name>
-					<packageName></packageName>
-					<script>--function sym.ui.set_borders()
---  local w, h = getMainWindowSize()
-
-  --sym.ui.border_left = w / 4
-  --sym.ui.border_top = h / 19
-  --sym.ui.border_bottom = h / 19
-  --sym.ui.border_right = w / 4
-
-  --setBorderLeft(sym.ui.border_left)
-  --setBorderTop(sym.ui.border_top)
-  --setBorderBottom(sym.ui.border_bottom)
-  --setBorderRight(sym.ui.border_right)
---end</script>
-					<eventHandlerList />
-				</Script>
 				<Script isActive="yes" isFolder="no">
 					<name>create background</name>
 					<packageName></packageName>
@@ -1413,8 +1395,9 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     background-color: rgba(0,0,0,100);
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(0,110,40);
+    border-color: rgb(0,190,40);
     border-radius: 1px;
+    font: bold 16pt "OCR A Extended";
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1423,8 +1406,9 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     background-color: rgba(0,0,0,100);
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(0,40,40);
+    border-color: rgb(0,80,80);
     border-radius: 1px;
+    font: bold 16pt "OCR A Extended";
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1432,6 +1416,7 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
   table.foreach(sym.ui.modulelist, function(key, module)
     sym.ui['module'..module] = Geyser.Label:new({ name = 'sym.ui.module.'..module }, sym.ui.header)
     sym.ui['module'..module]:setClickCallback('sym.setmodule', module)
+    sym.ui['module'..module]:setFontSize(12)
     sym.ui['module'..module]:setStyleSheet(inactivecss:getCSS())
     sym.ui['module'..module]:echo('&lt;center&gt;F'..key..': '..module)
     sym.ui.modulestatus[module] = false
@@ -1513,6 +1498,7 @@ sym.ui.chat.currenttab = sym.ui.chat.currenttab or sym.ui.chat.config.alltab or 
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 50, 50, 130);
+  font: bold 13pt "OCR A Extended";
   margin: 5px;
 ]])
 
@@ -1521,6 +1507,7 @@ local inactivecss = CSSMan.new([[
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 30, 30, 130);
+  font: bold 13pt "OCR A Extended";
   margin: 5px;
 ]])
 
@@ -1578,6 +1565,7 @@ function sym.ui.chat:create()
     sym.ui.chat.tabs[tab] = Geyser.Label:new({ name = string.format('chattab%s', tab) }, sym.ui.chat.tabbox)
     sym.ui.chat.tabs[tab]:echo(tab, sym.ui.chat.config.inactivetabtext, 'c')
     sym.ui.chat.tabs[tab]:setColor(r, g, b)
+    sym.ui.chat.tabs[tab]:setFontSize(12)
     sym.ui.chat.tabs[tab]:setClickCallback('sym.ui.chat.switch', tab)
     sym.ui.chat.tabs[tab]:setStyleSheet(inactivecss:getCSS())
     sym.ui.chat.windows[tab] = Geyser.MiniConsole:new({
@@ -1834,18 +1822,19 @@ sym.ui.mapper.currenttab = sym.ui.mapper.currenttab or sym.ui.mapper.config.maps
 					<script>local activecss = CSSMan.new([[
   border-radius: 3px;
   border-style: solid;
-  font: bold 16pt "OCR A Extended";
   border-width: 3px;
   border-color: rgba(0, 50, 50, 250);
+  font: bold 16pt "OCR A Extended";
   margin: 3px;
+
 ]])
 
 local inactivecss = CSSMan.new([[
   border-radius: 3px;
   border-style: solid;
-  font: bold 16pt "OCR A Extended";
   border-width: 3px;
   border-color: rgba(0, 30, 30, 150);
+  font: bold 16pt "OCR A Extended";
   margin: 3px;
 ]])
 
@@ -2005,7 +1994,8 @@ sym.ui.info.currenttab = sym.ui.info.currenttab or sym.ui.info.config.types[1]</
   border-radius: 3px;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(0, 50, 50, 100);
+  border-color: rgba(0, 50, 50, 250);
+  font: bold 16pt "OCR A Extended";
   margin: 1px;
 ]])
 
@@ -2013,7 +2003,8 @@ local inactivecss = CSSMan.new([[
   border-radius: 3px;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(0, 30, 30, 100);
+  border-color: rgba(0, 30, 30, 150);
+  font: bold 16pt "OCR A Extended";
   margin: 1px;
 ]])
 
@@ -2031,10 +2022,12 @@ sym.ui.info.switch = function(tab)
   if sym.ui.info.currenttab ~= tab then
     sym.ui.info.windows[oldtab]:hide()
     sym.ui.info.tabs[oldtab]:setColor(r, g, b)
+    sym.ui.info.tabs[oldtab]:setFontSize(12)
     sym.ui.info.tabs[oldtab]:echo(oldtab, sym.ui.info.config.inactivetabtext, 'c')
     sym.ui.info.tabs[oldtab]:setStyleSheet(inactivecss:getCSS())
   end
   sym.ui.info.tabs[tab]:setColor(newr, newg, newb)
+  sym.ui.info.tabs[tab]:setFontSize(12)
   sym.ui.info.tabs[tab]:echo(tab, sym.ui.info.config.activetabtext, 'c')
 	sym.ui.info.tabs[tab]:setStyleSheet(activecss:getCSS())
   sym.ui.info.windows[tab]:show()
@@ -2045,8 +2038,8 @@ function sym.ui.info:resetUI()
   sym.ui.info.container = sym.ui.bottomright
   sym.ui.info.tabbox = Geyser.HBox:new({
     name = 'sym.ui.info.tabbox',
-    x = '5%', y = '4%',
-    width = '90%', height = '6%'
+    x = 0, y = 0,
+    width = '100%', height = '7%'
   }, sym.ui.info.container)
 end
 
@@ -2064,14 +2057,15 @@ function sym.ui.info:create()
     sym.ui.info.tabs[tab] = Geyser.Label:new({ name = string.format('infotab%s', tab) }, sym.ui.info.tabbox)
     sym.ui.info.tabs[tab]:echo(tab, sym.ui.info.config.inactivetabtext, 'c')
     sym.ui.info.tabs[tab]:setColor(r, g, b)
+    sym.ui.info.tabs[tab]:setFontSize(12)
     sym.ui.info.tabs[tab]:setClickCallback('sym.ui.info.switch', tab)
     sym.ui.info.tabs[tab]:setStyleSheet(inactivecss:getCSS())
     sym.ui.info.windows[tab] = Geyser.MiniConsole:new({
       name = string.format('infowin%s', tab),
-      x = '5%', y = '12%',
+      x = 0, y = '7%',
       autoWrap = true,
       fontSize = sym.ui.info.config.fontsize,
-      width = '90%', height = '85%'
+      width = '100%', height = '93%'
     }, sym.ui.info.container)
     sym.ui.info.windows[tab]:setColor(winr, wing, winb)
     sym.ui.info.windows[tab]:hide()
