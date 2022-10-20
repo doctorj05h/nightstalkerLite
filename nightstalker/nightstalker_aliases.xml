@@ -1223,28 +1223,30 @@ end</script>
 if not sym.hunter.flags.embraced and
   ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 80 and not sym.hunter.flags.channeling then
   sym.hunter.send('void embrace')
-  elseif canmend then
+elseif canmend then
   checkSystems()
-elseif tonumber(sym.hunter.flags.mindaff) &gt; 5 then
+elseif not sym.pvp.flags.enveloped then
+  sym.hunter.send('nano envelop '.. target)
+elseif tonumber(sym.pvp.flags.mindaff) &gt; 5 then
   sym.hunter.send('void minddrain ' .. target)
-elseif sym.hunter.flags.rattle then
+elseif sym.pvp.flags.rattle then
   sym.hunter.send('nano confound ' .. target)
   
-elseif sym.hunter.flags.sluggish then
+elseif sym.pvp.flags.sluggish then
   sym.hunter.send('CLEARQUEUE')
   sym.hunter.send('void rattle ' .. target)
   
-elseif sym.hunter.flags.distracted then
+elseif sym.pvp.flags.distracted then
   sym.hunter.send('CLEARQUEUE')
   sym.hunter.send('nano sluggish ' .. target)
-elseif tonumber(sym.hunter.flags.mindaff) &gt; 3 then
+elseif tonumber(sym.pvp.flags.mindaff) &gt; 3 then
   sym.hunter.send('nano distract ' .. target)
   
-elseif not sym.hunter.flags.mindswap then
+elseif not sym.pvp.flags.mindswap then
   sym.hunter.send('nano mindswap ' .. target)
   sym.hunter.send('assess')
   
-elseif sym.hunter.flags.mindswap then
+elseif sym.pvp.flags.mindswap then
   sym.hunter.send('nano confound ' .. target)
   sym.hunter.send('assess')
   
@@ -1284,17 +1286,17 @@ end</script>
 					<regex>^nanodefup</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
-					<name>damage route</name>
+					<name>shatter route</name>
 					<script>    local target = sym.target
   if not sym.hunter.flags.embraced and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and not sym.hunter.flags.channeling then
     sym.hunter.send('void embrace')
   elseif canmend then
     checkSystems()
-  elseif not sym.hunter.flags.roomdrain and windupcheck == 0 then
+  elseif not sym.pvp.flags.roomdrain then
     expandAlias('frenzy')
     sym.hunter.send('void roomdrain')
     sym.hunter.send('assess')
-  elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') and windupcheck == 0 then
+  elseif sym.haveskill('Freeze', 'Voidism') then
     expandAlias('frenzy')
     sym.hunter.send('void freeze '..target)
     sym.hunter.send('assess')
@@ -1328,15 +1330,15 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
     sym.hunter.send('void embrace')
   elseif canmend then
     checkSystems()
-  elseif not sym.hunter.flags.affinitied and tonumber(gmcp.Char.Vitals.nn) &gt; 150 then
+  elseif not sym.pvp.flags.affinitied and tonumber(gmcp.Char.Vitals.nn) &gt; 150 then
     expandAlias('frenzy')
     sym.hunter.send('nano affinity '..target)
     sym.hunter.send('assess')
-  elseif sym.hunter.flags.affinitied and not sym.hunter.flags.multistrike then
+  elseif sym.pvp.flags.affinitied and not sym.hunter.flags.multistrike then
     expandAlias('frenzy')
     sym.hunter.send('nano multistrike '.. target)
     sym.hunter.send('assess')
-  elseif sym.hunter.flags.affinitied and sym.hunter.flags.multistrike then
+  elseif sym.pvp.flags.affinitied and sym.hunter.flags.multistrike then
     expandAlias('frenzy')
     sym.hunter.send('nano swarm '.. target)
     sym.hunter.send('assess')

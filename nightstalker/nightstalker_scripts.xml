@@ -93,7 +93,14 @@ sym.hunter.checktarget =
     end
     return false
   end
-
+sym.pvp.triggy =
+  function(class)
+    class = class:lower()
+    local clist = {'b.e.a.s.t.', 'scoundrel', 'nanoseer', 'engineer', 'fury'}
+    for _, c in ipairs(clist) do
+      (c == class and enableTrigger or disableTrigger)('op-' .. c)
+    end
+  end
 function checkSystems()
   local vitals = gmcp.Char.Vitals
   local sym_ww = (vitals.ww == "1" and true or false)
@@ -130,6 +137,7 @@ end</script>
     sym.setmodule('Hunting', true)
 
     sym.hunter.triggy(gmcp.Char.Status.class)
+    sym.pvp.triggy(gmcp.Char.Status.class)
 
     if not debug.traceback():find('Trigger', 1, true) then
       send('look', false)
@@ -405,6 +413,23 @@ end</script>
     'a caliginous eagle',
     'a brown-scaled tigrid'
   }</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>ixsei desert</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['The Ixsei Desert'] = {
+  'a crystal-clawed rock giant',
+  'a female Selassian Viper',
+  'a male Selassian Viper',
+  'a female Selassian Venom',
+  'a male Selassian Venom',
+  'a female Selassian Ophidian',
+  'a male Selassian Ophidian',
+  'a salt-crusted quartz creeper',
+  'a female Selassian Neonate',
+  'a male Selassian Neonate'
+}</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -695,7 +720,7 @@ end</script>
 			<Script isActive="yes" isFolder="no">
 				<name>skill checker</name>
 				<packageName></packageName>
-				<script>local ignore = {'Captaincy', 'Hacking', 'Art', 'Fashion', 'Cuisine', 'Jewelry', 'WeaponModding', 'ArmorModding', 'ShipModding', 'Furnishing', 'Mixology'}
+				<script>local ignore = {'Captaincy', 'Hacking', 'Art', 'Fashion', 'Cuisine', 'Jewelry', 'WeaponModding', 'ArmorModding', 'ShipModding', 'Furnishing', 'Mixology', 'Bodymods'}
 
 function sym.gmcpcharskillsgroups()
   if not sym.skills then
@@ -1526,6 +1551,7 @@ sym.ui.chat.switch = function(chat)
   if sym.ui.chat.currenttab ~= chat then
     sym.ui.chat.windows[oldchat]:hide()
     sym.ui.chat.tabs[oldchat]:setColor(r, g, b)
+    sym.ui.chat.tabs[oldchat]:setFontSize(11)
     sym.ui.chat.tabs[oldchat]:echo(oldchat, sym.ui.chat.config.inactivetabtext, 'c')
     sym.ui.chat.tabs[oldchat]:setStyleSheet(inactivecss:getCSS())
     if sym.ui.chat.config.blink and sym.ui.chat.tabstoblink[chat] then
@@ -1565,7 +1591,7 @@ function sym.ui.chat:create()
     sym.ui.chat.tabs[tab] = Geyser.Label:new({ name = string.format('chattab%s', tab) }, sym.ui.chat.tabbox)
     sym.ui.chat.tabs[tab]:echo(tab, sym.ui.chat.config.inactivetabtext, 'c')
     sym.ui.chat.tabs[tab]:setColor(r, g, b)
-    sym.ui.chat.tabs[tab]:setFontSize(12)
+    sym.ui.chat.tabs[tab]:setFontSize(11)
     sym.ui.chat.tabs[tab]:setClickCallback('sym.ui.chat.switch', tab)
     sym.ui.chat.tabs[tab]:setStyleSheet(inactivecss:getCSS())
     sym.ui.chat.windows[tab] = Geyser.MiniConsole:new({
@@ -2470,9 +2496,9 @@ sym.space.flags = sym.space.flags or {}</script>
   local systems =
     {
       ["ship_dmg_cap"] = "capacitor",
-      ["ship_dmg_sim"] = "shipsim",
-      ["ship_dmg_sensor"] = "sensor",
       ["ship_dmg_engine"] = "engine",
+      ["ship_dmg_sensor"] = "sensor",
+      ["ship_dmg_sim"] = "shipsim",
       ["ship_dmg_shield"] = "shields",
     }
   if sym.space.flags.astromechs then
