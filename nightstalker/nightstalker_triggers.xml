@@ -3238,12 +3238,14 @@ deselect()</script>
 					<string>Denizen sale:</string>
 					<string>You have successfully primed the demolition charge here.</string>
 					<string>Ishvana              No</string>
+					<string>Your renown in the hacking community </string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>2</integer>
 					<integer>0</integer>
 					<integer>3</integer>
 					<integer>0</integer>
+					<integer>2</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -4027,7 +4029,22 @@ end</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>alertness highlights</name>
-					<script></script>
+					<script>if sym.target == matches[2] and matches[3] ~= "subroutines"then
+deleteLine()
+cecho('\n ')
+cecho("\n &lt;ansi_226&gt;|        &lt;yellow&gt; TARGET "..matches[3].." &lt;ansi_226&gt;        |")
+cecho('\n ')
+elseif sym.target == matches[2] and matches[3] == "subroutines" then
+deleteLine()
+cecho("\n &lt;ansi_226&gt;|        &lt;yellow&gt; TARGET HERE &lt;ansi_226&gt;    |")
+elseif sym.target ~= matches[2] and matches[3] ~= "subroutines" then
+deleteLine()
+cecho("\n &lt;ansi_226&gt;|        &lt;white&gt; "..matches[2].." "..matches[3].." &lt;ansi_226&gt;        |")
+else
+deleteLine()
+cecho("\n &lt;ansi_226&gt;|        &lt;white&gt; "..matches[2].." here &lt;ansi_226&gt;    |")
+end
+</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -4039,19 +4056,40 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^A rapidly scrolling alert is projected across the lenses of your goggles as your swarm reports .+ to the .+\.$</string>
-						<string>^The alert status of your swarm shifts to a different subroutine\, changing the readout across your goggles to suggest that .+ is no longer present to the .+\.</string>
-						<string>^An alarm flashes across the HUD of your goggles\, your swarm sending you an urgent signal that .+ is currently triggering their proximity alert subroutines\.$</string>
-						<string>Your nanites can not swap any more afflictions, because they are all present already.</string>
-						<string>Your renown in the hacking community </string>
+						<string>^A rapidly scrolling alert is projected across the lenses of your goggles as your swarm reports (.+) to the (.+)\.$</string>
+						<string>^An alarm flashes across the HUD of your goggles\, your swarm sending you an urgent signal that (.+) is currently triggering their proximity alert (\w+)\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
 						<integer>1</integer>
-						<integer>1</integer>
-						<integer>3</integer>
-						<integer>2</integer>
 					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>alertness left</name>
+						<script>if sym.target == matches[2] then
+deleteLine()
+cecho('\n ')
+cecho("\n &lt;ansi_226&gt;|     &lt;yellow&gt; TARGET VACATED"..matches[3].." &lt;ansi_226&gt;     |")
+cecho('\n ')
+else
+cecho("\n &lt;ansi_226&gt;|     &lt;white&gt; "..matches[2].." VACATED"..matches[3].." &lt;ansi_226&gt;     |")
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^The alert status of your swarm shifts to a different subroutine\, changing the readout across your goggles to suggest that (.+) is no longer present to the (.+)\.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>mindswap start</name>
@@ -4425,10 +4463,32 @@ tempTimer(
 					<regexCodeList>
 						<string>You: Nanotech Envelop</string>
 						<string>You send your nanites to envelop</string>
+						<string>^.+ is already enveloped by your nanites\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>2</integer>
 						<integer>2</integer>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>they full up</name>
+					<script>cecho('OOoooeyyyy they are FULLL UP on afflictions, don\'t mess this up!')</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#0000ff</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Your nanites can not swap any more afflictions, because they are all present already.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
@@ -4503,18 +4563,18 @@ local target = tblname[1]
 local dir = table.keys(gmcp.Room.Info.exits)
 c = "white"
 if matches[3] == "healthy" then
-  cecho('\nTarget: &lt;' .. c .. '&gt;' .. target .. ' &lt;green&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
+  cecho('\n&lt;orange&gt;Target: &lt;' .. c .. '&gt;' .. target .. ' &lt;green&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
 elseif matches[3] == "wounded" then
-  cecho('\nTarget: &lt;' .. c .. '&gt;' .. target .. ' &lt;yellow&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
+  cecho('\n&lt;orange&gt;Target: &lt;' .. c .. '&gt;' .. target .. ' &lt;yellow&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
 elseif matches[3] == "maimed" then
-  cecho('\nTarget: &lt;' .. c .. '&gt;' .. target .. ' &lt;orange&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
+  cecho('\n&lt;orange&gt;Target: &lt;' .. c .. '&gt;' .. target .. ' &lt;orange&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
 elseif matches[3] == "critically wounded" then
-  cecho('\nTarget: &lt;' .. c .. '&gt;' .. target .. ' &lt;red&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' ').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
+  cecho('\n&lt;orange&gt;Target: &lt;' .. c .. '&gt;' .. target .. ' &lt;red&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' ').. '&lt;/b&gt;&lt;white&gt; ' ..gmcp.IRE.Target.Info.hpperc)
     if sym.pvp.flags.unstoppable and not sym.checkmodule('Hunting') then
     send('rage throw '.. sym.target .. ' ' .. dir[1])
     end
 else
-  cecho('\nTarget: &lt;' .. c .. '&gt;' .. target .. ' &lt;white&gt;' .. matches[3]:gsub(' ', ' #').. ' ' ..gmcp.IRE.Target.Info.hpperc)
+  cecho('\n&lt;orange&gt;Target: &lt;' .. c .. '&gt;' .. target .. ' &lt;white&gt;&lt;b&gt;' .. matches[3]:gsub(' ', ' #').. '&lt;/b&gt; ' ..gmcp.IRE.Target.Info.hpperc)
     if sym.pvp.flags.unstoppable and not sym.checkmodule('Hunting') then
     send('rage throw '.. sym.target .. ' ' .. dir[1])
     end
@@ -4835,6 +4895,7 @@ sym.pvp.flags.rattle = false
 sym.pvp.flags.sluggish = false
 sym.pvp.flags.distracted = false
 sym.pvp.flags.mindaff = 0
+sym.pvp.flags.enveloped = false
 elseif class == "Engineer" then
 sym.pvp.currentstatic = 0
 sym.pvp.currentshards = 0

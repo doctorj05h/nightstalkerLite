@@ -20,6 +20,24 @@ end</script>
 				<time>00:00:04.000</time>
 			</Timer>
 		</TimerGroup>
+		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<name>static degeneration</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:00.000</time>
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>static</name>
+				<script>if current_static &gt; 0 then
+current_static = current_static - (current_static *.1)
+else
+disableTimer("static")
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:08.000</time>
+			</Timer>
+		</TimerGroup>
 	</TimerPackage>
 	<AliasPackage />
 	<ActionPackage />
