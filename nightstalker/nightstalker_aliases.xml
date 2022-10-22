@@ -1292,7 +1292,11 @@ end</script>
     sym.hunter.send('void embrace')
   elseif canmend then
     checkSystems()
-  elseif not sym.pvp.flags.roomdrain then
+  elseif not sym.hunter.flags.speedup then
+    sym.hunter.send('oblivion speedup')
+  elseif not sym.pvp.flags.enveloped then
+    sym.hunter.send('nano envelop '.. target)
+  elseif not sym.pvp.flags.roomdrain and #sym.ui.roommobs == 0 then
     expandAlias('frenzy')
     sym.hunter.send('void roomdrain')
     sym.hunter.send('assess')

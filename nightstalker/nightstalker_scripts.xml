@@ -251,12 +251,11 @@ end</script>
     else
       if not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send('void embrace')
-      elseif not sym.hunter.flags.multistrike and sym.haveskill('Multistrike', 'Nanotech') then
-        sym.hunter.send('nano multistrike ' .. target)
-      elseif not sym.hunter.flags.frozen and sym.haveskill('Freeze', 'Voidism') then
+      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+        sym.hunter.send('oblivion speedup')  
+      else 
+        expandAlias('frenzy')
         sym.hunter.send('void freeze ' .. target)
-      else
-        sym.hunter.send('nano swarm ' .. target)
       end
     end
   end</script>
@@ -430,6 +429,17 @@ end</script>
   'a female Selassian Neonate',
   'a male Selassian Neonate'
 }</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>new dikamazi</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['New Dikamazi'] = {
+    'the thrashing root of a cyborg leech orchid',
+    'a rampaging construction mech',
+    'a cyborg leech orchid',
+    'a dilapidated construction mech',
+  }</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -1422,7 +1432,7 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     border-width: 1px;
     border-color: rgb(0,190,40);
     border-radius: 1px;
-    font: bold 16pt "OCR A Extended";
+    font: bold 16pt "Calibri";
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1433,7 +1443,7 @@ sym.ui.modulestatus = sym.ui.modulestatus or {}</script>
     border-width: 1px;
     border-color: rgb(0,80,80);
     border-radius: 1px;
-    font: bold 16pt "OCR A Extended";
+    font: bold 16pt "Calibri";
     margin: 5px;
     qproperty-wordWrap: true;
   ]])
@@ -1523,7 +1533,7 @@ sym.ui.chat.currenttab = sym.ui.chat.currenttab or sym.ui.chat.config.alltab or 
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 50, 50, 130);
-  font: bold 13pt "OCR A Extended";
+  font: bold 13pt "Calibri";
   margin: 5px;
 ]])
 
@@ -1532,7 +1542,7 @@ local inactivecss = CSSMan.new([[
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 30, 30, 130);
-  font: bold 13pt "OCR A Extended";
+  font: bold 13pt "Calibri";
   margin: 5px;
 ]])
 
@@ -1850,7 +1860,7 @@ sym.ui.mapper.currenttab = sym.ui.mapper.currenttab or sym.ui.mapper.config.maps
   border-style: solid;
   border-width: 3px;
   border-color: rgba(0, 50, 50, 250);
-  font: bold 16pt "OCR A Extended";
+  font: bold 16pt "Calibri";
   margin: 3px;
 
 ]])
@@ -1860,7 +1870,7 @@ local inactivecss = CSSMan.new([[
   border-style: solid;
   border-width: 3px;
   border-color: rgba(0, 30, 30, 150);
-  font: bold 16pt "OCR A Extended";
+  font: bold 16pt "Calibri";
   margin: 3px;
 ]])
 
@@ -1931,6 +1941,7 @@ function sym.ui.mapper:create()
         sym.ui.mapper.windows[tab]:setColor(winr, wing, winb)
       else
         sym.ui.mapper.windows[tab]:setColor(0, 0, 0)
+        sym.ui.mapper.windows[tab]:setFontSize(9)
         -- use this if you want to change the font of the space map         
         sym.ui.mapper.windows[tab]:setFont("square")
       end
@@ -2021,7 +2032,7 @@ sym.ui.info.currenttab = sym.ui.info.currenttab or sym.ui.info.config.types[1]</
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 50, 50, 250);
-  font: bold 16pt "OCR A Extended";
+  font: bold 16pt "Calibri";
   margin: 1px;
 ]])
 
@@ -2030,7 +2041,7 @@ local inactivecss = CSSMan.new([[
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 30, 30, 150);
-  font: bold 16pt "OCR A Extended";
+  font: bold 16pt "Calibri";
   margin: 1px;
 ]])
 
