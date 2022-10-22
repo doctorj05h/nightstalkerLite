@@ -647,7 +647,9 @@ setTriggerStayOpen('capture beacon', 0)
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>switch space map</name>
-				<script>sym.ui.mapper.switch('Space')</script>
+				<script>sym.ui.mapper.switch('Space')
+sym.space.weapon = {}
+sendAll('ship details weapons','ship weapons')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -660,9 +662,11 @@ setTriggerStayOpen('capture beacon', 0)
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>You embark the ship.</string>
+					<string>^You board .+\, .+\.$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>3</integer>
+					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -2316,56 +2320,6 @@ sym.ships.flags = sym.ships.flags or {}</script>
 			<regexCodeList />
 			<regexCodePropertyList />
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>missile counter</name>
-				<script>if not sym.space.flags.countermeasures and not sym.space.flags.missilesinbound then
-  local firetime = matches[2] * .85
-  sym.space.flags.missilesinbound = true
-  tempTimer(
-    firetime,
-    function()
-      send('ship countermeasures')
-      sym.space.flags.missilesinbound = false
-    end
-  )
-end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^Missile launch detected from .+, ETA (.+)\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>countermeasures</name>
-				<script>sym.space.flags.countermeasures = true</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ffaa00</mFgColor>
-				<mBgColor>#550000</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>The ship shoots countermeasures around its hull.</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>3</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>reload</name>
 				<script>send("ship weapon reload "..matches[2])</script>
 				<triggerType>0</triggerType>
@@ -2380,71 +2334,6 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^.+\#(\d+) has 0 ammunition loaded\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>countermeasures cooldown</name>
-				<script>sym.space.flags.countermeasures = false</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ffaa00</mFgColor>
-				<mBgColor>#550000</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>The ship is again ready to fire countermeasures.</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>3</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>weapon autoassign module</name>
-				<script>if matches[3] == "Interdictor Beam" then
-  send('ship module alias ' .. matches[2] .. ' iterdict')
-elseif
-  matches[3] == "Laser Beam I" or matches[3] == "Laser Beam II" or matches[3] == "Laser Beam III"
-then
-  send('ship module alias ' .. matches[2] .. ' lasers')
-elseif
-  matches[3] == "Targeted Missile I" or
-  matches[3] == "Targeted Missile II" or
-  matches[3] == "Targeted Missile III"
-then
-  send('ship module alias ' .. matches[2] .. ' missiles')
-elseif
-  matches[3] == "Massive Cannon I" or
-  matches[3] == "Massive Cannon II" or
-  matches[3] == "Massive Cannon III"
-then
-  send('ship module alias ' .. matches[2] .. ' mcannons')
-elseif matches[3] == "Cannon I" or matches[3] == "Cannon II" or matches[3] == "Cannon III" then
-  send('ship module alias ' .. matches[2] .. ' cannons')
-elseif matches[3] == "Slicekit" then
-  send('ship module alias ' .. matches[2] .. ' slicer')
-elseif matches[3] == "Cap Drainer" then
-  send('ship module alias ' .. matches[2] .. ' drainer')
-else
-end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^Module #(\d+) - \b(.+)\b\s+(Active|Inactive)$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -2668,55 +2557,9 @@ sym.shiprepair()</script>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>reload</name>
-				<script>send("ship weapon reload "..matches[2])</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^.+\#(\d+) has 0 ammunition loaded\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>0</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>ship balance</name>
-				<script>if sym.space.boarded == true then
+				<script>if sym.space.boarded then
   deleteLine()
-else
-  local vitals = gmcp.Char.Vitals
-  local sym_ww = (vitals.ww == "1" and true or false)
-  local efficacy =
-    {
-      "wetwiring_efficacy",
-      "mind_efficacy",
-      "muscular_efficacy",
-      "internal_efficacy",
-      "sensory_efficacy",
-    }
-  local systems = {"wetwiring", "mind", "muscular", "internal", "sensory"}
-  if not sym_ww then
-    return
-  end
-  for _, system in pairs(systems) do
-    local value = math.floor(tonumber(vitals[system]))
-    local evalue = tonumber(vitals[efficacy[_]])
-    if value &lt;= 92.5 and evalue &gt;= 85 then
-      sym.echo('You should mend your ' .. system .. ' system')
-      canmend = true
-      break
-    else
-      canmend = false
-    end
-  end
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -2876,33 +2719,9 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>ship weapons tracking</name>
-				<script>sym.space.weapon = sym.space.weapon or {}
-sym.space.weapon.id = matches[2]
-sym.space.weapon.type = matches[3] --em thermal kinetic gravitic 
-sym.space.weapon.ammo = matches[4]
-sym.space.weapon.charges = matches[5]
-sym.space.weapon.reloadspeed = matches[6]
-sym.space.weapon.ready = matches[8]
-local w = sym.space.weapon
---local weaponinfo = {'id','ammo','type','charges','reloadspeed','ready'}
---display("id  "..w.id,"ammo  "..w.ammo,"type "..w.type,"charges "..w.charges, "reload "..w.reloadspeed, "ready "..w.ready)
-function sym.space.fireSheilds()
-for _, v in pairs(w) do
-  if v == "EM" or "kinetic" or "gravitic" then
-  send('ship weapon fire '..(w.id)..' '..sym.target)
-  end
-end
-end
-
-function sym.space.fireHull()
-for _, v in pairs(w) do
-  if v == "thermal" or "kinetic" or "gravitic" then
-  send('ship weapon fire '..(w.id)..' '..sym.target)
-  end
-end
-end</script>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>pvp</name>
+				<script></script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -2913,13 +2732,318 @@ end</script>
 				<mSoundFile></mSoundFile>
 				<colorTriggerFgColor>#000000</colorTriggerFgColor>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^\s+(\d+)\s+.+\b(EM|kinetic|gravitic|thermal|capdrainer)\s(\w+)\s+\d+%\s+(\d+)\s+(\d).00s\s+(Yes|No)\s+(Yes|No)\s+$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>missile counter</name>
+					<script>if not sym.space.flags.countermeasures and not sym.space.flags.missilesinbound then
+  local firetime = matches[2] * .85
+  sym.space.flags.missilesinbound = true
+  tempTimer(
+    firetime,
+    function()
+      send('ship countermeasures')
+      sym.space.flags.missilesinbound = false
+    end
+  )
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Missile launch detected from .+, ETA (.+)\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>countermeasures</name>
+					<script>sym.space.flags.countermeasures = true</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ffaa00</mFgColor>
+					<mBgColor>#550000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>The ship shoots countermeasures around its hull.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>countermeasures cooldown</name>
+					<script>sym.space.flags.countermeasures = false</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ffaa00</mFgColor>
+					<mBgColor>#550000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>The ship is again ready to fire countermeasures.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>weapon autoassign module</name>
+					<script>if matches[3] == "Interdictor Beam" then
+  send('ship module alias ' .. matches[2] .. ' iterdict')
+elseif
+  matches[3] == "Laser Beam I" or matches[3] == "Laser Beam II" or matches[3] == "Laser Beam III"
+then
+  send('ship module alias ' .. matches[2] .. ' lasers')
+elseif
+  matches[3] == "Targeted Missile I" or
+  matches[3] == "Targeted Missile II" or
+  matches[3] == "Targeted Missile III"
+then
+  send('ship module alias ' .. matches[2] .. ' missiles')
+elseif
+  matches[3] == "Massive Cannon I" or
+  matches[3] == "Massive Cannon II" or
+  matches[3] == "Massive Cannon III"
+then
+  send('ship module alias ' .. matches[2] .. ' mcannons')
+elseif matches[3] == "Cannon I" or matches[3] == "Cannon II" or matches[3] == "Cannon III" then
+  send('ship module alias ' .. matches[2] .. ' cannons')
+elseif matches[3] == "Slicekit" then
+  send('ship module alias ' .. matches[2] .. ' slicer')
+elseif matches[3] == "Cap Drainer" then
+  send('ship module alias ' .. matches[2] .. ' drainer')
+else
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Module #(\d+) - \b(.+)\b\s+(Active|Inactive)$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>reload</name>
+					<script>send("ship weapon reload "..matches[2])</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^.+\#(\d+) has 0 ammunition loaded\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>ship weapons tracking</name>
+					<script>sym.space.weapon = sym.space.weapon or {}
+sym.space.weapon[matches[2]] = {}
+sym.space.weapon[matches[2]].type = matches[3] --em thermal kinetic gravitic
+sym.space.weapon[matches[2]].ammo = matches[4]
+sym.space.weapon[matches[2]].charges = matches[5]
+sym.space.weapon[matches[2]].reloadspeed = matches[6]
+sym.space.weapon[matches[2]].ready = matches[8]
+
+function fireShields()
+  for _, v in pairs(sym.space.weapon) do
+    if v.type == "EM" or v.type == "gravitic" or v.type == "kinetic" then
+      send('ship weapon fire ' .. _ .. ' ' .. sym.target)
+    end
+  end
+end
+
+function fireHull()
+  for _, v in pairs(sym.space.weapon) do
+    if v.type == "thermal" or v.type == "kinetic" or v.type == "gravitic" then
+      send('ship weapon fire ' .. _ .. ' ' .. sym.target)
+    end
+  end
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^\s+(\d+)\s+.+\b(EM|kinetic|gravitic|thermal|capdrainer)\s(\w+)\s+\d+%\s+(\d+)\s+(\d).00s\s+(Yes|No)\s+(Yes|No)\s+$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>enemy shields down</name>
+					<script>sym.space.targetshields = false
+if math.floor(gmcp.Char.Vitals.ship_cap / gmcp.Char.Vitals.ship_cap_max * 100) &gt;= 50 then
+fireHull()
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You have broken the shields on your target!</string>
+						<string>That is not a known ship type.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
+						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>enemy shields up</name>
+					<script>-- this isn't going to be actually accurate until I add in pattern matching for the actual ship target but quick fix
+if gmcp.Room.Info.environment == 'bridge' then
+sym.space.targetshields = true
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^The shields around .+ begin to flicker with new life\.$</string>
+						<string>You have defeated</string>
+						<string>You have slain</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+						<integer>2</integer>
+						<integer>2</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>ship combat</name>
+					<script>sym.space.incombat = true</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#000000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>The shipsim locks down into combat mode. Diverting power to main weapon systems. Maximum ship speed limited to 50%.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>ship combat off</name>
+					<script>sym.space.incombat = false</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#00ff00</mFgColor>
+					<mBgColor>#000000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>The shipsim disengages combat mode.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>ship info</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^--\s.+\s\(.+\)\s.+-$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>enemy owner track</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Model:\s+.+\s+Owner:\s+(\w+)$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+			</TriggerGroup>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>alerts</name>
@@ -4601,7 +4725,7 @@ tempTimer(
 				<regexCodeList />
 				<regexCodePropertyList />
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-b.e.a.s.t.</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -4982,6 +5106,9 @@ end</script>
 					<script>deleteLine()
 cecho("\n&lt;orange&gt;Targetting: &lt;white&gt;&lt;&lt;green&gt;"..matches[2].."&lt;white&gt;&gt;")
 target = matches[2]
+if gmcp.Room.Info.environment == 'bridge'then
+  sym.space.targetshields = true
+end
 local class = gmcp.Char.Status.class
 if class == "Nanoseer" then
 sym.pvp.flags.rattle = false

@@ -437,6 +437,7 @@ send("artifact link ship_free_voidgate here")
 send("artifact link ship_cargo_recover here")
 send("artifact link ship_hyperscan_1 here")
 send("artifact link ship_anonymity here")
+send("artifact link ship_enemy_detector here")
 send("artifact link stationlink here")
 send("artifact link ship_illusion here")
 send("artifact link ship_weapon_falloff here")
@@ -468,24 +469,6 @@ send("artifact link ship_voidgate_hopper here")
 				<regex>^shipaf$</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
-				<name>shipfire all</name>
-				<script>local target = gmcp.Char.Status.target:match('%w+')
-sendAll(
-  'ship target ' .. target,
-  'ship weapon fire lasers ' .. target,
-  'ship weapon fire mcannons ' .. target,
-  'ship weapon fire cannons ' .. target,
-  'ship weapon fire missiles ' .. target,
-  'ship weapon fire slicer ' .. target,
-  'ship weapon fire drainer ' .. target,
-  'ship weapon fire tractor ' .. target,
-  'ship weapon fire interdict ' .. target
-)</script>
-				<command></command>
-				<packageName></packageName>
-				<regex>^shipf$</regex>
-			</Alias>
-			<Alias isActive="yes" isFolder="no">
 				<name>manual web</name>
 				<script>send('ship weapon fire webs '..sym.target)</script>
 				<command></command>
@@ -498,6 +481,7 @@ sendAll(
   'ship weapon ammo mcannons kinetic',
   'ship weapon ammo cannons kinetic',
   'ship weapon ammo missiles kinetic',
+  'ship weapons',
   'say reloading Kinetic'
 )</script>
 				<command></command>
@@ -509,6 +493,7 @@ sendAll(
 				<script>  sendAll('ship weapon ammo mcannons thermal',
           'ship weapon ammo cannons thermal',
           'ship weapon ammo missiles thermal',
+          'ship weapons',
           'say reloading Thermal')</script>
 				<command></command>
 				<packageName></packageName>
@@ -519,6 +504,7 @@ sendAll(
 				<script>  sendAll('ship weapon ammo mcannons em',
           'ship weapon ammo cannons em',
           'ship weapon ammo missiles em',
+          'ship weapons',
           'say reloading EM')</script>
 				<command></command>
 				<packageName></packageName>
@@ -529,6 +515,7 @@ sendAll(
 				<script>  sendAll('ship weapon ammo mcannons gravitic',
           'ship weapon ammo cannons gravitic',
           'ship weapon ammo missiles gravitic',
+          'ship weapons',
           'say reloading Gravtic')</script>
 				<command></command>
 				<packageName></packageName>

@@ -187,7 +187,11 @@ end</script>
 					<script>sym.hunter.class['B.E.A.S.T.'] = function()
   local target = sym.target
   if sym.hunter.flags.channeling then
-    sym.hunter.send('plasma flash '..target)
+      if tonumber(gmcp.Char.Vitals.pl) &lt; 100 then
+        sym.hunter.send('mwp netlaunch ' .. target)
+      else
+        sym.hunter.send('plasma flash ' .. target)
+      end
     sym.hunter.flags.channeling = false
   else
   if not sym.hunter.flags.contingency then
@@ -221,7 +225,8 @@ end</script>
     sym.hunter.send('guile stim')
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
-      sym.hunter.send('ied fling ripper at '..target)
+      send("switch weakening random")
+      sym.hunter.send('ied fling shrapnel ripper at '..target)
     elseif sym.haveskill ('Pocketsand', 'Guile') then
       sym.hunter.send('guile pocketsand '..target)
     elseif sym.haveskill ('Spin', 'Gunslinging') then
@@ -231,7 +236,8 @@ end</script>
     end
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
-  elseif not sym.hunter.flags.dualshot and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
+    if caneject then send('gun eject') end
+  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
     sym.hunter.send('gun rapidfire '..target)
   else
     sym.hunter.send('gun crackshot '..target)
@@ -267,20 +273,25 @@ end</script>
 					<script>sym.hunter.class['Engineer'] = function()
   local target = sym.target
   local sym_name = gmcp.Char.Name.name
-      if sym.hunter.flags.channeling then
+  if sym.hunter.flags.channeling then
       sym.hunter.send('gadget shock '..target)
       sym.hunter.flags.channeling = false
-    else
-  if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjectors', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
-    sym.hunter.send('stimjector ' .. sym_name)
-  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
-    sym.hunter.send('bot repeat claw '..target)
-  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
-    sym.hunter.send('bot harass '..target)
-  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
-    sym.hunter.send('gadget shock '..target)
   else
-    sym.hunter.send('bot claw '..target)
+    if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjectors', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+      sym.hunter.send('stimjector ' .. sym_name)
+    elseif not sym.hunter.flags.turretpower then
+      sym.hunter.send('turret qpcboost')
+    elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop and sym.haveskill('Airdrop', 'Bots')then
+      send('airdrop')
+-- remove the commented out code below for lower level bashing
+--  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
+--    sym.hunter.send('bot repeat claw '..target)
+--  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
+--    sym.hunter.send('bot harass '..target)
+--  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
+--    sym.hunter.send('gadget shock '..target)
+    else
+      sym.hunter.send('bot disrupt '..target)
     end
   end
 end</script>
@@ -2526,6 +2537,25 @@ sym.space.flags = sym.space.flags or {}</script>
     end
   end
 end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>ship pve list</name>
+				<packageName></packageName>
+				<script>shipPVE =
+  {
+    "Leviathan",
+    "Devourer",
+    "Anomaly",
+    "Binary",
+    "Cleax",
+    "Trinaries",
+    "Miningdrone",
+    "Generator",
+    "Rogueai",
+    "Platform",
+    "Assassin"
+  }</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
