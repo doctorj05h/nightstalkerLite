@@ -552,7 +552,7 @@ local zone = matches[4]
 local x = tonumber(matches[5])
 local y = tonumber(matches[6])
 local desc = matches[7]
-local color = "#00ff00"
+local color = "#00ffff"
 
 if string.match(desc, "mineable") or string.match(desc, "harvestable") then
   color = "#ffff99"
@@ -563,7 +563,7 @@ elseif string.match(desc, "station") or string.match(desc, "voidgate") then
 elseif string.find(desc, "#%d+") then
   if not string.match(desc, "structure") then
   
-    local targetID = string.sub(string.match(desc, "#%d+"), 2)
+    local ship_id = string.sub(string.match(desc, "#%d+"), 2)
     
     if string.match(desc, "from Song") then
       color = "#ff33ff"
@@ -647,9 +647,11 @@ setTriggerStayOpen('capture beacon', 0)
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>switch space map</name>
-				<script>sym.ui.mapper.switch('Space')
+				<script>if gmcp.Room.Info.area ~= "a small transport craft" then
+sym.ui.mapper.switch('Space')
 sym.space.weapon = {}
-sendAll('ship details weapons','ship weapons')</script>
+sendAll('ship details weapons','ship weapons')
+end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -1108,7 +1110,7 @@ send('ih')</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -1123,7 +1125,7 @@ send('ih')</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>ambushed</name>
 					<script>sym.hunter.flags.ambushed = true</script>
 					<triggerType>0</triggerType>
@@ -1138,13 +1140,11 @@ send('ih')</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>Without warning, you snatch</string>
-						<string>piece from your belt and fire it from the hip</string>
 						<string>^You: Gun Ambush .+\.$</string>
 						<string>^.+ calmly dodges the predictable attack\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>2</integer>
-						<integer>0</integer>
 						<integer>1</integer>
 						<integer>1</integer>
 					</regexCodePropertyList>
@@ -1169,7 +1169,7 @@ send('ih')</script>
 						<integer>3</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>rapidfire</name>
 					<script>sym.hunter.flags.rapidfire = true</script>
 					<triggerType>0</triggerType>
@@ -1317,7 +1317,7 @@ send('ih')</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -2636,7 +2636,29 @@ send('ship repair hull')</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>how much refined</name>
-					<script>cechoLink('&lt;dark_salmon&gt; '..(matches[3] / 5).. ' refined', [[send('refinery queue '..(matches[3] / 5)..' '..matches[2])]], "click to refine", true)</script>
+					<script>local refined = math.floor(matches[3] / 5)
+
+if matches[2] == "helium" then
+  local material = "helium11"
+  cechoLink(
+  '&lt;dark_salmon&gt; ' .. refined .. ' refined',
+  function()
+    send('refinery queue ' .. refined .. ' ' .. material)
+  end,
+  "click to refine",
+  true
+)
+else
+  local material = matches[2]
+  cechoLink(
+  '&lt;dark_salmon&gt; ' .. refined .. ' refined',
+  function()
+    send('refinery queue ' .. refined .. ' ' .. material)
+  end,
+  "click to refine",
+  true
+)
+end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -2648,7 +2670,7 @@ send('ship repair hull')</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^raw.+ Raw(.+)  (\d+)   .+$</string>
+						<string>^raw.+\s+Raw\s(\w+).+\s+(\d+).+$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2716,6 +2738,29 @@ end</script>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>3</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>improved crush/compress</name>
+					<script>selectCurrentLine()
+setFgColor(200,125,98)
+resetFormat()
+deselect()</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Your efficient</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>2</integer>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
@@ -3640,7 +3685,7 @@ echo(getTime(true, "mm:ss:z"))</script>
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -3752,17 +3797,16 @@ cecho("\n&lt;white&gt; -&lt;ansi_075&gt;Affliction: &lt;light_goldenrod&gt;" ..m
 					<name>bug toggle</name>
 					<script>--deleteLine()
 local toggle = matches[3]
+local switch = matches[2]
 if toggle == "Yes" then
   cechoLink(
-    "&lt;cyan&gt;" .. matches[2] .. " press &lt;brown:white&gt;me!",
-    function()
-      send('guile bug tuneout ' .. matches[2])
-    end,
-    "On/Off",
+    " &lt;orange_red:black&gt;Tuneout?",
+    function() send('guile bug tuneout ' .. switch) end,
+    "Click to disable",
     true
   )
 else
-      send('guile bug tunein ' .. matches[2])
+      send('guile bug tunein ' .. switch)
 end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -3775,7 +3819,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^ (\d+) .+ (\w+)$</string>
+						<string>^\s+(\d+) .+ (Yes|No)$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -4164,7 +4208,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -5146,6 +5190,64 @@ end
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
+		</TriggerGroup>
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>hacker</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>hack variables</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You blink hazily as your eyes adjust to the world around you and you quickly consult your mindsim to catch up on worldly affairs.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Password helper</name>
+				<script>local solvesub =  matches[2]:gsub("*", "-")
+selectString(matches[2], 1)
+setLink([[openWebPage("http://www.crosswordsolver.org/solve/]]..solvesub..[[")]], "Open a list of possible solutions to "..solvesub)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#55aaff</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^PasswordUpdate\(\".+\"\) \-\&gt; Display\(\$pass\) \-\&gt; (.+)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 		</TriggerGroup>
 	</TriggerPackage>
 	<TimerPackage />

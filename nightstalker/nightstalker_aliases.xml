@@ -401,7 +401,7 @@ cecho("\n&lt;dark_orchid&gt;----------------------------------------------------
 			<Alias isActive="yes" isFolder="no">
 				<name>launch ship</name>
 				<script>sym.space.boarded = true
-sendAll("ship launch", 'say activate all')
+sendAll("ship launch", 'say activate all', 'ship weapons')
 expandAlias("shipart")
 enableTimer("ships")</script>
 				<command></command>
@@ -411,13 +411,13 @@ enableTimer("ships")</script>
 			<Alias isActive="yes" isFolder="no">
 				<name>dock ship</name>
 				<script>sym.space.boarded = false
-send("ship dock")
+sendAll("ship dock")
 disableTimer("ships")
 sym.ui.adj.right:hide()
 sym.ui.adj.left:hide()</script>
 				<command></command>
 				<packageName></packageName>
-				<regex>^ship (dock|eva)$</regex>
+				<regex>^ship dock$</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>cargoRecovery</name>
@@ -520,6 +520,17 @@ send("artifact link ship_voidgate_hopper here")
 				<command></command>
 				<packageName></packageName>
 				<regex>^rlg$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>ship eva</name>
+				<script>sym.space.boarded = false
+sendAll("ship eva")
+disableTimer("ships")
+sym.ui.adj.right:hide()
+sym.ui.adj.left:hide()</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^ship eva$</regex>
 			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">

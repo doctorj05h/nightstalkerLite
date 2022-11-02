@@ -2271,6 +2271,7 @@ sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
   for _, player in ipairs(sym.ui.roomplayers) do
     if c % 3 == 0 then sym.ui.info:decho('Room', string.format('\n %s- ', colour('SlateBlue'))) end
     sym.ui.info:decho('Room', string.format('%s%-12s', colour('CornflowerBlue'), player.name))
+    sym.ui.info:dechoLink('Room', '&lt;180,10,80:0,0,0&gt;[X] ', [[send("st ]] .. player.name .. [[")]], "", true)
     c = c + 1
   end
 
@@ -2300,8 +2301,7 @@ sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
     local exception = sym.hunter.exceptions[entity.name]
     local colours = isTarget and {'maroon', 'MediumVioletRed'} or {'SlateBlue', noTarget and 'CornflowerBlue' or 'LightBlue'}
 
-    sym.ui.info:decho('Room', string.format('\n %s-%s %s',
-      colour(colours[1]),
+    sym.ui.info:decho('Room', string.format('\n %s-%s %s', colour(colours[1]),
       isTarget and '&gt;' or '',
       sym.ui.info.config.displayIDs and string.format('%s%d ', colour(isTarget and 'IndianRed' or 'MediumSlateBlue'), entity.id) or ''
     ))
@@ -2309,6 +2309,7 @@ sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
     setFgColor('infowinRoom', unpack(color_table[colours[2]]))
     setBgColor('infowinRoom', r, g, b)
     if ignoring then setStrikeOut('infowinRoom', true) end
+    sym.ui.info:dechoLink('Room', string.format('%s%-1s ', colour('white'), entity.id), [[send("probe ]] .. entity.id .. [[")]], "", true)
     echoPopup('infowinRoom', entity.name, {
       [[send('st ]]..entity.id..[[', false)]],
       [[send('probe ]]..entity.id..[[', false)]],
