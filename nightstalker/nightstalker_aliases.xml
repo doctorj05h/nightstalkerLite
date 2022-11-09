@@ -403,7 +403,8 @@ cecho("\n&lt;dark_orchid&gt;----------------------------------------------------
 				<script>sym.space.boarded = true
 sendAll("ship launch", 'ship module activate all', 'ship weapons')
 expandAlias("shipart")
-enableTimer("ships")</script>
+enableTimer("ships")
+sym.ui.mapper.switch('Space')</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^(say|ship) launch$</regex>
@@ -527,10 +528,11 @@ send("artifact link ship_voidgate_hopper here")
 sendAll("ship eva")
 disableTimer("ships")
 sym.ui.adj.right:hide()
-sym.ui.adj.left:hide()</script>
+sym.ui.adj.left:hide()
+sym.ui.mapper.switch('Space')</script>
 				<command></command>
 				<packageName></packageName>
-				<regex>^ship eva$</regex>
+				<regex>^(ship|station) eva$</regex>
 			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">
@@ -730,18 +732,17 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
     sym.hunter.send('guile stim')
   elseif canmend then
     checkSystems()
-  elseif bullets == 0 and windupcheck == 0 then
+  elseif bullets == 0 then
     send("switch weakening random")
     sym.hunter.send('ied fling shrapnel piercer at '..target)
      if caneject then
       send("gun eject")
      end
   
-  elseif bullets == 0 and windupcheck == 1 then
+  elseif bullets == 0 then
       send("switch weakening random")
       sym.hunter.send('guile pocketsand '..target)
       sym.hunter.send('assess ' .. target)
-      windupcheck = 0
   
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     send("switch weakening random")
@@ -761,7 +762,6 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
   
   else
     sym.hunter.send('gun pointblank '..target)
-    windupcheck = 0
  end</script>
 					<command></command>
 					<packageName></packageName>
@@ -776,7 +776,7 @@ if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Ch
 elseif canmend then
     checkSystems()
 
-elseif bullets == 0 and windupcheck == 0 then
+elseif bullets == 0 then
   if sym.haveskill('Fling', 'Improvisation') then
     if not sym.hunter.flags.meltered then
       sym.hunter.send('ied fling shrapnel melter at ' .. target)
@@ -789,23 +789,18 @@ elseif bullets == 0 and windupcheck == 0 then
     sym.hunter.send('ied fling shrapnel blinder at ' .. target)
     end
   end
-elseif bullets == 0 and windupcheck == 1 then
+elseif bullets == 0 then
   sym.hunter.send('guile pocketsand ' .. target)
-  windupcheck = 0
 elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
   send("switch disrupting random")
   sym.hunter.send('gun ambush ' .. target)
   send('assess ' .. target)
 elseif
-  not sym.hunter.flags.rapidfire and
-  sym.haveskill('Rapidfire', 'Gunslinging') and
-  bullets &gt;= 2 and
-  windupcheck == 0
-then
+  not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
   send("switch disrupting random")
   sym.hunter.send('gun rapidfire ' .. target)
   send('assess ' .. target)
-elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 and windupcheck == 0 then
+elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 then
   sym.hunter.send('guile haymaker ' .. target .. ' head')
   sym.hunter.send('assess ' .. target)
   if caneject == true then
@@ -813,7 +808,6 @@ elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 and windupcheck == 0 then
   end
 else
   sym.hunter.send('gun pointblank ' .. target)
-  windupcheck = 0
 end</script>
 					<command></command>
 					<packageName></packageName>

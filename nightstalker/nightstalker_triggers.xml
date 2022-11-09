@@ -3386,11 +3386,9 @@ end</script>
 				<script>deleteLine()
 local hit = matches[2]
 if hit == "CRITICAL" then
-cecho("\n &lt;ansi_075&gt;._.-._.-&lt;white&gt; CRITICAL HIT &lt;ansi_075&gt;-._.-._.")
-cecho('\n ')
+cecho("&lt;orange&gt; \[&lt;firebrick&gt; &lt;b&gt;CRITICAL HIT&lt;/b&gt;&lt;orange&gt; \] ")
 else
-cecho("\n &lt;ansi_075&gt;&lt;light_sea_green&gt;&lt;medium_spring_green&gt;&lt;light_sea_green&gt;.&lt;ansi_075&gt;_&lt;light_sea_green&gt;.-&lt;medium_spring_green&gt;*&lt;light_sea_green&gt;-&lt;white&gt; CRUSHING CRITICAL HIT &lt;light_sea_green&gt;-&lt;medium_spring_green&gt;*&lt;light_sea_green&gt;-&lt;ansi_075&gt;&lt;light_sea_green&gt;.&lt;ansi_075&gt;_&lt;light_sea_green&gt;.&lt;medium_spring_green&gt;&lt;light_sea_green&gt;&lt;ansi_075&gt;")
-cecho('\n ')
+cecho("&lt;gold&gt; \{&lt;red&gt;&lt;b&gt; CRUSHING CRITICAL HIT&lt;gold&gt; &lt;/b&gt;\}")
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -3640,9 +3638,9 @@ deselect()</script>
 				<script>local percents = (tonumber(matches[2]) / tonumber(gmcp.Char.Vitals.maxhp)) * 100
 
 if percents &gt;= 92.5 then
-  local red = 150
+  local red = 230
   local green = 250
-  local blue = 100
+  local blue = 205
   selectString(matches[2], 1)
   setFgColor(red, green, blue)
   resetFormat()
@@ -3798,7 +3796,7 @@ echo(getTime(true, "mm:ss:z"))</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>gunslinging afflictions</name>
 					<script>deleteLine()
-cecho("\n&lt;white&gt; -&lt;ansi_075&gt;Affliction: &lt;light_goldenrod&gt;" ..matches[2])</script>
+cecho("\n&lt;white&gt; - &lt;gray&gt;Affliction&lt;white&gt;: &lt;light_goldenrod&gt;" ..matches[2])</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -5144,7 +5142,7 @@ cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>damage dealt track</name>
 					<script>deleteLine()
-cecho("\n&lt;green&gt;Damage Dealt: &lt;white&gt;&lt;b&gt;"..matches[2].. "&lt;/b&gt; " ..matches[3].." - &lt;light_goldenrod&gt;"..matches[4])
+cecho("\n&lt;lime_green&gt;Damage Dealt&lt;white&gt;: &lt;b&gt;"..matches[2].. "&lt;/b&gt; " ..matches[3].." - &lt;light_goldenrod&gt;"..matches[4])
 if matches[3] == "electric" then
   sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
   cecho('\n ')
@@ -5163,6 +5161,33 @@ end</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>^Damage Dealt: (\d+) (.+), (.+)</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>subsystem dealt track</name>
+					<script>deleteLine()
+cecho("\n&lt;dark_orchid&gt;Subsys Dealt&lt;white&gt;: &lt;pink&gt;&lt;b&gt;"..matches[2].. "&lt;/b&gt; &lt;white&gt;" ..matches[3].."&lt;gold&gt; - &lt;pink&gt;"..matches[4])
+--if matches[3] == "electric" then
+--  sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
+--  cecho('\n ')
+--  cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
+--  cecho('\n ')
+--end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#aaffff</mFgColor>
+					<mBgColor>#000000</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Subsystem Damage Dealt: (\d+) (.+), (.+)</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
