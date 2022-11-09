@@ -160,17 +160,17 @@ end</script>
 					<packageName></packageName>
 					<script>local target = gmcp.Char.Status.target:match('%w+')
 if gmcp.Room.Info.environment == 'bridge' then
- if not sym.space.targetshields or table.contains(shipPVE, target)then
-  fireHull()
- else
-  fireShields()
- end
   sendAll(
     'ship target ' .. target,
     'ship weapon fire slicer ' .. target,
     'ship weapon fire tractor ' .. target,
     'ship weapon fire interdict ' .. target
   )
+ if not sym.space.targetshields or table.contains(shipPVE, target)then
+  fireHull()
+ else
+  fireShields()
+ end
 else
   send("out")
 end</script>

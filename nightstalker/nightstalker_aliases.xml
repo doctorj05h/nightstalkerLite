@@ -401,7 +401,7 @@ cecho("\n&lt;dark_orchid&gt;----------------------------------------------------
 			<Alias isActive="yes" isFolder="no">
 				<name>launch ship</name>
 				<script>sym.space.boarded = true
-sendAll("ship launch", 'say activate all', 'ship weapons')
+sendAll("ship launch", 'ship module activate all', 'ship weapons')
 expandAlias("shipart")
 enableTimer("ships")</script>
 				<command></command>

@@ -2473,11 +2473,17 @@ end</script>
         sym.ui.create_boxes()
         sym.ui.create_modules()
         sym.ui.adj.top:show()
+         sym.ui.adj.top:connectToBorder("top")
         sym.ui.adj.bottom:show()
+         sym.ui.adj.bottom:connectToBorder("bottom")
         sym.ui.adj.topright:show()
+         sym.ui.adj.topright:connectToBorder("right")
         sym.ui.adj.bottomright:show()
+         sym.ui.adj.bottomright:connectToBorder("right")
         sym.ui.adj.topleft:show()
+         sym.ui.adj.topleft:connectToBorder("left")
         sym.ui.adj.bottomleft:show()
+         sym.ui.adj.topleft:connectToBorder("left")
         sym.space.boarded = false
         capacitor_bf = "No"
         engine_bf = "No"
