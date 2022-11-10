@@ -1582,6 +1582,20 @@ sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.reload', 'sysLuaInstallMo
 			<packageName></packageName>
 			<regex>^reloadui$</regex>
 		</Alias>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>hacking</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<Alias isActive="yes" isFolder="no">
+				<name>infect</name>
+				<script>send('infect '..sym.target)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^infect$</regex>
+			</Alias>
+		</AliasGroup>
 	</AliasPackage>
 	<ActionPackage />
 	<ScriptPackage />

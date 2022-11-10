@@ -2362,14 +2362,16 @@ sym.ships.flags = sym.ships.flags or {}</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>backfire tracking</name>
-				<script>if matches[3] ~= "No" and (tonumber(gmcp.Char.Vitals.ship_shield) &gt; 0) then
+				<script>local system = matches[2]
+if matches[3] ~= "No" and (tonumber(gmcp.Char.Vitals.ship_shield) &gt; 0) then
   if not sym.space.restart then 
-  sym.space.restart = tempTimer(5, function()
-    send("ship restart " .. matches[2])
-    sym.echo("Restarting " ..matches[2])
-    sym.space.restart = nil
-  end)
-end
+  sym.space.restart = tempTimer(5, 
+    function()
+      send("ship restart " .. system)
+      sym.echo("Restarting " .. system)
+      sym.space.restart = false
+    end)
+  end
 end
 if matches[2] == "Engine" then
   engine_bf = matches[3]
@@ -3386,9 +3388,9 @@ end</script>
 				<script>deleteLine()
 local hit = matches[2]
 if hit == "CRITICAL" then
-cecho("&lt;orange&gt; \[&lt;firebrick&gt; &lt;b&gt;CRITICAL HIT&lt;/b&gt;&lt;orange&gt; \] ")
+cecho("&lt;khaki&gt; \[&lt;turquoise&gt; &lt;b&gt;CRITICAL HIT&lt;/b&gt;&lt;khaki&gt; \] ")
 else
-cecho("&lt;gold&gt; \{&lt;red&gt;&lt;b&gt; CRUSHING CRITICAL HIT&lt;gold&gt; &lt;/b&gt;\}")
+cecho("&lt;khaki&gt; \[&lt;aquamarine&gt;&lt;b&gt; CRUSHING CRITICAL HIT&lt;khaki&gt; &lt;/b&gt;\]")
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -5142,7 +5144,7 @@ cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>damage dealt track</name>
 					<script>deleteLine()
-cecho("\n&lt;lime_green&gt;Damage Dealt&lt;white&gt;: &lt;b&gt;"..matches[2].. "&lt;/b&gt; " ..matches[3].." - &lt;light_goldenrod&gt;"..matches[4])
+cecho("\n&lt;spring_green&gt;Damage Dealt&lt;white&gt;: &lt;b&gt;"..matches[2].. "&lt;/b&gt;&lt;khaki&gt; " ..matches[3].." - &lt;spring_green&gt;"..matches[4])
 if matches[3] == "electric" then
   sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
   cecho('\n ')
@@ -5241,7 +5243,7 @@ end
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>hacker</name>
-			<script></script>
+			<script>sym.hacker = sym.hacker or {}</script>
 			<triggerType>0</triggerType>
 			<conditonLineDelta>0</conditonLineDelta>
 			<mStayOpen>0</mStayOpen>
@@ -5256,7 +5258,7 @@ end
 			<regexCodePropertyList />
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>hack variables</name>
-				<script></script>
+				<script>sym.hacker = {}</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -5295,6 +5297,84 @@ setLink([[openWebPage("http://www.crosswordsolver.org/solve/]]..solvesub..[[")]]
 				<regexCodePropertyList>
 					<integer>1</integer>
 				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>overwrite</name>
+				<script>sym.hacker.overwrite = true</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Load\("Overwrite .+"\, \d+\)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>overwrite cooldown</name>
+				<script>sym.hacker.overwrite = false</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>CooldownOver("overwrite")</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>decoy</name>
+				<script>sym.hacker.decoy = true</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>DeployDecoy.Result("SUCCESS")</string>
+					<string>Error("DECOY_ALREADY_PRESENT")</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>New trigger</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
 			</Trigger>
 		</TriggerGroup>
 	</TriggerPackage>
