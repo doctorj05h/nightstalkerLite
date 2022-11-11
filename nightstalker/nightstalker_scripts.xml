@@ -621,11 +621,11 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
       send('crt Target: '..mob.id, false)
     end
   else
-    sym.echo('&lt;156,0,0&gt;There are no suitable targets left.\n')
+    sym.echo('&lt;160,0,0&gt;There are no suitable targets left.\n')
     disableTrigger('hunting balance')
     if sym.hunter.runner.enabled then
       if sym.hunter.runner.empty_timer then killTimer(sym.hunter.runner.empty_timer) end
-      sym.hunter.runner.empty_timer = tempTimer(1 + getNetworkLatency(), [[raiseEvent('empty_room')]])
+      sym.hunter.runner.empty_timer = tempTimer(0.75 + getNetworkLatency(), [[raiseEvent('empty_room')]])
     end
   end
 end
@@ -833,7 +833,7 @@ end</script>
 				<name>echo</name>
 				<packageName></packageName>
 				<script>sym.echo = function(what)
-  decho('&lt;157,60,60&gt;(&lt;55,145,55&gt;Nightstalker&lt;157,60,60&gt;): &lt;62,245,62&gt;'..what..'\n')
+  decho('&lt;192,192,192&gt;(&lt;55,145,55&gt;Nightstalker&lt;192,192,192&gt;): &lt;245,245,245&gt;'..what..'\n')
 end</script>
 				<eventHandlerList />
 			</Script>
@@ -2562,6 +2562,57 @@ end</script>
     "Rogueai",
     "Platform",
     "Assassin"
+  }</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>hacker</name>
+			<packageName></packageName>
+			<script></script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>h_targetting</name>
+				<packageName></packageName>
+				<script>function sym.hacker.targetting()
+
+  local mob = sym.hunter.checktarget()
+
+  if mob then
+    local target = gmcp.Char.Status.target:match('%d+')
+    if target and mob.id == target then return end
+    decho('\n(Hacker):&lt;0,50,160&gt;Next Target: &lt;25,130,155&gt;' .. mob.name .. '&lt;0,128,128&gt; (&lt;25,130,155&gt;' .. mob.id .. '&lt;0,128,128&gt;)\n')
+--    enableTrigger('hacking balance')
+    send('st ' .. mob.id, false)
+--    if sym.hunter.runner.config.calling then
+--      send('crt Target: '..mob.id, false)
+--    end
+  else
+    decho('\n&lt;255,255,255&gt;(&lt;200,255,100&gt;Hacker&lt;255,255,255&gt;):&lt;0,200,0&gt;There are no suitable targets here.\n')
+--    disableTrigger('hacking balance')
+    if sym.hunter.runner.enabled then
+      if sym.hunter.runner.empty_timer then killTimer(sym.hunter.runner.empty_timer) end
+      sym.hunter.runner.empty_timer = tempTimer(0.75 + getNetworkLatency(), [[raiseEvent('empty_room')]])
+    end
+  end
+end
+
+sym.registerevent('hunter targetting', 'room_updated', 'sym.hunter.targetting')</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>hacking prio</name>
+				<packageName></packageName>
+				<script>sym.hunter.priorities['Unknown location'] = {
+    'an erratic glitch',
+    'a wedge-shaped black scanner',
+    'a self-replicating antivirus',
+    'a basic antivirus',
+    'a polymorphic antivirus',
+    'a smooth-surfaced honeypot',
+    'a hard-light firewall',
+    'a hard-light mobile firewall',
+    'an erratic mobile glitch',
   }</script>
 				<eventHandlerList />
 			</Script>

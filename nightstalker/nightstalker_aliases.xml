@@ -1590,7 +1590,11 @@ sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.reload', 'sysLuaInstallMo
 			<regex></regex>
 			<Alias isActive="yes" isFolder="no">
 				<name>infect</name>
-				<script>send('infect '..sym.target)</script>
+				<script>if not sym.hacker.overwrite then
+  send('overwrite ' .. sym.target)
+else
+  send('infect ' .. sym.target)
+end</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^infect$</regex>
