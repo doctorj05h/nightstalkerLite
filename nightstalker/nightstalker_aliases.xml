@@ -534,6 +534,14 @@ sym.ui.mapper.switch('Space')</script>
 				<packageName></packageName>
 				<regex>^(ship|station) eva$</regex>
 			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>leave ship</name>
+				<script>sym.ui.mapper.switch('Ground')
+sym.space.boarded = false</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^ship disembark</regex>
+			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">
 			<name>pvp</name>
@@ -726,43 +734,44 @@ end</script>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>internal</name>
-					<script>local target = sym.target
-local bullets = tonumber(gmcp.Char.Vitals.bl)
- if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and windupcheck == 0 then
+					<script>  local target = sym.target
+  local bullets = tonumber(gmcp.Char.Vitals.bl)
+if sym.hunter.flags.channeling and bullets &gt; 0 then
+      sym.hunter.send('gun pointblank '..target)
+      sym.hunter.flags.channeling = false
+elseif sym.hunter.flags.channeling and bullets == 0 then
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.flags.channeling = false
+else
+  if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
   elseif canmend then
     checkSystems()
   elseif bullets == 0 then
-    send("switch weakening random")
-    sym.hunter.send('ied fling shrapnel piercer at '..target)
-     if caneject then
-      send("gun eject")
-     end
-  
-  elseif bullets == 0 then
+    if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
+      sym.hunter.send('ied fling shrapnel piercer at '..target)
+      send('assess ' .. target)
+    elseif sym.haveskill ('Pocketsand', 'Guile') then
       sym.hunter.send('guile pocketsand '..target)
-      sym.hunter.send('assess ' .. target)
-  
+      send('assess ' .. target)
+    elseif sym.haveskill ('Spin', 'Gunslinging') then
+      sym.hunter.send('gun spin '..target)
+    else
+      sym.hunter.send('gun quickload')
+    end
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
-    send("switch weakening random")
     sym.hunter.send('gun ambush '..target)
-    sym.hunter.send('assess ' .. target)
-  
+    send('assess ' .. target)
+    if caneject then send('gun eject') end
   elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
     sym.hunter.send('gun rapidfire '..target)
-    sym.hunter.send('assess ' .. target)
-    
-  elseif caneject and bullets &gt; 3 then
-    send('gun eject')
-  
-  elseif bullets &gt;= 1 then
-    sym.hunter.send('gun crackshot '..target)
-    sym.hunter.send('assess ' .. target)
-  
+    send('assess ' .. target)
   else
-    sym.hunter.send('gun pointblank '..target)
- end</script>
+    sym.hunter.send('gun crackshot '..target)
+    send('assess ' .. target)
+   end
+end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^33</regex>
@@ -1592,12 +1601,21 @@ sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.reload', 'sysLuaInstallMo
 				<name>infect</name>
 				<script>if not sym.hacker.overwrite then
   send('overwrite ' .. sym.target)
+elseif not sym.hacker.decoy and #sym.ui.roommobs &gt; 2 then
+  send('decoy')
 else
   send('infect ' .. sym.target)
 end</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^infect$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>unlock</name>
+				<script>send('unlock ' ..sym.hacker.password)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^unlock$</regex>
 			</Alias>
 		</AliasGroup>
 	</AliasPackage>

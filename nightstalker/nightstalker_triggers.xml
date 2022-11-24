@@ -51,7 +51,7 @@ if groundMapCount == 1 then
   sym.ui.mapper:decho('Ground', '\n &lt;0,128,128&gt;Environment: &lt;128,128,0&gt;' .. gmcp.Room.Info.environment .. '')
   sym.ui.mapper:decho('Ground', '\n &lt;0,128,128&gt;Coords: &lt;128,128,0&gt;' .. gmcp.Room.Info.num .. '')
   sym.ui.mapper:decho('Ground', '\n &lt;0,128,128&gt;Exits: &lt;128,128,0&gt;' .. table.concat(table.keys(gmcp.Room.Info.exits), ' ') .. '\n')
-  sym.ui.mapper:decho('Ground', '\n&lt;0,0,128&gt;' .. string.rep('-', 45))
+  sym.ui.mapper:decho('Ground', '\n&lt;0,0,128&gt;' .. string.rep('-', 45) .. '\n')
 end
 
 if groundMapCount &gt; 1 and groundMapCount &lt; 25 then
@@ -739,7 +739,7 @@ end</script>
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>hunting balance</name>
 				<script>sym.hunter.class[gmcp.Char.Status.class](sym.target)</script>
 				<triggerType>0</triggerType>
@@ -2583,6 +2583,25 @@ sym.shiprepair()</script>
 				<name>ship balance</name>
 				<script>if sym.space.boarded then
   deleteLine()
+else
+-- systems checking while not piloting
+  local vitals = gmcp.Char.Vitals
+	local sym_ww = (vitals.ww == "1" and true or false)
+  local efficacy = {"wetwiring_efficacy", "mind_efficacy", "muscular_efficacy", "internal_efficacy", "sensory_efficacy"}
+	local systems = {"wetwiring", "mind", "muscular", "internal", "sensory"}
+	if not sym_ww then return end
+	for _, system in pairs(systems) do
+		local value = math.floor(tonumber(vitals[system]))
+    local evalue = tonumber(vitals[efficacy[_]])
+		if value &lt;= 92.5 and evalue &gt;= 85 then
+			sym.echo('You should mend your '..system..' system')
+      canmend = true
+			break
+    else
+      canmend = false
+		end
+	end
+
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -4932,7 +4951,7 @@ cecho('\n ')</script>
 					<name>room cover track</name>
 					<script>send('assess ' ..sym.target)
 cecho('\n ')
-cecho("\n &lt;ansi_075&gt;._.-._.-&lt;white&gt; "..matches[2].." IN COVER &lt;ansi_075&gt;-._.-._.")
+cecho("\n &lt;ansi_075&gt;      &lt;white&gt; "..matches[2].." IN COVER &lt;ansi_075&gt;      ")
 cecho('\n ')</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -5300,7 +5319,8 @@ setLink([[openWebPage("http://www.crosswordsolver.org/solve/]]..solvesub..[[")]]
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>overwrite</name>
-				<script>sym.hacker.overwrite = true</script>
+				<script>sym.hacker.overwrite = true
+sym.hacker.sync = true</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -5399,6 +5419,68 @@ setLink([[openWebPage("http://www.crosswordsolver.org/solve/]]..solvesub..[[")]]
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>2</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>sync balance</name>
+				<script>sym.hacker.sync = true</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#77c4ff</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Sync();</string>
+					<string>^Overwrite\.Result\(".+"\, \d+\)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>sync used</name>
+				<script>sym.hacker.sync = true</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#000000</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^UseSync\((.+)\)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>hack password</name>
+				<script>sym.hacker.password = matches[5]</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^\[ ([\*S]) \| GigaOps: (\d+)/(\d+) \| Password: (.+) \]</string>
+				</regexCodeList>
+				<regexCodePropertyList>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
