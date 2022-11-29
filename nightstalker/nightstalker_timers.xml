@@ -31,8 +31,8 @@ end</script>
 			<time>00:00:00.000</time>
 			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>static</name>
-				<script>if current_static &gt; 0 then
-current_static = current_static - (current_static *.1)
+				<script>if sym.pvp.currentstatic &gt; 0 then
+sym.pvp.currentstatic = sym.pvp.currentstatic - (sym.pvp.currentstatic *.1)
 else
 disableTimer("static")
 end</script>

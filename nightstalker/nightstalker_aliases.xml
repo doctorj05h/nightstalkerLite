@@ -537,7 +537,8 @@ sym.ui.mapper.switch('Space')</script>
 			<Alias isActive="yes" isFolder="no">
 				<name>leave ship</name>
 				<script>sym.ui.mapper.switch('Ground')
-sym.space.boarded = false</script>
+sym.space.boarded = false
+send('ship disembark')</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^ship disembark</regex>
@@ -1140,7 +1141,7 @@ if not sym.hunter.flags.channeling then
     sym.hunter.send('assess ' .. target)
   elseif canmend then
     checkSystems()
-  elseif current_shards &gt; 5 then
+  elseif sym.pvp.currentshards &gt; 5 then
     sym.hunter.send('operate magnetize ' .. target)
     sym.hunter.send('assess ' .. target)
   elseif not sym.hunter.flags.spike then
