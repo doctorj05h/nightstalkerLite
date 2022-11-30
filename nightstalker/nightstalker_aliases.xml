@@ -1079,9 +1079,6 @@ local sym_name = gmcp.Char.Name.name
 if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('stimjector ' .. sym_name)
-  elseif not sym.hunter.flags.stimjected and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 55 then
-    sym.hunter.send('stimjector ' .. sym_name)
-    sym.hunter.flags.autoheal = false
   elseif not sym.hunter.flags.turretpower then
     sym.hunter.send('turret qpcboost')
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
@@ -1092,7 +1089,7 @@ if not sym.hunter.flags.channeling then
   elseif not sym.hunter.flags.repeated then
     sym.hunter.send('bot repeat disrupt ' .. target)
     sym.hunter.send('assess ' .. target)
-  elseif not sym.hunter.flags.worming then
+  elseif not sym.pvp.flags.worming then
     sym.hunter.send('bot worm ' .. target)
     sym.hunter.send('assess ' .. target)
   elseif not sym.hunter.flags.gaussify and not sym.hunter.flags.degauss then
@@ -1129,9 +1126,6 @@ local sym_name = gmcp.Char.Name.name
 if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('stimjector ' .. sym_name)
-  elseif not sym.hunter.flags.stimjected and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 55 then
-    sym.hunter.send('stimjector ' .. sym_name)
-    sym.hunter.flags.autoheal = false
   elseif not sym.hunter.flags.turretpower then
     sym.hunter.send('turret qpcboost')
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then

@@ -277,7 +277,7 @@ end</script>
       sym.hunter.send('gadget shock '..target)
       sym.hunter.flags.channeling = false
   else
-    if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjectors', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
       sym.hunter.send('stimjector ' .. sym_name)
     elseif not sym.hunter.flags.turretpower then
       sym.hunter.send('turret qpcboost')
