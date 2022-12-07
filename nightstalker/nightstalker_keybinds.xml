@@ -19,7 +19,7 @@
 				<packageName></packageName>
 				<script>sym.ui.rotateroomtarget()</script>
 				<command></command>
-				<keyCode>47</keyCode>
+				<keyCode>96</keyCode>
 				<keyModifier>67108864</keyModifier>
 			</Key>
 			<KeyGroup isActive="yes" isFolder="yes">

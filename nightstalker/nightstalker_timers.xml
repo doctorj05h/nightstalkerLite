@@ -29,7 +29,7 @@ end</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:00.000</time>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>static</name>
 				<script>if sym.pvp.currentstatic &gt; 0 then
 sym.pvp.currentstatic = sym.pvp.currentstatic - (sym.pvp.currentstatic *.1)

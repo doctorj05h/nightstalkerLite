@@ -2171,7 +2171,7 @@ sym.hunter.flags.repeating = true</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>^Your bot ceases its attack, as its target is no longer present\.$</string>
-						<string>^A crane-armed carrybot stops its attack\.$</string>
+						<string>^.+ stops its attack\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -4081,8 +4081,10 @@ deselect()</script>
 				<regexCodeList>
 					<string>Celestine            No</string>
 					<string>Space junk selling</string>
+					<string>drops a deployed turret with</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>0</integer>
 					<integer>0</integer>
 					<integer>0</integer>
 				</regexCodePropertyList>
@@ -6105,6 +6107,31 @@ end
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>facility</name>
+					<script>echo("CRASH")
+echo("CRASH")
+echo("CRASH")
+echo("CRASH")
+echo("CRASH")
+echo("CRASH")</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>The Inquisitor's cranium reaches triple its original size. This looks bad, very bad</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>2</integer>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>

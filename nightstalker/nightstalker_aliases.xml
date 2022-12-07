@@ -1197,6 +1197,35 @@ end</script>
 					<packageName></packageName>
 					<regex>^hlqpc(o)?$</regex>
 				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>^kill</name>
+					<script>  local target = sym.target
+  local sym_name = gmcp.Char.Name.name
+  if sym.hunter.flags.channeling then
+      sym.hunter.send('gadget shock '..target)
+      sym.hunter.flags.channeling = false
+  else
+    if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+      sym.hunter.send('stimjector ' .. sym_name)
+    elseif not sym.hunter.flags.turretpower then
+      sym.hunter.send('turret qpcboost')
+    elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop and sym.haveskill('Airdrop', 'Bots')then
+      send('airdrop')
+-- remove the commented out code below for lower level bashing
+--  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
+--    sym.hunter.send('bot repeat claw '..target)
+--  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
+--    sym.hunter.send('bot harass '..target)
+--  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
+--    sym.hunter.send('gadget shock '..target)
+    else
+      sym.hunter.send('bot disrupt '..target)
+    end
+  end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^kill</regex>
+				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
 				<name>nanoseer pvp</name>
