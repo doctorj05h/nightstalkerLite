@@ -197,12 +197,15 @@ end</script>
   if not sym.hunter.flags.contingency then
     sym.hunter.send('contingency')
   end
-  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 70 then
     sym.hunter.send('suit support')
-  elseif not sym.hunter.flags.backhand then
-    sym.hunter.send('suit backhand '..target)
+  elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
+    sym.hunter.send('mwp dualshot '..target..' headshot headshot')
+  elseif not sym.hunter.flags.rails then
+    sym.hunter.send('mwp headshot ' ..target)
   else
-    sym.hunter.send('mwp wristblade '..target)
+    sym.hunter.send('mwp wallop '..target)
+    --sym.hunter.send('burn '..target)
     end
   end
 end</script>

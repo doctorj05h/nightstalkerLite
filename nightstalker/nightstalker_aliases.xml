@@ -559,18 +559,20 @@ send('ship disembark')</script>
 				<Alias isActive="yes" isFolder="no">
 					<name>beast muscular damage</name>
 					<script>local target = sym.target
-  if sym.hunter.flags.channeling then
-  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+  if not sym.hunter.flags.channeling then
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 70 then
     sym.hunter.send('suit support')
-  elseif not sym.hunter.flags.dualshot then
-    sym.hunter.send('mwp dualshot '..target)
+  elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
+    sym.hunter.send('mwp dualshot '..target..' railshot railshot')
     send('assess '..target)
   elseif sym.hunter.flags.dualshot and not sym.hunter.flags.combust then
     sym.hunter.send('plasma combust '..target)
     send('assess '..target)
-  else
-    send('railshot')
+  elseif not sym.hunter.flags.rails then
+    sym.hunter.send('railshot')
     send('assess ' ..target)
+  else
+    sym.hunter.send('mwp tear ' ..target)
     end
   else
   sym.hunter.send('plasma sear '..target)
@@ -584,22 +586,22 @@ end
 				<Alias isActive="yes" isFolder="no">
 					<name>beast muscular delay</name>
 					<script>local target = sym.target
-if sym.hunter.flags.channeling then
+if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('suit support')
-  elseif not sym.hunter.flags.dualshot then
-    sym.hunter.send('mwp dualshot ' .. target)
-    send('assess ' .. target)
-  elseif not sym.hunter.flags.routine and not sym.hunter.flags.airshot then
-    sym.hunter.send('mwp airshot ' .. target)
-    sym.hunter.send('suit routine ' .. target .. ' armvice legclamp boot')
-    send('assess ' .. target)
   elseif not sym.hunter.flags.airshot then
     sym.hunter.send('mwp airshot ' .. target)
+  elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
+    sym.hunter.send('mwp dualshot ' .. target ..' hobble hobble')
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.routine then
+    sym.hunter.send('suit routine ' .. target .. ' armvice armvice armvice')
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp hobble ' .. target)
     send('assess ' .. target)
   else
-    sym.hunter.send('mwp hobble ' .. target)
+    sym.hunter.send('suit armvice ' .. target)
     send('assess ' .. target)
   end
 else
@@ -608,12 +610,12 @@ else
 end </script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^66</regex>
+					<regex>^arms$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>beast burn rotation</name>
 					<script>local target = sym.target
-if sym.hunter.flags.channeling then
+if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('suit support')
   elseif not sym.hunter.flags.dualshot then
@@ -670,6 +672,13 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^88$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>suit examine</name>
+					<script>send('suit examine '..sym.target)</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^hud$</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -1083,11 +1092,11 @@ if not sym.hunter.flags.channeling then
     sym.hunter.send('turret qpcboost')
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
     send('airdrop')
-  elseif not sym.hunter.flags.gaussfield then
-  sym.hunter.send('operate gaussfield')
-  sym.hunter.send('assess ' .. target)
   elseif not sym.hunter.flags.repeated then
     sym.hunter.send('bot repeat disrupt ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.gaussfield then
+    sym.hunter.send('operate gaussfield')
     sym.hunter.send('assess ' .. target)
   elseif not sym.pvp.flags.worming then
     sym.hunter.send('bot worm ' .. target)
@@ -1225,6 +1234,13 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^kill</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>turret focus</name>
+					<script>send('turret focus ' .. sym.target)</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^focus</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
