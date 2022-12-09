@@ -187,7 +187,9 @@ end</script>
 					<script>sym.hunter.class['B.E.A.S.T.'] = function()
   local target = sym.target
   if sym.hunter.flags.channeling then
-      if tonumber(gmcp.Char.Vitals.pl) &lt; 100 then
+      if #sym.ui.roommobs == 1 and #sym.ui.roomplayers == 1 then
+        sym.hunter.send('suit rumble')
+      elseif tonumber(gmcp.Char.Vitals.pl) &lt; 100 then
         sym.hunter.send('mwp netlaunch ' .. target)
       else
         sym.hunter.send('plasma flash ' .. target)
@@ -203,9 +205,10 @@ end</script>
     sym.hunter.send('mwp dualshot '..target..' headshot headshot')
   elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp headshot ' ..target)
+--  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
+--    sym.hunter.send('burn '..target)
   else
     sym.hunter.send('mwp wallop '..target)
-    --sym.hunter.send('burn '..target)
     end
   end
 end</script>
