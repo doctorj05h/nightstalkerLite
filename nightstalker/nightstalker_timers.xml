@@ -15,7 +15,7 @@
   if sym.space.incombat then
     send('ship scan '..sym.target)
   end
-  sendAll("ship details damage", "ship beacon")
+  sendAll("ship details damage", "ship beacon", false)
   sym.shiprepair()
 end</script>
 				<command></command>
@@ -39,6 +39,56 @@ end</script>
 				<command></command>
 				<packageName></packageName>
 				<time>00:00:08.000</time>
+			</Timer>
+		</TimerGroup>
+		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<name>freeze stack loss</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:00.000</time>
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>frozen</name>
+				<script>if sym.pvp.flags.freezestacks &gt;= 0 then
+sym.pvp.flags.freezestacks = sym.pvp.flags.freezestacks - 1
+cecho('\n\n&lt;cyan&gt; Current Freeze Stacks\: ' ..sym.pvp.flags.freezestacks..'\n')
+else
+disableTimer("frozen")
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:08.000</time>
+			</Timer>
+		</TimerGroup>
+		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<name>blazing stack loss</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:00.000</time>
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>ww blazing</name>
+				<script>if sym.pvp.flags.blazingstacks &gt;= 0 then
+sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
+cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
+else
+disableTimer("ww blazing")
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:05.000</time>
+			</Timer>
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>blazing</name>
+				<script>if sym.pvp.flags.blazingstacks &gt;= 0 then
+sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
+cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
+else
+disableTimer("blazing")
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:09.000</time>
 			</Timer>
 		</TimerGroup>
 	</TimerPackage>

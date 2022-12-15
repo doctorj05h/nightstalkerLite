@@ -203,8 +203,14 @@ end</script>
     sym.hunter.send('suit support')
   elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
     sym.hunter.send('mwp dualshot '..target..' headshot headshot')
+      if sym.hunter.flags.overclock then
+        sym.hunter.send('suit overclock')
+      end
   elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp headshot ' ..target)
+      if sym.hunter.flags.overclock then
+        sym.hunter.send('suit overclock')
+      end
 --  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
 --    sym.hunter.send('burn '..target)
   else
@@ -240,6 +246,8 @@ end</script>
     else
       sym.hunter.send('gun quickload')
     end
+  elseif incover and not sym.pvp.flags.trigger then
+    send('trigger ripper shrapnel')
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
     if caneject then send('gun eject') end
@@ -2501,6 +2509,7 @@ end</script>
         sensor_bf = "No"
         shield_bf = "No"
         sim_bf = "No"
+        sym.hunter.flags.overclock = true
         if sym.ui.chat.use then
           sym.ui.chat:create()
         end
