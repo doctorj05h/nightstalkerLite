@@ -12,14 +12,14 @@
 			<regex></regex>
 			<Alias isActive="yes" isFolder="no">
 				<name>help me</name>
-				<script>send('crt Requesting assistance at '..gmcp.Room.Info.name..' in '..gmcp.Room.Info.area..'!')-- you wimp</script>
+				<script>send('crt Requesting assistance at '..gmcp.Room.Info.name..' in '..gmcp.Room.Info.num..'!')-- you wimp</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^helpme$</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>my location</name>
-				<script>send("crt I'm at "..gmcp.Room.Info.name.." in "..gmcp.Room.Info.area..".")</script>
+				<script>send("crt I'm at "..gmcp.Room.Info.name.." roomID "..gmcp.Room.Info.num..' in ' ..gmcp.Room.Info.area..".")</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^myloc$</regex>
@@ -550,7 +550,7 @@ send('ship disembark')</script>
 			<command></command>
 			<packageName></packageName>
 			<regex></regex>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-beast pvp</name>
 				<script></script>
 				<command></command>
@@ -862,7 +862,7 @@ end</script>
 					<regex>^44</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
-					<name>damage2</name>
+					<name>kill (facility)</name>
 					<script>  local target = sym.target
   local bullets = tonumber(gmcp.Char.Vitals.bl)
       if sym.hunter.flags.channeling and bullets &gt; 0 then
@@ -877,7 +877,8 @@ end</script>
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
-      sym.hunter.send('ied fling shrapnel ripper at '..target)
+      sym.hunter.send('ied fling shrapnel melter at '..target)
+      if caneject then send('gun eject') end
     elseif sym.haveskill ('Pocketsand', 'Guile') then
       sym.hunter.send('guile pocketsand '..target)
     elseif sym.haveskill ('Spin', 'Gunslinging') then
@@ -885,6 +886,10 @@ end</script>
     else
       sym.hunter.send('gun quickload')
     end
+  elseif incover and not sym.pvp.flags.trigger then
+    send('trigger ripper shrapnel')
+  elseif incover and not sym.pvp.flags.multibomb then
+    send('multibomb ripper shrapnel')
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
     if caneject then send('gun eject') end
@@ -892,6 +897,7 @@ end</script>
     sym.hunter.send('gun rapidfire '..target)
   else
     sym.hunter.send('gun crackshot '..target)
+--    sym.hunter.send('guile haymaker '..target)
     end
   end</script>
 					<command></command>
@@ -1096,6 +1102,34 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 					<command></command>
 					<packageName></packageName>
 					<regex>^hinder$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>evocation</name>
+					<script>  local target = sym.target
+  local bullets = tonumber(gmcp.Char.Vitals.bl)
+      if sym.hunter.flags.channeling and bullets &gt; 0 then
+      sym.hunter.send('gun pointblank '..target)
+      sym.hunter.flags.channeling = false
+      elseif sym.hunter.flags.channeling and bullets == 0 then
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.flags.channeling = false
+    else
+  if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+    sym.hunter.send('guile stim')
+  elseif not sym.pvp.flags.trigger then
+    send('trigger ripper shrapnel')
+  elseif not sym.pvp.flags.multibomb then
+    send('multibomb ripper shrapnel')
+  elseif bullets == 0 then
+    send("switch impairing random")
+    sym.hunter.send('guile gritblast')
+  else
+    sym.hunter.send('gun outgunned')
+    end
+  end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^aoe$</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
@@ -1680,6 +1714,519 @@ end</script>
 				<packageName></packageName>
 				<regex>^unlock$</regex>
 			</Alias>
+		</AliasGroup>
+		<AliasGroup isActive="yes" isFolder="yes">
+			<name>SPT</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<regex></regex>
+			<Alias isActive="yes" isFolder="no">
+				<name>Install Tracker</name>
+				<script>--Install / reset the tracker.
+spt_install()</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^sptinstall$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>Parse QWHO</name>
+				<script>if not spt then
+	spt_echo("Database not currently enabled. Please use 'sptinstall' before attempting to check qwho; this will prevent errors.")
+else
+	peopleOnline = {}
+	parsingQW = true
+	enableTrigger("SPT Qwho")
+	send("qwho", false)
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^qwp$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>Parse Bounty Hunters</name>
+				<script>if not spt then
+	spt_echo("Database not currently enabled. Please use 'sptinstall' before attempting to check qwho; this will prevent errors.")
+else
+	peopleOnline = {}
+	parsingQW = true
+	enableTrigger("SPT Qwho")
+	send("bounty hunters",false)
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^qwb$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>Update Highlights</name>
+				<script>spt_loadHighlights()
+send("qw")</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^qw$</regex>
+			</Alias>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>Configs</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>Toggle Highlighting</name>
+					<script>if spt.highlightNames then
+	--Remove any highlights, and turn off the toggle.
+	spt.highlightNames = false
+	spt_clearHighlights()
+	spt_echo("Disabled name highlighting.")
+else
+	--Begin highlighting again, and enable them all.
+	spt.highlightNames = true
+	spt_loadHighlights()
+	spt_echo("Enabled name highlighting.")
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt hl$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Set Colours of Factions</name>
+					<script>local factions = {"Celestine", "Scatterhome", "Song"}
+
+local faction, colour = "", ""
+
+if table.contains(factions, matches[2]:title()) then
+	faction = matches[2]:title()
+	colour = matches[3]
+elseif table.contains(factions, matches[3]:title()) then
+	faction = matches[3]:title()
+	colour = matches[2]
+else
+	spt_echo("That is not a valid faction, please choose from: &lt;green&gt;Celestine, Scatterhome or Song.")
+end
+
+if faction ~= "" then
+	if table.contains(color_table, colour) then
+		spt_echo(faction.." will now be highlighted in &lt;"..colour.."&gt;"..colour..".")
+		spt_updateHighlights(faction, colour)
+	else
+		spt_echo("That is not a valid colour to choose from.")
+	end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^sptc (\w+) (\w+)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Show Settings</name>
+					<script>local count = 0
+for i,v in pairs(spt.players) do
+	count = count + 1
+end
+
+spt_echo("Starmourn Player Tracking Settings")
+echo("\n")
+spt_echo((spt.highlightNames and "&lt;green&gt;We are" or "&lt;red&gt;We are not").."&lt;LightSkyBlue&gt; currently highlighting names.")
+cecho("\n       &lt;LightSkyBlue&gt;Total of &lt;white&gt;"..count.."&lt;LightSkyBlue&gt; names!\n\n")
+spt_echo("Highlight settings:")
+cecho("\n &lt;"..spt.highlighting.Celestine.."&gt;Celestine &lt;white&gt;members will be highlighted in &lt;"..spt.highlighting.Celestine.."&gt;"..spt.highlighting.Celestine.."&lt;white&gt;.")
+cecho("\n &lt;"..spt.highlighting.Scatterhome.."&gt;Scatterhome &lt;white&gt;members will be highlighted in &lt;"..spt.highlighting.Scatterhome.."&gt;"..spt.highlighting.Scatterhome.."&lt;white&gt;.")
+cecho("\n &lt;"..spt.highlighting.Song.."&gt;Song &lt;white&gt;members will be highlighted in &lt;"..spt.highlighting.Song.."&gt;"..spt.highlighting.Song.."&lt;white&gt;.")
+cecho("\n &lt;"..spt.highlighting.Rogue.."&gt;Rogues &lt;white&gt; will be highlighted in &lt;"..spt.highlighting.Rogue.."&gt;"..spt.highlighting.Rogue.."&lt;white&gt;.")
+cecho("\n &lt;white&gt;Those &lt;"..spt.highlighting.Hidden.."&gt;Hidden &lt;white&gt; will be highlighted in &lt;"..spt.highlighting.Hidden.."&gt;"..spt.highlighting.Hidden.."&lt;white&gt;.")
+
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt show$</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>Actions</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
+				<Alias isActive="yes" isFolder="no">
+					<name>Honours Person</name>
+					<script>local ignore = {
+  "list", "categories", "stats", "show", "feature", "unfeature", "newbie", "combat", "space flight", 
+  "space combat", "exploration", "your character", "main quest", "wealth", "resource gathering",
+  "designing", "crafting", "resource production", "hacking", "questing", "orgs", "items", "prestige"
+}
+
+if not table.contains(ignore, matches[2]:lower()) then
+  honoursPerson = matches[2]:title()
+  spt_download(matches[2]:title(),false)
+else
+  send(matches[1])
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^honou?rs? (\w+)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Who</name>
+					<script>local name = matches[2]:title()
+local x, f, c, r
+if not spt_exists(name) then
+	spt_echo(name.." is not yet tracked!")
+else
+	x = spt.players[name]
+	f = spt.highlighting[x.faction]
+  c = spt.highlighting[x.class:gsub("%.", ""):lower():title()]
+
+	cecho("\n&lt;blue&gt;-- &lt;NavajoWhite&gt;"..x.fullname.." &lt;blue&gt;"..string.rep("-", 64 - (string.len(x.fullname) + 3)))
+  if x.faction ~= "" then
+  	cecho("\n&lt;DimGrey&gt; Faction:   &lt;"..f.."&gt;"..x.faction..string.rep(" ", 31 - string.len(x.faction)).."  &lt;DimGrey&gt; Level:   &lt;white&gt;"..x.level)
+  	cecho("\n&lt;DimGrey&gt; Class:     &lt;"..c.."&gt;"..x.class)
+  else
+  	cecho("\n&lt;DimGrey&gt; Faction:   &lt;white&gt;Admin"..string.rep(" ", 39 - string.len("Administrator")).."  &lt;DimGrey&gt; Level:   &lt;white&gt;Admin")
+  	cecho("\n&lt;DimGrey&gt; Class:     &lt;white&gt;Admin")
+  end
+	cecho("\n&lt;blue&gt;"..string.rep("-", 65))
+	cecho("\n ")
+	send(" ",false)
+end	</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^whois (\w+)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Stats</name>
+					<script>local celestine, scatterhome, song, rogue = {}, {}, {}, {}
+local beast, engineer, fury, nanoseer, scoundrel = {}, {}, {}, {}, {}
+local amaian, decheeran, elgan, human, jin, krona, nathel, nusriza, rynari, shen, tukkav, whoorn = {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+local totalp = 0
+
+for i,v in pairs(spt.players) do
+	if v.faction == "Celestine" then
+		table.insert(celestine, v.name)
+	elseif v.faction == "Scatterhome" then
+		table.insert(scatterhome, v.name)
+	elseif v.faction == "Song" then
+		table.insert(song, v.name)
+	else
+		table.insert(rogue, v.name)
+	end
+  if v.class == "B.E.A.S.T." then
+    table.insert(beast, v.name)
+  elseif v.class == "Engineer" then
+    table.insert(engineer, v.name)
+  elseif v.class == "Fury" then
+    table.insert(fury, v.name)
+  elseif v.class == "Nanoseer" then
+    table.insert(nanoseer, v.name)
+  elseif v.class == "Scoundrel" then
+    table.insert(scoundrel, v.name)
+  end
+  if v.race == "Amaian" then
+    table.insert(amaian, v.name)
+  elseif v.race == "Decheeran" then
+    table.insert(decheeran, v.name)
+  elseif v.race == "Elgan" then
+    table.insert(elgan, v.name)
+  elseif v.race == "Human" then
+    table.insert(human, v.name)
+  elseif v.race == "Jin" then
+    table.insert(jin, v.name)
+  elseif v.race == "Krona" then
+    table.insert(krona, v.name)
+  elseif v.race == "Nath-el" then
+    table.insert(nathel, v.name)
+  elseif v.race == "Nusriza" then
+    table.insert(nusriza, v.name)
+  elseif v.race == "Ry'nari" then
+    table.insert(rynari, v.name)
+  elseif v.race == "Shen" then
+    table.insert(shen, v.name)
+  elseif v.race == "Tukkav" then
+    table.insert(tukkav, v.name)
+  elseif v.race == "W'hoorn" then
+    table.insert(whoorn, v.name)
+  end
+	totalp = totalp + 1
+end
+
+spt_echo("Racial count of people currently tracked:")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Amaian.."&gt;Amaian&lt;white&gt;]      - "..#amaian.." &lt;"..spt.highlighting.Amaian.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Decheeran.."&gt;Decheeran&lt;white&gt;]   - "..#decheeran.." &lt;"..spt.highlighting.Decheeran.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Elgan.."&gt;Elgan&lt;white&gt;]       - "..#elgan.." &lt;"..spt.highlighting.Elgan.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Human.."&gt;Human&lt;white&gt;]       - "..#human.." &lt;"..spt.highlighting.Human.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Jin.."&gt;Jin&lt;white&gt;]         - "..#jin.." &lt;"..spt.highlighting.Jin.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Krona.."&gt;Krona&lt;white&gt;]       - "..#krona.." &lt;"..spt.highlighting.Krona.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Nathel.."&gt;Nath-el&lt;white&gt;]     - "..#nathel.." &lt;"..spt.highlighting.Nathel.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Nusriza.."&gt;Nusriza&lt;white&gt;]     - "..#nusriza.." &lt;"..spt.highlighting.Nusriza.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Rynari.."&gt;Ry'nari&lt;white&gt;]     - "..#rynari.." &lt;"..spt.highlighting.Rynari.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Shen.."&gt;Shen&lt;white&gt;]        - "..#shen.." &lt;"..spt.highlighting.Shen.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Tukkav.."&gt;Tukkav&lt;white&gt;]      - "..#tukkav.." &lt;"..spt.highlighting.Tukkav.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Whoorn.."&gt;W'hoorn&lt;white&gt;]     - "..#whoorn.." &lt;"..spt.highlighting.Whoorn.."&gt;players tracked\n\n")
+
+spt_echo("Class count of people currently tracked:")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Beast.."&gt;B.E.A.S.T.&lt;white&gt;]  - "..#beast.." &lt;"..spt.highlighting.Beast.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Engineer.."&gt;Engineer&lt;white&gt;]    - "..#engineer.." &lt;"..spt.highlighting.Engineer.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Fury.."&gt;Fury&lt;white&gt;]        - "..#fury.." &lt;"..spt.highlighting.Fury.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Nanoseer.."&gt;Nanoseer&lt;white&gt;]    - "..#nanoseer.." &lt;"..spt.highlighting.Nanoseer.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Scoundrel.."&gt;Scoundrel&lt;white&gt;]   - "..#scoundrel.." &lt;"..spt.highlighting.Scoundrel.."&gt;players tracked\n\n")
+
+spt_echo("Faction member count of people currently tracked:")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Celestine.."&gt;Celestine&lt;white&gt;]   - "..#celestine.." &lt;"..spt.highlighting.Celestine.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Scatterhome.."&gt;Scatterhome&lt;white&gt;] - "..#scatterhome.." &lt;"..spt.highlighting.Scatterhome.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Song.."&gt;Song&lt;white&gt;]        - "..#song.." &lt;"..spt.highlighting.Song.."&gt;players tracked")
+cecho("\n&lt;white&gt; [&lt;"..spt.highlighting.Rogue.."&gt;Rogues&lt;white&gt;]      - "..#rogue.." &lt;"..spt.highlighting.Rogue.."&gt;players tracked")
+cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt stats$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Race Members</name>
+					<script>local names = {}
+local race = matches[2]:title()
+local totalp, c = 0, ""
+if race == "Hidden" then
+  c = "red"
+else
+  if race == "Nath-el" then
+    c = spt.highlighting["Nathel"]
+  elseif race == "Ry'nari" then
+    c = spt.highlighting["Rynari"]
+  elseif race == "W'hoorn" then
+    c = spt.highlighting["Whoorn"]  
+  else
+    c = spt.highlighting[race]
+  end
+end
+for i,v in pairs(spt.players) do
+	if v.race == race then
+		table.insert(names, v.name)
+		totalp = totalp + 1
+	end
+end
+table.sort(names)
+
+spt_echo("Showing members of &lt;"..c.."&gt;"..race.." &lt;LightSkyBlue&gt;race.")
+cecho("\n&lt;DimGrey&gt;"..table.concat(names, ", "))
+cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt race (Amaian|amaian|Decheeran|decheeran|Elgan|elgan|Human|human|Jin|jin|Krona|krona|Nath-el|nath-el|Nusriza|nusriza|Ry'nari|ry'nari|Shen|shen|Tukkav|tukkav|W'hoorn|w'hoorn)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Class Members</name>
+					<script>local names = {}
+local class = matches[2]:title()
+if class == "Beast" then class = "B.E.A.S.T." end
+local totalp, c = 0, ""
+if class == "Hidden" then
+  c = "red"
+else 
+  c = spt.highlighting[class] 
+end
+for i,v in pairs(spt.players) do
+	if v.class == class then
+		table.insert(names, v.name)
+		totalp = totalp + 1
+	end
+end
+table.sort(names)
+
+spt_echo("Showing members of &lt;"..class.."&gt;"..class.." &lt;LightSkyBlue&gt;class.")
+cecho("\n&lt;DimGrey&gt;"..table.concat(names, ", "))
+cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt class (Beast|beast|B.E.A.S.T.|Engineer|engineer|Fury|fury|Nanoseer|nanoseer|Scoundrel|scoundrel)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Faction Members</name>
+					<script>if matches[2] == "all" then
+  local celestine, scatterhome, song, rogue, hidden = {}, {}, {}, {}, {}
+  local totalc, totalsc, totalso, totalr, totalh, c = 0, 0, 0, 0, 0, ""
+  local factions = {"Celestine", "Scatterhome", "Song", "Rogue", "Hidden"}
+  for _, faction in pairs(factions) do
+    for i,v in pairs(spt.players) do
+      if v.faction == faction then
+        if faction == "Celestine" then
+          table.insert(celestine, v.name)
+          totalc = totalc + 1
+        elseif faction == "Scatterhome" then
+          table.insert(scatterhome, v.name)
+          totalsc = totalsc + 1
+        elseif faction == "Song" then
+          table.insert(song, v.name)
+          totalso = totalso + 1
+        elseif faction == "Rogue" then
+          table.insert(rogue, v.name)
+          totalr = totalr + 1
+        elseif faction == "Hidden" then
+          table.insert(hidden, v.name)
+          totalh = totalh + 1
+        end
+      end
+    end
+    --table.sort(faction)
+  end
+  for _, faction in pairs(factions) do
+    c = spt.highlighting[faction]
+    if faction == "Celestine" then
+      table.sort(celestine)
+      spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+      cecho("\n&lt;"..c.."&gt;"..table.concat(celestine, ", "))
+      cecho("\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalc.."\n\n")
+    elseif faction == "Scatterhome" then
+      table.sort(scatterhome)
+      spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+      cecho("\n&lt;"..c.."&gt;"..table.concat(scatterhome, ", "))
+      cecho("\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalsc.."\n\n")
+    elseif faction == "Song" then
+      table.sort(song)
+      spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+      cecho("\n&lt;"..c.."&gt;"..table.concat(song, ", "))
+      cecho("\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalso.."\n\n")
+    elseif faction == "Rogue" then
+      table.sort(rogue)
+      spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+      cecho("\n&lt;"..c.."&gt;"..table.concat(rogue, ", "))
+      cecho("\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalr.."\n\n")
+    elseif faction == "Hidden" then
+      table.sort(hidden)
+      spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+      cecho("\n&lt;"..c.."&gt;"..table.concat(hidden, ", "))
+      cecho("\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalh)
+    end
+  end
+  send(" ")
+else
+  local names = {}
+  local faction = matches[2]:title()
+  local totalp, c = 0, ""
+  c = spt.highlighting[faction] 
+  for i,v in pairs(spt.players) do
+    if v.faction == faction then
+    	table.insert(names, v.name)
+    	totalp = totalp + 1
+    end
+  end
+  table.sort(names)
+  spt_echo("Showing members of &lt;"..c.."&gt;"..faction.."&lt;LightSkyBlue&gt;.")
+  cecho("\n&lt;"..c.."&gt;"..table.concat(names, ", "))
+  cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+  send(" ")
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt faction (all|celestine|Celestine|Scatterhome|scatterhome|Song|song|Rogue|rogue|Hidden|hidden)$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Lawless Members</name>
+					<script>local names = {}
+local totalp, c = 0, ""
+for i,v in pairs(spt.players) do
+	if v.lawless == true then
+		table.insert(names, v.name)
+		totalp = totalp + 1
+	end
+end
+table.sort(names)
+
+spt_echo("Showing members of the lawless.\n")
+for k, v in pairs(names) do
+  if k == #names then
+    cecho("and &lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v)
+  else
+    cecho("&lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v.."&lt;ansi_white&gt;, ")
+  end
+end
+cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt lawless$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Display Bounty Hunters</name>
+					<script>local names = {}
+local totalp, c = 0, ""
+for i,v in pairs(spt.players) do
+	if v.bountyHunter == true then
+		table.insert(names, v.name)
+		totalp = totalp + 1
+	end
+end
+table.sort(names)
+
+spt_echo("Showing bounty hunters.\n")
+for k, v in pairs(names) do
+  if k == #names then
+    cecho("and &lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v)
+  else
+    cecho("&lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v.."&lt;ansi_white&gt;, ")
+  end
+end
+cecho("\n\n&lt;DimGrey&gt;Total: &lt;white&gt;"..totalp)
+send(" ")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt bounty hunters$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Auto Honors Everyone</name>
+					<script>--Different from spt redo as it honors the people to distingush lawless/bounty hunter status
+
+spt_echo("Auto honouring everyone currently tracked!\n")
+spt_echo("This is going to be spammy!")
+spt_honorsTablePopulate()</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt ah$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Remove Unranked/Retired</name>
+					<script>local remove = {}
+
+for i,v in pairs(spt.players) do
+	if v.retired then
+		table.insert(remove, v.name)
+		spt.players[v.name] = nil
+	end
+end
+table.sort(remove)
+
+spt_echo("Removed a total of &lt;green&gt;"..#remove.."&lt;LightSkyBlue&gt; unranked people from the database:\n - "..table.concat(remove, ", ")..".")
+send(" ")
+</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt remove$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Re-honours</name>
+					<script>local count = 0
+if matches[2] then
+  spt_echo("Updating everyone who's currently online.\n")
+  for i,v in pairs(peopleOnline) do
+    if not v:match("masked") then
+      count = count + 1
+      spt_download(v,false)
+    end
+  end
+  spt_echo("Update complete. Total of "..count.." people have been re-checked.\n")
+else
+  spt_echo("Updating everyone who's currently in the database.\n")
+  for i,v in pairs(spt.players) do
+  	count = count + 1
+  	spt_download(v.name:title(),false)
+  end
+  spt_echo("Update complete. Total of "..count.." people have been re-checked.\n")
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^spt redo( online)?$</regex>
+				</Alias>
+			</AliasGroup>
 		</AliasGroup>
 	</AliasPackage>
 	<ActionPackage />

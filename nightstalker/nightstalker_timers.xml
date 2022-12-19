@@ -68,11 +68,9 @@ end</script>
 			<time>00:00:00.000</time>
 			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>ww blazing</name>
-				<script>if sym.pvp.flags.blazingstacks &gt;= 0 then
+				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
 cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
-else
-disableTimer("ww blazing")
 end</script>
 				<command></command>
 				<packageName></packageName>
@@ -80,15 +78,39 @@ end</script>
 			</Timer>
 			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>blazing</name>
-				<script>if sym.pvp.flags.blazingstacks &gt;= 0 then
+				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
 cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
-else
-disableTimer("blazing")
 end</script>
 				<command></command>
 				<packageName></packageName>
 				<time>00:00:09.000</time>
+			</Timer>
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>burns loss</name>
+				<script>if sym.pvp.flags.burns &gt; 0 then
+sym.pvp.flags.burns = sym.pvp.flags.burns - 1
+cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..' Burns: '..sym.pvp.flags.burns)
+else
+disableTimer("burns loss")
+end</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:35.000</time>
+			</Timer>
+		</TimerGroup>
+		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<name>SPT</name>
+			<script></script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:00.000</time>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>pullNames</name>
+				<script>spt_apiCheck()</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:05:00.000</time>
 			</Timer>
 		</TimerGroup>
 	</TimerPackage>

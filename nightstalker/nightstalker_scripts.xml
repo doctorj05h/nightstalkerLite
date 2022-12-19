@@ -11,7 +11,8 @@
 			<packageName></packageName>
 			<script>sym = sym or {}
 sym.pvp = sym.pvp or {}
-sym.pvp.flags = sym.pvp.flags or {}</script>
+sym.pvp.flags = sym.pvp.flags or {}
+sym.hacker = sym.hacker or {}</script>
 			<eventHandlerList />
 		</Script>
 		<ScriptGroup isActive="yes" isFolder="yes">
@@ -214,7 +215,7 @@ end</script>
 --  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
 --    sym.hunter.send('burn '..target)
   else
-    sym.hunter.send('mwp wallop '..target)
+    sym.hunter.send('mwp tear '..target)
     end
   end
 end</script>
@@ -236,7 +237,13 @@ end</script>
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
   elseif bullets == 0 then
-    if sym.haveskill ('Fling', 'Improvisation') then
+    if not sym.pvp.flags.meltered then
+      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+      send('assess ' .. target)
+      if caneject == true then
+        send("gun eject")
+      end
+    elseif sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
       sym.hunter.send('ied fling shrapnel ripper at '..target)
     elseif sym.haveskill ('Pocketsand', 'Guile') then
@@ -255,6 +262,7 @@ end</script>
     sym.hunter.send('gun rapidfire '..target)
   else
     sym.hunter.send('gun crackshot '..target)
+ --sym.hunter.send('guile haymaker '..target)
     end
   end
 end</script>
@@ -463,8 +471,20 @@ end</script>
     'the thrashing root of a cyborg leech orchid',
     'a rampaging construction mech',
     'a cyborg leech orchid',
-    'a dilapidated construction mech',
+    'a dilapidated construction mech'
   }</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>facility</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['a Vihana facility'] = {
+  'a bulging metastatic slug',
+  'a misshapen Vihana reject',
+  'a two-headed, Vihanized zhubeast',
+  'an oily-skinned Vihana tracker'
+
+}</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -2610,6 +2630,7 @@ end</script>
     'a hard-light firewall',
     'a hard-light mobile firewall',
     'an erratic mobile glitch',
+    'decoy'
   }</script>
 				<eventHandlerList />
 			</Script>
@@ -2631,6 +2652,482 @@ end</script>
 --    disableTrigger('sync balance')
   end
 end</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>SPT</name>
+			<packageName></packageName>
+			<script></script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Settings Functions</name>
+				<packageName></packageName>
+				<script>function spt_loadSettings()
+	--If already loaded, then ignore.
+	if spt then return false end
+  
+	local sep
+  local homeDir = getMudletHomeDir()
+  
+  if string.char(homeDir:byte()) == "/" then
+    sep = "/"
+  else
+    sep = "\\"
+  end
+  
+	local file_loc = homeDir..sep.."sptDB"
+
+	--If file does not exist, then ignore.
+	if not io.exists(file_loc) then return false end
+
+	spt = {}
+	table.load(file_loc, spt)
+
+	spt_echo("Name database loaded successfully.\n")
+	spt_loadHighlights()
+end
+
+function spt_saveSettings()
+	--Save the database, to persist through restarts.
+	local sep
+  local homeDir = getMudletHomeDir()
+  
+  if string.char(homeDir:byte()) == "/" then
+    sep = "/"
+  else
+    sep = "\\"
+  end
+	local file_loc = homeDir..sep.."sptDB"
+
+	table.save(file_loc, spt)
+  echo("\n")
+	spt_echo("Name database successfully saved.\n")
+end
+
+function spt_install()
+	--Simple function to initialise the DB.
+	spt = {}
+	spt = {
+		installed = true,
+		players = {},
+		highlightNames = true,
+		highlighting = {
+      Amaian = "dark_turquoise",
+      Decheeran = "OliveDrab",
+      Elgan = "navajo_white",
+      Human = "gold",
+      Jin = "medium_orchid",
+      Krona = "RosyBrown",
+      Nathel = "thistle",
+      Nusriza = "LightBlue",
+      Rynari = "yellow_green",
+      Shen = "LightPink",
+      Tukkav = "peru",
+      Whoorn = "RoyalBlue",
+      
+      Beast = "SteelBlue",
+      Engineer = "yellow",
+      Fury = "DarkOrange",
+      Nanoseer = "DarkSlateBlue",
+      Scoundrel = "LightCoral",
+      
+			Celestine = "DodgerBlue",
+			Scatterhome = "sienna",
+			Song = "purple",
+			Rogue = "khaki",
+      Hidden = "DimGrey",
+      Enemy = "gold"	
+		},
+	}
+
+	spt_echo("Name database installed successfully.\n")
+	spt_clearHighlights()
+	spt_saveSettings()
+	--Save on install, as a failsafe.
+  spt_apiCheck()
+end
+
+registerAnonymousEventHandler("sysConnectionEvent", "spt_loadSettings")
+registerAnonymousEventHandler("sysDisconnectionEvent", "spt_saveSettings")
+registerAnonymousEventHandler("sysExitEvent", "spt_saveSettings", true)</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Information Grabber</name>
+				<packageName></packageName>
+				<script>function spt_download(person)
+  if person:match("masked") then return end
+	assert(person)
+	local person = string.trim(person:title())
+	local path = getMudletHomeDir().."/SPTData"
+
+	if not lfs.attributes(path) then
+		--We'll need a folder to store downloaded data. Don't worry, it won't cause issues.
+		lfs.mkdir(path)
+		spt_echo("Created folder to store downloaded information at: "..path)
+	end
+	
+	downloadFile(path .. "/" .. person .. ".json", "http://api.starmourn.com/characters/" .. person .. ".json")
+
+end</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>spt_gotInfo</name>
+					<packageName></packageName>
+					<script>function spt_gotInfo(_, filepath)
+	--Don't open if not to do with SPT.
+	if not filepath:find("SPT", 1, true) then return end
+    local f, s = io.open(filepath)
+    if f then s = f:read("*l"); io.close(f) end
+
+	-- didn't get JSON data? 
+	if s:find("Internal error", 1, true) or s:find("DOCTYPE html PUBLIC", 1, true) then
+		cecho("\n&lt;red&gt;Data Acquisition Failed!") 
+		return 
+	end
+
+	local t = yajl.to_value(s)
+	local factions = {"Celestine", "Scatterhome", "Song", "Rogue", "Hidden", "Enemy"}
+	local name = t.name
+	local fullname = t.fullname
+	local level = t.level
+	local class = t.class
+  local race = t.race
+  local age = t.age
+  local captaincy = t.captaincy
+	local explorer = t.explorer
+	local faction = t.faction
+  local lawless = false
+  local bountyHunter = false
+  local retired = false
+
+	spt.players[name] = {
+		name = name,
+		fullname = fullname,
+		level = level,
+		class = class,
+		race = race,
+    age = age,
+    captaincy = captaincy,
+    explorer = explorer,
+    faction = faction,
+    lawless = false,
+    bountyHunter = false,
+    retired = false
+	}
+	if level:find("Hidden") then
+		spt.players[name].level = "Hidden"
+	end
+  if class:find("Hidden") then
+    spt.players[name].class = "Hidden"
+  end
+  if race:find("Hidden") then
+    spt.players[name].class = "Hidden"
+  end
+  if age:find("Hidden") then
+    spt.players[name].age = "Hidden"
+  end
+  if captaincy:find("Hidden") then
+    spt.players[name].captaincy = "Hidden"
+  end
+  if explorer:find("Hidden") then
+    spt.players[name].explorer = "Hidden"
+  end
+	if faction:find("Hidden") then
+		spt.players[name].faction = "Hidden"
+	elseif faction:find("N/A") then
+		spt.players[name].faction = "Rogue"
+	else
+		spt.players[name].faction = faction:title()
+	end
+  
+  if etcs and etcs.pvp.target == name then
+    spt.players[name].faction = "Enemy"
+  end
+  os.remove(filepath)
+	if honoursPerson ~= nil then 
+		send("honours "..honoursPerson)
+	else
+		raiseEvent("SPT Check Highlight", t.name)
+	end
+end</script>
+					<eventHandlerList>
+						<string>sysDownloadDone</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>spt_downloadFailed</name>
+					<packageName></packageName>
+					<script>function spt_downloadFailed(_, filepath)
+  echo("\n")
+	spt_echo("Error downloading information.\n")
+	
+	if filepath:match("server replied: Not Found") then
+		local person = filepath:match("/(%a+).json")
+		spt_echo("This person does not exist: " .. person.."\n")
+		spt_deletePerson(person)
+	else
+		spt_echo("Unknown error while downloading: " .. filepath)
+	end
+
+end</script>
+					<eventHandlerList>
+						<string>sysDownloadError</string>
+					</eventHandlerList>
+				</Script>
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Download Name</name>
+				<packageName></packageName>
+				<script>function spt_getInfo(names)
+	--Parse list to see who isn't tracked.
+	for _, name in pairs(names) do
+		if not spt_exists(name) then
+			spt_download(name)
+		end
+	end
+	spt_echo("Database has been fully updated, thank you.")
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT API</name>
+				<packageName></packageName>
+				<script>function spt_echo(text)
+	cecho("&lt;DimGrey&gt;(&lt;NavajoWhite&gt;SPT&lt;DimGrey&gt;): &lt;LightSkyBlue&gt;"..text)
+end
+
+function spt_exists(name)
+	if not spt.players[name] then
+		return false
+	else
+		return true
+	end
+end
+
+function spt_isCelestine(name)
+	if spt_exists(name) then
+		return (spt.players[name].faction == "Celestine" and true or false)
+	else
+		return false
+	end
+end
+
+function spt_isScatterhome(name)
+	if spt_exists(name) then
+		return (spt.players[name].faction == "Scatterhome" and true or false)
+	else
+		return false
+	end
+end
+
+function spt_isSong(name)
+	if spt_exists(name) then
+		return (spt.players[name].faction == "Song" and true or false)
+	else
+		return false
+	end
+end
+
+function spt_isRogue(name)
+	if spt_exists(name) then
+		return (spt.players[name].faction == "Rogue" and true or false)
+	else
+		return false
+	end
+end
+
+function spt_getFaction(name)
+	if spt_exists(name) then
+		return spt.players[name].faction
+	else
+		return "Unknown"
+	end
+end
+
+function spt_getClass(name)
+	if spt_exists(name) then
+		return spt.players[name].class
+	else
+		return "Unknown"
+	end
+end
+
+function spt_deletePerson(name)
+	if spt_exists(name) then
+		spt.players[name] = nil
+		--If any highlight available, then clear it.
+		if spt.highlightTriggers and spt.highlightTriggers[name] then
+			killTrigger(spt.highlightTriggers[name])
+		end
+	end
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Highlighting</name>
+				<packageName></packageName>
+				<script>function spt_clearHighlights()
+	if not spt.highlightTriggers or not next(spt.highlightTriggers) then return end
+
+  	local killTrigger = killTrigger
+  	for k,v in pairs(spt.highlightTriggers) do
+    	killTrigger(v)
+  	end
+
+  	spt.highlightTriggers = {}
+end
+
+function spt_loadHighlights()
+	spt.highlightTriggers = spt.highlightTriggers or {}
+	collectgarbage("stop")
+
+	spt_clearHighlights()
+
+	if spt.highlightNames then
+		for index, person in pairs(spt.players) do
+			spt_highlightName(person.name, person.faction)
+		end
+	end
+
+	collectgarbage()
+end
+
+function spt_addHighlight(_, name)
+
+	if not spt.highlightNames then return end	
+	if not name then return end
+	if not spt.players[name] then return end
+
+	spt_highlightName(spt.players[name].name, spt.players[name].faction)
+end
+
+
+function spt_updateHighlights(faction, colour)
+
+	spt.highlighting[faction] = colour
+	
+  local killTrigger = killTrigger
+  for name, trig in pairs(spt.highlightTriggers) do
+  	if spt.players[name].faction == faction then
+      	killTrigger(trig)
+  		if spt.highlightNames then
+  			spt_highlightName(spt.players[name].name, spt.players[name].faction)
+  		end
+		end
+  end
+end
+
+
+function spt_highlightName(who, faction)
+	--If any highlight available, then clear it.
+	if spt.highlightTriggers and spt.highlightTriggers[who] then
+		killTrigger(spt.highlightTriggers[who])
+	end
+	--Get the necessary colour.
+	colour = spt.highlighting[faction]
+
+	spt.highlightTriggers = spt.highlightTriggers or {}
+	spt.highlightTriggers[who] = tempTrigger(who, ([[spt_highlight("%s", %s)]]):format(who, (colour and '"' .. colour .. '"' or "false")))
+end
+
+function spt_highlight(name, colour)
+
+  local c, k = 1, 1
+
+  while k &gt; 0 do
+    k = line:find(name, k)
+    if k == nil then return end
+    c = c + 1
+
+    if k == line:find("%f[%a]"..name.."%f[%A]", k) then
+      if selectString(name, c-1) &gt; -1 then
+        if colour then fg(colour) end
+        resetFormat()
+      else return end
+    end
+
+    k = k + 1
+  end
+end
+registerAnonymousEventHandler("SPT Check Highlight", "spt_addHighlight")
+</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Honors Check</name>
+				<packageName></packageName>
+				<script>function spt_honorsTablePopulate()
+  honorsTable = {}
+  for k,v in pairs(spt.players) do
+    table.insert(honorsTable, spt.players[k].name)
+  end
+  spt_honorsCheck(honorsTable)
+end
+
+function spt_honorsCheck(honorsTable)
+  if table.is_empty(honorsTable) then spt_echo("Auto honouring everyone finished!\n") return end
+  enableTrigger("Honors Gag")
+  honoursPerson = honorsTable[1]
+  send("honors "..honorsTable[1])
+  table.remove(honorsTable, 1)
+  tempTimer(1.5+getNetworkLatency(), [[spt_honorsCheck(honorsTable)]])
+end
+</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>STP API Check</name>
+				<packageName></packageName>
+				<script>function spt_apiCheck()
+  getHTTP("https://api.starmourn.com/characters.json", {["Content-Type"] = "application/json"})
+end</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>spt_httpGetDone</name>
+					<packageName></packageName>
+					<script>function spt_httpGetDone(_, url, body)
+  apiOnlineFound = {}
+  local t = yajl.to_value(body)
+  for k, v in pairs(t.characters) do
+    table.insert(apiOnlineFound, v.name)
+    spt_download(v.name)
+  end
+  raiseEvent("spt_httpGetDone_Done")
+end</script>
+					<eventHandlerList>
+						<string>sysGetHttpDone</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>spt_httpGetDone_Done</name>
+					<packageName></packageName>
+					<script>function spt_httpGetDone_Done()
+  if parsingQW then
+    cecho("&lt;spt_purple&gt;-- &lt;spt_blue&gt;Users connected to the commsphere &lt;spt_purple&gt;------------------------------------------\n   ")
+    for k, v in pairs(apiOnlineFound) do
+      if k == #apiOnlineFound then
+        cecho("and &lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v)
+      else
+        cecho("&lt;"..spt.highlighting[spt.players[v].faction].."&gt;"..v.."&lt;ansi_white&gt;, ")
+      end
+    end
+    cecho("\n&lt;spt_purple&gt;------------------------------------------------------------------- &lt;spt_blue&gt;Total: "..#apiOnlineFound.." &lt;spt_purple&gt;--")
+    parsingQW = false
+    send(" ")
+  end
+end</script>
+					<eventHandlerList>
+						<string>spt_httpGetDone_Done</string>
+					</eventHandlerList>
+				</Script>
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>SPT Colors</name>
+				<packageName></packageName>
+				<script>color_table["spt_purple"] = {102, 0, 153}
+color_table["spt_blue"] = {0, 153, 204}</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
