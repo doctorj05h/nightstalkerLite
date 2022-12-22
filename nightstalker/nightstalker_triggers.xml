@@ -819,6 +819,7 @@ local namespacer = 12 - string.len(crewmember)
 local spacer = ' '
 local repspacer = string.rep(spacer, namespacer)
 local crewper = math.floor(100 * crewcurrenthp / crewmaxhp)
+
 local function getSystemColour(amount)
   amount = tonumber(amount)
   if amount &gt;= 92.5 then
@@ -831,7 +832,10 @@ local function getSystemColour(amount)
     return 'red'
   end
 end
-cecho('Crew','&lt;b&gt;\n' .. crewmember.. '&lt;/b&gt; '.. repspacer.. '&lt;'..getSystemColour(crewper)..'&gt;'..crewcurrenthp.. '&lt;white&gt; ' ..crewmaxhp..' &lt;cyan&gt;' ..crewroom..' &lt;white&gt;'..crewrmdesc, true)</script>
+
+cechoLink('Crew','&lt;b&gt;\n' ..crewmember ..'&lt;/b&gt; '.. repspacer ..'&lt;' .. getSystemColour(crewper) .. '&gt;'.. crewcurrenthp ..' &lt;cyan&gt;' .. crewroom .. ' &lt;white&gt;' ..  crewrmdesc,[[send("path track ]] .. crewroom ..[[")]],'travel to crewmember',  true)
+
+--cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]..[[")]], "Path Track "..multimatches[2][3].."!",true)</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -886,8 +890,10 @@ cecho('Crew','&lt;b&gt;\n' .. crewmember.. '&lt;/b&gt; '.. repspacer.. '&lt;'..g
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^You have joined .+ crew\.$</string>
+					<string>^.+has joined your crew\.$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>1</integer>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>

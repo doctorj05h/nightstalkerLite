@@ -1245,7 +1245,7 @@ end</script>
   sym.ui.adj.bottom = Adjustable.Container:new({name = 'Gauges', x = '25%', y = '95%', width = '50%', height = '5%', }) 
   sym.ui.adj.left = Adjustable.Container:new({name = 'Starchart', x = '25%', y = '5%', width = '15%', height = '30%', }) 
   sym.ui.adj.right = Adjustable.Container:new({name = 'Beacon', x = '40%', y = '5%', width = '15%', height = '25%', })
-  
+
   sym.ui.adj.crew = Adjustable.Container:new({name = 'Crew Status', x = '25%', y = '25%', width = '15%', height = '15%', })
   crewStatus = crewStatus or Geyser.MiniConsole:new({name = "Crew",  x=0, y=0,  autoWrap = false,  color = "black", fontSize = 11,  width="100%", height="100%",}, sym.ui.adj.crew)
 

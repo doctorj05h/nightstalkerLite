@@ -1452,6 +1452,13 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 					<packageName></packageName>
 					<regex>^swarm$</regex>
 				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>limbdrain</name>
+					<script>send('void limbdrain '..sym.target..' right arm')</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^limbs$</regex>
+				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-fury pvp</name>
