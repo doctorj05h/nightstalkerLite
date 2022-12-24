@@ -279,14 +279,25 @@ end</script>
     else
       if not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send('void embrace')
-      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
-        sym.hunter.send('oblivion speedup')  
+--      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+--        sym.hunter.send('oblivion speedup')  
       else 
         expandAlias('frenzy')
         sym.hunter.send('void freeze ' .. target)
       end
     end
-  end</script>
+  end
+function limbdrainchooser()
+local limbtarget = {' right arm', ' left arm', ' right leg', ' left leg'}
+local limbrotation = limbrotation or 1
+    send('void limbdrain '..sym.target..limbtarget[limbrotation])
+
+    -- if we reach the end of the limbtarget table, reset limbrotation to 1
+   if limbrotation &gt; #limbtarget then
+     limbrotation = 1
+   end
+end
+</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -1403,7 +1414,7 @@ function sym.ui.update_mindsim()
   elseif class == 'Engineer' then
     sym.ui.parts:setValue(tonumber(gmcp.Char.Vitals.pt), tonumber(gmcp.Char.Vitals.maxpt), '&lt;center&gt;&lt;font color="LightGrey"&gt;Parts: ' .. gmcp.Char.Vitals.formatpt)
   elseif class == 'B.E.A.S.T.' then
-    sym.ui.plasma:setValue(tonumber(gmcp.Char.Vitals.pl), tonumber(gmcp.Char.Vitals.maxpl), '&lt;center&gt;&lt;font color="LightGrey"&gt;Plasma: ' .. gmcp.Char.Vitals.formatpl)
+    sym.ui.plasma:setValue(tonumber(gmcp.Char.Vitals.pl), tonumber(gmcp.Char.Vitals.maxpl), '&lt;center&gt;&lt;font color="LightGrey"&gt;Plasma: ' .. gmcp.Char.Vitals.formatpl..' \(&lt;font color="yellow"&gt;'..gmcp.Char.Vitals.pl..'&lt;font color="LightGrey"&gt;\)')
   elseif class == 'Scoundrel' then
     sym.ui.bullets:setValue(tonumber(gmcp.Char.Vitals.bl), tonumber(gmcp.Char.Vitals.maxbl or 8), '&lt;center&gt;&lt;font color="LightGrey"&gt;Bullets: ' .. gmcp.Char.Vitals.formatbl)
   elseif class == 'Fury' then
@@ -2489,7 +2500,7 @@ sym.registerevent('target set', 'gmcp.IRE.Target.Set', 'sym.ui.gmcpiretargetset'
     end
   end
 
-  cecho("&lt;red&gt;There's nothing here, mate.\n")
+  cecho("&lt;red&gt;There's nothing here.\n")
 end</script>
 						<eventHandlerList />
 					</Script>

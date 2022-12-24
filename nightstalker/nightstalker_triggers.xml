@@ -825,7 +825,7 @@ local function getSystemColour(amount)
   if amount &gt;= 92.5 then
     return 'spring_green'
   elseif amount &gt;= 70 then
-    return 'goldenrod'
+    return 'ansi_227'
   elseif amount &gt;= 30 then
     return 'dark_orange'
   else
@@ -833,9 +833,7 @@ local function getSystemColour(amount)
   end
 end
 
-cechoLink('Crew','&lt;b&gt;\n' ..crewmember ..'&lt;/b&gt; '.. repspacer ..'&lt;' .. getSystemColour(crewper) .. '&gt;'.. crewcurrenthp ..' &lt;cyan&gt;' .. crewroom .. ' &lt;white&gt;' ..  crewrmdesc,[[send("path track ]] .. crewroom ..[[")]],'travel to crewmember',  true)
-
---cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]..[[")]], "Path Track "..multimatches[2][3].."!",true)</script>
+cechoLink('Crew','&lt;b&gt;\n' ..crewmember ..'&lt;/b&gt; '.. repspacer ..'&lt;' .. getSystemColour(crewper) .. '&gt;'.. crewcurrenthp ..' &lt;cyan&gt;' .. crewroom .. ' &lt;white&gt;' ..  crewrmdesc,[[send("path track ]] .. crewroom ..[[")]],'travel to crewmember',  true)</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -855,7 +853,8 @@ cechoLink('Crew','&lt;b&gt;\n' ..crewmember ..'&lt;/b&gt; '.. repspacer ..'&lt;'
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>disable crew timer</name>
-				<script>disableTimer('crew timer')</script>
+				<script>disableTimer('crew timer')
+sym.ui.adj.crew:hide()</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -877,7 +876,9 @@ cechoLink('Crew','&lt;b&gt;\n' ..crewmember ..'&lt;/b&gt; '.. repspacer ..'&lt;'
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>enable crew timer</name>
-				<script>enableTimer('crew timer')</script>
+				<script>enableTimer('crew timer')
+sym.ui.adj.crew:show()
+send('crew status')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -1224,7 +1225,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-b.e.a.s.t.</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -1798,7 +1799,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -4208,6 +4209,27 @@ end</script>
 						<integer>3</integer>
 					</regexCodePropertyList>
 				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>limbdrain</name>
+					<script>    limbrotation = limbrotation or 0
+    limbrotation = limbrotation + 1</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You: Void Limbdrain</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>2</integer>
+					</regexCodePropertyList>
+				</Trigger>
 			</TriggerGroup>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>weapon off cooldown</name>
@@ -5328,7 +5350,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -6324,7 +6346,7 @@ cecho('\n ')</script>
 					</Trigger>
 				</TriggerGroup>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-b.e.a.s.t.</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -6510,8 +6532,10 @@ end</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>You: Plasma Douse</string>
+						<string>Accelerant is already present on your target</string>
 					</regexCodeList>
 					<regexCodePropertyList>
+						<integer>2</integer>
 						<integer>2</integer>
 					</regexCodePropertyList>
 				</Trigger>
@@ -6658,7 +6682,10 @@ cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n
 						<name>burns tracking</name>
 						<script>sym.pvp.flags.burns = sym.pvp.flags.burns + 1
 sym.pvp.flags.blazingstacks = 0
-enableTimer('burns loss')</script>
+enableTimer('burns loss')
+if sym.hunter.flags.overclock then
+    sym.hunter.send('suit overclock')
+end</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -7133,7 +7160,9 @@ cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
 cecho('\n&lt;ansi_light_red&gt;     Current Shards: '..sym.pvp.currentshards)
 cecho('\n ')
 elseif class == "B.E.A.S.T." then
+sym.hunter.flags.doused = false
 sym.pvp.flags.blazingstacks = 0
+sym.pvp.flags.burns = sym.pvp.flags.burns or 0
 cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')
 else
 end

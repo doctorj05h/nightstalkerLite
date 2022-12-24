@@ -66,7 +66,7 @@ end</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:00.000</time>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>ww blazing</name>
 				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
@@ -76,7 +76,7 @@ end</script>
 				<packageName></packageName>
 				<time>00:00:05.000</time>
 			</Timer>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>blazing</name>
 				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
@@ -123,7 +123,7 @@ end</script>
 				<name>crew timer</name>
 				<script>if gmcp.Char.Vitals.bal == '0' then
 clearWindow('Crew')
-send('crew status')
+send('crew status', false)
 end</script>
 				<command></command>
 				<packageName></packageName>

@@ -550,7 +550,7 @@ send('ship disembark')</script>
 			<command></command>
 			<packageName></packageName>
 			<regex></regex>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-beast pvp</name>
 				<script></script>
 				<command></command>
@@ -708,6 +708,38 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^kill$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>cook 'em</name>
+					<script>local target = sym.target
+  if sym.hunter.flags.channeling then
+      if tonumber(gmcp.Char.Vitals.pl) &lt; 75 then
+        sym.hunter.send('mwp netlaunch ' .. target)
+      else
+        sym.hunter.send('plasma flash ' .. target)
+      end
+    sym.hunter.flags.channeling = false
+  else
+  if not sym.hunter.flags.contingency then
+    sym.hunter.send('contingency')
+  end
+  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 50 then
+    sym.hunter.send('suit support')
+  elseif tonumber(gmcp.Char.Vitals.pl) &lt; 225 then
+    sym.hunter.send('plasma consumption')
+  elseif sym.pvp.flags.blazingstacks &gt; 5 and sym.pvp.flags.burns &lt; 3 then
+    sym.hunter.send('plasma conflagrate '..target)
+  elseif not sym.hunter.flags.doused then
+    sym.hunter.send('plasma douse '..target)
+  elseif sym.pvp.flags.burns == 3 and tonumber(gmcp.Char.Vitals.pl) &gt; 300 then
+    sym.hunter.send('plasma incinerate '..target)
+  else
+    sym.hunter.send('plasma burn '..target)
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
@@ -1300,7 +1332,7 @@ end</script>
 					<regex>^focus</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-nanoseer pvp</name>
 				<script></script>
 				<command></command>
@@ -1454,13 +1486,28 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>limbdrain</name>
-					<script>send('void limbdrain '..sym.target..' right arm')</script>
+					<script>local target = sym.target
+
+ if sym.hunter.flags.channeling then
+      sym.hunter.send('nano eyestrike')
+      sym.hunter.flags.channeling = false
+    elseif not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+        sym.hunter.send('void embrace')
+      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+        sym.hunter.send('oblivion speedup')  
+      elseif sym.pvp.flags.freezestacks &gt; 3 then
+        expandAlias('frenzy')
+        limbdrainchooser()      
+      else
+        expandAlias('frenzy')
+        sym.hunter.send('void freeze ' .. target)
+      end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^limbs$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-fury pvp</name>
 				<script></script>
 				<command></command>
