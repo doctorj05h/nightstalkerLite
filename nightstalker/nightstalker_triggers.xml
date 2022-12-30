@@ -6614,7 +6614,7 @@ end</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList />
 					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>doused blaze</name>
 						<script>sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks + 2
 cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')</script>
@@ -6635,7 +6635,7 @@ cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n
 							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>blazing single stack</name>
 						<script>sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks + 1
 cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')</script>
@@ -7086,6 +7086,7 @@ cechoLink("&lt;yellow&gt;(Path Track)",[[send("path track ]]..multimatches[2][3]
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>damage dealt track</name>
 					<script>deleteLine()
+sym.hunter.flags.lastdamage = matches[3]..' '..matches[4]
 cecho("\n&lt;spring_green&gt;Damage Dealt&lt;white&gt;: &lt;b&gt;"..matches[2].. "&lt;/b&gt;&lt;khaki&gt; " ..matches[3].." - &lt;spring_green&gt;"..matches[4])
 if matches[3] == "electric" then
   sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
@@ -7113,13 +7114,15 @@ end</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>subsystem dealt track</name>
 					<script>deleteLine()
+sym.hunter.flags.subsysdealt = tonumber(matches[2])
+sym.hunter.flags.lastsubsys = matches[3]
 cecho("\n&lt;dark_orchid&gt;Subsys Dealt&lt;white&gt;: &lt;pink&gt;&lt;b&gt;"..matches[2].. "&lt;/b&gt; &lt;white&gt;" ..matches[3].."&lt;gold&gt; - &lt;pink&gt;"..matches[4])
---if matches[3] == "electric" then
---  sym.pvp.currentstatic = sym.pvp.currentstatic + (matches[2] * .1)
---  cecho('\n ')
---  cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
---  cecho('\n ')
---end</script>
+if sym.hunter.flags.subsysdealt &lt; 100 and sym.hunter.flags.lastsubsys == "muscular" and (sym.hunter.flags.lastdamage == 'thermal gun' or sym.hunter.flags.lastdamage == 'thermal tech') then
+  deleteLine()
+  sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks + 1
+  cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '&lt;orange&gt; Burns&lt;white&gt;:&lt;yellow&gt; '..sym.pvp.flags.burns)
+
+end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -7393,7 +7396,8 @@ sym.hacker.sync = true</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>sync balance</name>
-				<script>sym.hacker.sync = true</script>
+				<script>sym.hacker.sync = true
+expandAlias('infect')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>

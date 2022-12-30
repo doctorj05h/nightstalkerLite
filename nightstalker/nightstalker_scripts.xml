@@ -101,6 +101,9 @@ sym.pvp.triggy =
     for _, c in ipairs(clist) do
       (c == class and enableTrigger or disableTrigger)('op-' .. c)
     end
+    for _, c in ipairs(clist) do
+      (c == class and enableTrigger or disableTrigger)('a-' .. c)
+    end
   end
 function checkSystems()
   local vitals = gmcp.Char.Vitals
@@ -214,6 +217,7 @@ end</script>
       end
 --  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
 --    sym.hunter.send('burn '..target)
+--sym.hunter.send('wallop '..target)
   else
     sym.hunter.send('mwp tear '..target)
     end

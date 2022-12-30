@@ -83,6 +83,29 @@ end</script>
 				<packageName></packageName>
 				<regex>^fly(.+)$</regex>
 			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>expanded honors</name>
+				<script>send('honors '..matches[2])
+wait(1)
+
+local body = ""
+local person = matches[2]
+local url = "https://starmourn.com/api/characters/"..person..".json"
+local header = {["Content-Type"] = "application/json"}
+
+function onHttpGetDone(_, url, body)
+  killAnonymousEventHandler(handlerId)
+  thisInfo = yajl.to_value(body)
+  cecho("&lt;LightSkyBlue&gt;Age: &lt;WhiteSmoke&gt;"..thisInfo.age.."&lt;LightSkyBlue&gt; Class: &lt;WhiteSmoke&gt;"..thisInfo.class.."&lt;LightSkyBlue&gt; Level: &lt;WhiteSmoke&gt;"..thisInfo.level.."&lt;LightSkyBlue&gt; Captaincy: &lt;WhiteSmoke&gt;"..thisInfo.captaincy.."\n")
+end
+
+handlerId = registerAnonymousEventHandler("sysGetHttpDone", onHttpGetDone)
+
+getHTTP(url, header)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^honors (\w+)$</regex>
+			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">
 			<name>hunter</name>
@@ -551,7 +574,7 @@ send('ship disembark')</script>
 			<packageName></packageName>
 			<regex></regex>
 			<AliasGroup isActive="yes" isFolder="yes">
-				<name>a-beast pvp</name>
+				<name>a-b.e.a.s.t.</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
@@ -701,8 +724,9 @@ end</script>
   elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp headshot ' ..target)
   else
-    sym.hunter.send('mwp wallop '..target)
+    --sym.hunter.send('mwp wallop '..target)
     --sym.hunter.send('burn '..target)
+    sym.hunter.send('tear '..target)
     end
   end</script>
 					<command></command>
@@ -725,13 +749,15 @@ end</script>
   end
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 50 then
     sym.hunter.send('suit support')
-  elseif tonumber(gmcp.Char.Vitals.pl) &lt; 225 then
+  elseif entangled then
+    send('plasma disentangle jaidyn')
+  elseif tonumber(gmcp.Char.Vitals.pl) &lt; 301 then
     sym.hunter.send('plasma consumption')
   elseif sym.pvp.flags.blazingstacks &gt; 5 and sym.pvp.flags.burns &lt; 3 then
     sym.hunter.send('plasma conflagrate '..target)
   elseif not sym.hunter.flags.doused then
     sym.hunter.send('plasma douse '..target)
-  elseif sym.pvp.flags.burns == 3 and tonumber(gmcp.Char.Vitals.pl) &gt; 300 then
+  elseif sym.pvp.flags.burns == 3 and tonumber(gmcp.Char.Vitals.pl) &gt; 301 then
     sym.hunter.send('plasma incinerate '..target)
   else
     sym.hunter.send('plasma burn '..target)
@@ -743,7 +769,7 @@ end</script>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
-				<name>a-scoundrel pvp</name>
+				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
@@ -1165,7 +1191,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
-				<name>a-engineer pvp</name>
+				<name>a-engineer</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
@@ -1333,7 +1359,7 @@ end</script>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
-				<name>a-nanoseer pvp</name>
+				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
@@ -1508,7 +1534,7 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
-				<name>a-fury pvp</name>
+				<name>a-fury</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
