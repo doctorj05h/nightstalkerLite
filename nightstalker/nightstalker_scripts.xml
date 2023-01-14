@@ -102,7 +102,7 @@ sym.pvp.triggy =
       (c == class and enableTrigger or disableTrigger)('op-' .. c)
     end
     for _, c in ipairs(clist) do
-      (c == class and enableTrigger or disableTrigger)('a-' .. c)
+      (c == class and enableAlias or disableAlias)('a-' .. c)
     end
   end
 function checkSystems()
@@ -242,7 +242,7 @@ end</script>
     sym.hunter.send('guile stim')
   elseif bullets == 0 then
     if not sym.pvp.flags.meltered then
-      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+      sym.hunter.send('ied fling shrapnel ripper at ' .. target)
       send('assess ' .. target)
       if caneject == true then
         send("gun eject")
@@ -342,72 +342,72 @@ end</script>
   local stance = gmcp.Char.Vitals.st:lower()
   local rage = tonumber(gmcp.Char.Vitals.rg)
     if sym.hunter.flags.channeling then
-      sym.hunter.send('nano eyestrike')
+      sym.hunter.send('fever')
       sym.hunter.flags.channeling = false
     else
-if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
-  sym.hunter.send("suffuse")
- elseif sym.haveskill('Burn', 'Fulmination') then
-  sym.hunter.send("kith burn " .. target)
- else
-   sym.hunter.send("kill " .. target)
-   end
-end
+--if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+--  sym.hunter.send("suffuse")
+-- elseif sym.haveskill('Burn', 'Fulmination') then
+--  sym.hunter.send("kith burn " .. target)
+-- else
+--   sym.hunter.send("kill " .. target)
+--   end
+--end
         
-  -- for later when you have all yours skills, one way to do a bashing route for fury
+-- for later when you have all yours skills, one way to do a bashing route for fury
   
- --     if
- --       not sym.hunter.flags.suffused and
- --       ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 71 then
- --       sym.hunter.send("suffuse")
- --     elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
- --       local to_combo =
- --         {
- --           ['symmetry'] = 'combo gutrend overpower',
- --           ['flare'] = 'combo wound overpower',
- --           ['eruption'] = 'combo rupture overpower',
- --         }
- --       sym.hunter.send(to_combo[stance] .. ' ' .. target)
- --     else
- --       if sym.hunter.flags.unstoppable == true then
- --         local to_combo =
- --           {
- --             ['symmetry'] = 'combo gutrend slice',
- --             ['flare'] = 'combo wound slice',
- --             ['eruption'] = 'combo rupture slice',
- --           }
- --         sym.hunter.send(to_combo[stance] .. ' ' .. target)
- --       else
- --         if sym.hunter.flags.unstoppableready == true then
- --           local to_combo =
- --             {
- --               ['symmetry'] = 'combo gutrend unstoppable',
- --               ['flare'] = 'combo wound unstoppable',
- --               ['eruption'] = 'combo hypertension unstoppable',
- --             }
- --           sym.hunter.send(to_combo[stance] .. ' ' .. target)
- --         else
- --           if not sym.hunter.flags.berserk and rage &gt; 10 then
- --             local to_combo =
- --               {
- --                 ['symmetry'] = 'combo gutrend berserk',
- --                 ['flare'] = 'combo wound deepstrike',
- --                 ['eruption'] = 'combo rupture berserk',
- --               }
- --             sym.hunter.send(to_combo[stance] .. ' ' .. target)
- --           else
- --             local to_combo =
- --               {
- --                 ['symmetry'] = 'combo gutrend flyinglash',
- --                 ['flare'] = 'combo wound deepstrike',
- --                 ['eruption'] = 'combo rupture flyinglash',
- --               }
- --             sym.hunter.send(to_combo[stance] .. ' ' .. target)
- --           end
- --         end
- --       end
- --     end
-
+     if
+        not sym.hunter.flags.suffused and
+        ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+        sym.hunter.send("suffuse")
+      elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo gutrend overpower',
+            ['flare'] = 'combo wound overpower',
+            ['eruption'] = 'combo rupture overpower',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else
+        if sym.hunter.flags.unstoppable == true then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend slice',
+              ['flare'] = 'combo wound slice',
+              ['eruption'] = 'combo rupture slice',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          if sym.hunter.flags.unstoppableready == true then
+            local to_combo =
+              {
+                ['symmetry'] = 'combo gutrend unstoppable',
+                ['flare'] = 'combo wound unstoppable',
+                ['eruption'] = 'combo hypertension unstoppable',
+              }
+            sym.hunter.send(to_combo[stance] .. ' ' .. target)
+         else
+            if not sym.hunter.flags.berserk and rage &gt; 10 then
+              local to_combo =
+               {
+                 ['symmetry'] = 'combo gutrend berserk',
+                  ['flare'] = 'combo wound deepstrike',
+                  ['eruption'] = 'combo rupture berserk',
+                }
+             sym.hunter.send(to_combo[stance] .. ' ' .. target)
+            else
+              local to_combo =
+                {
+                 ['symmetry'] = 'combo gutrend flyinglash',
+                 ['flare'] = 'combo wound deepstrike',
+                  ['eruption'] = 'combo rupture flyinglash',
+               }
+            sym.hunter.send(to_combo[stance] .. ' ' .. target)
+           end
+         end
+      end
+      end
+end
 end</script>
 					<eventHandlerList />
 				</Script>
@@ -1291,12 +1291,13 @@ function sym.ui.create_boxes()
     border-color: rgb(0,40,40);
     margin: 1px;
   ]])
+  local fontsize = sym.ui.info.config.fontsize
   sym.ui.adj = sym.ui.adj or {} 
    
   sym.ui.adj.topright = Adjustable.Container:new({name = 'Chat', x = '75%', y = 0, width = '25%', height = '50%', }) 
   sym.ui.adj.bottomright = Adjustable.Container:new({name = 'Room Info', x = '75%', y = '50%', width = '25%', height = '50%',}) 
   sym.ui.adj.topleft = Adjustable.Container:new({name = 'Map', x = '0%', y = '0%', width = '25%', height = '75%', }) 
-  sym.ui.adj.bottomleft = Adjustable.Container:new({name = 'Mindsim', x = '0%', y = '75%', width = '25%', height = '25%', fontSize = 12}) 
+  sym.ui.adj.bottomleft = Adjustable.Container:new({name = 'Mindsim', x = '0%', y = '75%', width = '25%', height = '25%', fontSize = fontsize}) 
     
   sym.ui.topright = Geyser.Label:new({ name = 'sym.ui.topright', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.topright)
   sym.ui.topright:setStyleSheet(boxcss:getCSS())
@@ -1304,15 +1305,14 @@ function sym.ui.create_boxes()
   sym.ui.bottomright = Geyser.Label:new({ name = 'sym.ui.bottomright', x = 0, y = 0, width = '100%', height = '100%', }, sym.ui.adj.bottomright)
   sym.ui.bottomright:setStyleSheet(boxcss:getCSS())
 
-  sym.ui.topleft = Geyser.Label:new({ name = 'sym.ui.topleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = 11 }, sym.ui.adj.topleft)
+  sym.ui.topleft = Geyser.Label:new({ name = 'sym.ui.topleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = fontsize }, sym.ui.adj.topleft)
   sym.ui.topleft:setStyleSheet(boxcss:getCSS())
 
-  sym.ui.bottomleft = Geyser.Label:new({ name = 'sym.ui.bottomleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = 11 }, sym.ui.adj.bottomleft)
+  sym.ui.bottomleft = Geyser.Label:new({ name = 'sym.ui.bottomleft',  x = 0, y = 0, width = '100%', height = '100%',  fontSize = fontsize }, sym.ui.adj.bottomleft)
   sym.ui.bottomleft:setStyleSheet(boxcss:getCSS())
 
-  local fontsize = sym.ui.mapper.config.fontsize - 2
-  beaconMini = beaconMini or Geyser.MiniConsole:new({name = "beacon",  x=0, y=0,  autoWrap = true,  color = "black", fontSize = fontsize,  width="100%", height="100%",}, sym.ui.adj.right)
-  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black",font = 'square', fontSize = fontsize,  width="100%", height="100%",}, sym.ui.adj.left)
+  beaconMini = beaconMini or Geyser.MiniConsole:new({name = "beacon",  x=0, y=0,  autoWrap = true,  color = "black", fontSize = (fontsize - 1),  width="100%", height="100%",}, sym.ui.adj.right)
+  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black",font = 'square', fontSize = (fontsize - 3),  width="100%", height="100%",}, sym.ui.adj.left)
 
 end</script>
 					<eventHandlerList />
@@ -1410,7 +1410,7 @@ function sym.ui.update_mindsim()
 
   if not sym.ui.footer then sym.ui.create_gauges(class) end
 
-  sym.ui.health:setValue(tonumber(gmcp.Char.Vitals.hp), tonumber(gmcp.Char.Vitals.maxhp), '&lt;center&gt;&lt;font color="LightGrey"&gt;&lt;font color="LightGrey"&gt;Health: ' .. string.format('%s / %s', gmcp.Char.Vitals.hp, gmcp.Char.Vitals.maxhp))
+  sym.ui.health:setValue(tonumber(gmcp.Char.Vitals.hp), tonumber(gmcp.Char.Vitals.maxhp), '&lt;center&gt;&lt;font="OCR A Extended"&gt;&lt;font color="LightGrey"&gt;&lt;font color="LightGrey"&gt;Health: ' .. string.format('%s / %s', gmcp.Char.Vitals.hp, gmcp.Char.Vitals.maxhp))
 
   if class == 'Nanoseer' then
     sym.ui.nanites:setValue(tonumber(gmcp.Char.Vitals.nn), tonumber(gmcp.Char.Vitals.maxnn), '&lt;center&gt;&lt;font color="LightGrey"&gt;Nanites: ' .. gmcp.Char.Vitals.formatnn)

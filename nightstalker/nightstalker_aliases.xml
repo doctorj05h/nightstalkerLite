@@ -573,7 +573,7 @@ send('ship disembark')</script>
 			<command></command>
 			<packageName></packageName>
 			<regex></regex>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-b.e.a.s.t.</name>
 				<script></script>
 				<command></command>
@@ -934,7 +934,7 @@ end</script>
     sym.hunter.send('guile stim')
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
-      send("switch weakening random")
+--      send("switch weakening random")
       sym.hunter.send('ied fling shrapnel melter at '..target)
       if caneject then send('gun eject') end
     elseif sym.haveskill ('Pocketsand', 'Guile') then
@@ -1358,7 +1358,7 @@ end</script>
 					<regex>^focus</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
@@ -1531,6 +1531,13 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^limbs$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>nano analyze</name>
+					<script>send('nano analyze '..sym.target)</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^hud$</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
