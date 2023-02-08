@@ -240,6 +240,7 @@ end</script>
     else
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
+
   elseif bullets == 0 then
     if not sym.pvp.flags.meltered then
       sym.hunter.send('ied fling shrapnel ripper at ' .. target)
@@ -257,11 +258,17 @@ end</script>
     else
       sym.hunter.send('gun quickload')
     end
+
   elseif incover and not sym.pvp.flags.trigger then
     send('trigger ripper shrapnel')
+  elseif incover and not sym.pvp.flags.multibomb then
+    send('multibomb ripper shrapnel')
+
+
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
     if caneject then send('gun eject') end
+
   elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
     sym.hunter.send('gun rapidfire '..target)
   else
@@ -304,6 +311,44 @@ end
 </script>
 					<eventHandlerList />
 				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>engineer</name>
+					<packageName></packageName>
+					<script>sym.hunter.class['Engineer'] = function()
+  local target = sym.target
+  local sym_name = gmcp.Char.Name.name
+  if sym.hunter.flags.channeling then
+      sym.hunter.send('gadget shock '..target)
+      sym.hunter.flags.channeling = false
+  else
+    if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+      sym.hunter.send('stimjector ' .. sym_name)
+    elseif not sym.hunter.flags.turretpower then
+      sym.hunter.send('turret qpcboost')
+    elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop and sym.haveskill('Airdrop', 'Bots')then
+      send('airdrop')
+-- remove the commented out code below for lower level bashing
+--  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
+--    sym.hunter.send('bot repeat claw '..target)
+--  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
+--    sym.hunter.send('bot harass '..target)
+--  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
+--    sym.hunter.send('gadget shock '..target)
+    else
+      --sym.hunter.send('bot disrupt '..target)
+      --sym.hunter.send('bot claw '..target)
+  if not sym.hunter.flags.focused then
+    sym.hunter.send('turret focus '..target)
+    send('cq')
+  elseif not sym.hunter.flags.controlling then
+    sym.hunter.send('turret control')
+     send('cq')
+    end
+    end
+  end
+end</script>
+					<eventHandlerList />
+				</Script>
 				<Script isActive="yes" isFolder="no">
 					<name>engineer</name>
 					<packageName></packageName>
@@ -329,6 +374,7 @@ end
 --    sym.hunter.send('gadget shock '..target)
     else
       sym.hunter.send('bot disrupt '..target)
+      --sym.hunter.send('bot claw '..target)
     end
   end
 end</script>
@@ -611,7 +657,7 @@ function sym.hunter.nextroom()
 end
 
 function sym.hunter.previousroom()
-	sym.hunter.runner.backracking = true
+	sym.hunter.runner.backtracking = true
 	if #sym.hunter.runner.reverse &gt; 0 then
 		sym.hunter.runner.walkingTo = table.remove(sym.hunter.runner.reverse)
 		expandAlias('goto '..sym.hunter.runner.walkingTo)
@@ -656,9 +702,9 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
-					<name>targetting</name>
+					<name>targeting</name>
 					<packageName></packageName>
-					<script>function sym.hunter.targetting()
+					<script>function sym.hunter.targeting()
   if sym.hunter.runner.enabled and sym.hunter.runner.walkingTo ~= gmcp.Room.Info.num then
     return false
   end
@@ -684,7 +730,7 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
   end
 end
 
-sym.registerevent('hunter targetting', 'room_updated', 'sym.hunter.targetting')</script>
+sym.registerevent('hunter targeting', 'room_updated', 'sym.hunter.targeting')</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -1312,7 +1358,7 @@ function sym.ui.create_boxes()
   sym.ui.bottomleft:setStyleSheet(boxcss:getCSS())
 
   beaconMini = beaconMini or Geyser.MiniConsole:new({name = "beacon",  x=0, y=0,  autoWrap = true,  color = "black", fontSize = (fontsize - 1),  width="100%", height="100%",}, sym.ui.adj.right)
-  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black",font = 'square', fontSize = (fontsize - 3),  width="100%", height="100%",}, sym.ui.adj.left)
+  schartMini = schartMini or Geyser.MiniConsole:new({name = "starchart",  x=0, y=0,  autoWrap = false,  color = "black",font = 'square', fontSize = (fontsize - 4),  width="100%", height="100%",}, sym.ui.adj.left)
 
 end</script>
 					<eventHandlerList />
@@ -1437,34 +1483,34 @@ local hull_perc = round(gmcp.Char.Vitals.ship_hull / gmcp.Char.Vitals.ship_hull_
 if shields_perc &gt;= 100 then spacer1 = 3 elseif shields_perc &lt; 10 then spacer1 = 1 else spacer1 = 2 end
 if hull_perc &gt;= 100 then spacer2 = 3 elseif hull_perc &lt; 10 then spacer2 = 1 else spacer2 = 2 end
 sym.ui.bottomleft:echo([[
-    &lt;p align="left" style="font-family:'Consolas'"&gt;
+    &lt;p align="left" style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="grey"&gt;ShipSim Interface:&lt;font color="gold"&gt; ]]..gmcp.Char.Vitals.ship_name..[[&lt;/font&gt;
     &lt;/p&gt;
-    &lt;p style="font-family:'Consolas'"&gt;
+    &lt;p style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&amp;nbsp;&lt;font color="gray"&gt;Name:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Name.name..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 10 - #gmcp.Char.Name.name)..[[ &lt;font color="grey"&gt;Capacitor:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_cap)..[["&gt;]]..ship_dmg_cap..[[&lt;/font&gt;&amp;nbsp;(]]..capacitor_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Level:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.level..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.level)..[[ &lt;font color="gray"&gt;Engine:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_engine)..[["&gt;]]..ship_dmg_engine..[[&lt;/font&gt;&amp;nbsp;(]]..engine_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Class:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..class..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #class)..[[ &lt;font color="gray"&gt;Sensor:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_sensor)..[["&gt;]]..ship_dmg_sensor..[[&lt;/font&gt;&amp;nbsp;(]]..sensor_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="moccasin"&gt;Marks&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.marks..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.marks)..[[ &lt;font color="gray"&gt;Shield:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_shield)..[["&gt;]]..ship_dmg_shield..[[&lt;/font&gt;&amp;nbsp;(]]..shield_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 1)..[[&lt;font color="gray"&gt;Health&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(hull_perc)..[["&gt;]]..hull_perc..[[&lt;/font&gt; ]]..[[&lt;font color = "cyan"&gt;(&lt;/font&gt;&lt;font color="]]..getSystemColour(shields_perc)..[["&gt;]]..shields_perc..[[&lt;/font&gt;&lt;font color = "cyan"&gt;)&lt;/font&gt;]]..string.rep('&amp;nbsp;', 5 - spacer1 + spacer2)..[[&lt;font color="gray"&gt;ShipSim:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(ship_dmg_sim)..[["&gt;]]..ship_dmg_sim..[[&lt;/font&gt;&amp;nbsp;(]]..sim_bf..[[&lt;/font&gt;)]]..[[&lt;br&gt;
     &lt;/p&gt;
-    &lt;p style="font-family:'Consolas'"&gt;
+    &lt;p style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 4)..[[&lt;font color="gray"&gt;Your target is: &lt;font color="turquoise"&gt;]]..gmcp.Char.Status.target..(gmcp.IRE and gmcp.IRE.Target and type(gmcp.IRE.Target.Info) == 'table' and gmcp.IRE.Target.Info.hpperc ~= '' and  [[ &lt;font color="gray"&gt;HP:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.IRE.Target.Info.hpperc:gsub("%%", ""))..[["&gt;]]..gmcp.IRE.Target.Info.hpperc or '')..[[&lt;/font&gt;
     &lt;/p&gt;
     ]]
     )
 else
 sym.ui.bottomleft:echo([[
-    &lt;p align="left" style="font-family:'Consolas'"&gt;
+    &lt;p align="left" style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 13)..[[&lt;font color="grey"&gt;MindSim Interface&lt;/font&gt;
     &lt;/p&gt;
-    &lt;p style="font-family:'Consolas'"&gt;
+    &lt;p style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&amp;nbsp;&lt;font color="gray"&gt;Name:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Name.name..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 11 - #gmcp.Char.Name.name)..[[ &lt;font color="grey"&gt;Wetwiring:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.wetwiring)..[["&gt;]]..gmcp.Char.Vitals.wetwiring..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.wetwiring_efficacy)..[["&gt;]]..gmcp.Char.Vitals.wetwiring_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Level:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.level..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 12 - #gmcp.Char.Status.level)..[[ &lt;font color="gray"&gt;Muscular:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.muscular)..[["&gt;]]..gmcp.Char.Vitals.muscular..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.muscular_efficacy)..[["&gt;]]..gmcp.Char.Vitals.muscular_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="gray"&gt;Class:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..class..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 12 - #class)..[[ &lt;font color="gray"&gt;Internal:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.internal)..[["&gt;]]..gmcp.Char.Vitals.internal..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.internal_efficacy)..[["&gt;]]..gmcp.Char.Vitals.internal_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 2)..[[&lt;font color="moccasin"&gt;Marks&lt;/font&gt;&lt;font color="gray"&gt;:&lt;/font&gt;&amp;nbsp;&lt;font color="white"&gt;]]..gmcp.Char.Status.marks..[[&lt;/font&gt; ]]..string.rep('&amp;nbsp;', 13 - #gmcp.Char.Status.marks)..[[ &lt;font color="gray"&gt;Sensory:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.sensory)..[["&gt;]]..gmcp.Char.Vitals.sensory..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.sensory_efficacy)..[["&gt;]]..gmcp.Char.Vitals.sensory_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
       ]]..string.rep('&amp;nbsp;', 27)..[[&lt;font color="gray"&gt;Mind:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.mind)..[["&gt;]]..gmcp.Char.Vitals.mind..[[&lt;/font&gt;&amp;nbsp;(&lt;font color="]]..getSystemColour(gmcp.Char.Vitals.mind_efficacy)..[["&gt;]]..gmcp.Char.Vitals.mind_efficacy..[[&lt;/font&gt;)]]..[[&lt;br&gt;
     &lt;/p&gt;
-    &lt;p style="font-family:'Consolas'"&gt;
+    &lt;p style="font-family:'Ubuntu Mono'"&gt;
       ]]..string.rep('&amp;nbsp;', 4)..[[&lt;font color="gray"&gt;Your target is: &lt;font color="turquoise"&gt;]]..gmcp.Char.Status.target..(gmcp.IRE and gmcp.IRE.Target and type(gmcp.IRE.Target.Info) == 'table' and gmcp.IRE.Target.Info.hpperc ~= '' and  [[ &lt;font color="gray"&gt;HP:&lt;/font&gt;&amp;nbsp;&lt;font color="]]..getSystemColour(gmcp.IRE.Target.Info.hpperc:gsub("%%", ""))..[["&gt;]]..gmcp.IRE.Target.Info.hpperc or '')..[[&lt;/font&gt;
     &lt;/p&gt;
   ]]
@@ -2647,9 +2693,9 @@ end</script>
 				<eventHandlerList />
 			</Script>
 			<Script isActive="yes" isFolder="no">
-				<name>h_targetting</name>
+				<name>h_targeting</name>
 				<packageName></packageName>
-				<script>function sym.hacker.targetting()
+				<script>function sym.hacker.targeting()
 
   local mob = sym.hunter.checktarget()
 

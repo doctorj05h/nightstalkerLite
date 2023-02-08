@@ -152,7 +152,7 @@ end</script>
 				<regex>^hcall (on|off)$</regex>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
-				<name>targetting</name>
+				<name>targeting</name>
 				<script>send('st '..matches[2])
 if sym.hunter.runner.config.calling then
 send('crt Target: '..matches[2], false)
@@ -201,7 +201,7 @@ end</script>
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>wilderness list</name>
-				<script>-- code curtesy of Morgan 
+				<script>-- code curtesy of Morgan
 cecho(
   "&lt;dark_orchid&gt;-- &lt;cornflower_blue&gt;Wilderness List &lt;dark_orchid&gt;------------------------------------------------------"
 )
@@ -768,7 +768,7 @@ end</script>
 					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
@@ -789,45 +789,49 @@ then
     checkSystems()
 elseif bullets == 0 then
   if sym.haveskill('Fling', 'Improvisation') then
-    if not sym.pvp.flags.meltered then
-      sym.hunter.send('ied fling shrapnel melter at ' .. target)
+    if not sym.pvp.flags.meltered and sym.ui.roomitems[1].id ~= nil and not sym.pvp.flags.stickybomb then
+      send("switch impairing random")
+      sym.hunter.send('ied stick melter to ' ..sym.ui.roomitems[1].id)
+    elseif not sym.pvp.flags.meltered then
+      send("switch impairing random")
+      sym.hunter.send('ied fling melter at ' .. target)
+    elseif not sym.pvp.flags.sleep and not sym.hunter.flags.prone and not sym.pvp.flags.bind then
+      send("switch impairing random")
+    sym.hunter.send('fling sleeper')
+
     else
+      send("switch impairing random")
       sym.hunter.send('ied fling wiring distorter at ' .. target)
     end
-    sym.hunter.send('assess ' .. target)
-    if caneject == true then
-      send("gun eject")
-    end
+
   else
     sym.hunter.send('gun spin')
   end
-elseif bullets == 0 and sym.hunter.flags.channeling then
-  sym.hunter.send('guile pocketsand ' .. target)
-  sym.hunter.flags.channeling = false
-elseif
-  not sym.hunter.flags.rapidfire and
-  sym.haveskill('Rapidfire', 'Gunslinging') and
-  bullets &gt;= 2
-then
-  send("switch impairing random")
+
+elseif not sym.pvp.flags.facesmashed and sym.pvp.flags.stickybomb then
+   send('guile facesmash ' ..target..' '..sym.ui.roomitems[1].id)
+   sym.hunter.send('assess ' .. target)
+   if caneject == true then send("gun eject") end
+   
+elseif sym.pvp.flags.prone and not sym.pvp.flags.bind then
+   sym.hunter.send('guile bind')
+
+elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
   sym.hunter.send('gun rapidfire ' .. target)
   sym.hunter.send('assess ' .. target)
+
 elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
   send("switch impairing random")
   sym.hunter.send('gun ambush ' .. target)
   sym.hunter.send('assess ' .. target)
-elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 then
-  send("switch impairing random")
+
+else
   sym.hunter.send('gun crackshot ' .. target)
   sym.hunter.send('assess ' .. target)
-else
-  sym.hunter.send('gun pointblank ' .. target)
-  sym.hunter.send('assess ' .. target)
-  sym.hunter.flags.channeling = false
 end</script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^22</regex>
+					<regex>^mind$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>internal</name>
@@ -842,8 +846,10 @@ elseif sym.hunter.flags.channeling and bullets == 0 then
 else
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
+
   elseif canmend then
     checkSystems()
+
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
@@ -857,13 +863,16 @@ else
     else
       sym.hunter.send('gun quickload')
     end
+
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
     send('assess ' .. target)
     if caneject then send('gun eject') end
+
   elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
     sym.hunter.send('gun rapidfire '..target)
     send('assess ' .. target)
+
   else
     sym.hunter.send('gun crackshot '..target)
     send('assess ' .. target)
@@ -877,47 +886,55 @@ end</script>
 					<name>sensory</name>
 					<script>local target = sym.target
 local bullets = tonumber(gmcp.Char.Vitals.bl)
-if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 then
+if sym.hunter.flags.channeling and bullets &gt; 0 then
+      sym.hunter.send('gun pointblank '..target)
+      sym.hunter.flags.channeling = false
+elseif sym.hunter.flags.channeling and bullets == 0 then
+      sym.hunter.send('guile pocketsand '..target)
+      sym.hunter.flags.channeling = false
+--healing logic
+elseif not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 then
   sym.hunter.send('guile stim')
+
 elseif canmend then
     checkSystems()
-
+--reload logic
 elseif bullets == 0 then
   if sym.haveskill('Fling', 'Improvisation') then
     if not sym.pvp.flags.meltered then
+      send("switch disrupting random")
       sym.hunter.send('ied fling shrapnel melter at ' .. target)
       send('assess ' .. target)
-      if caneject == true then
-        send("gun eject")
-      end
+      if caneject == true then send("gun eject") end
+    else
+      send("switch disrupting random")
+      sym.hunter.send('ied fling shrapnel blinder at ' .. target)
+      if caneject == true then send("gun eject") end
+    end  
   else
-    --      sym.hunter.send('gun spin')
-    sym.hunter.send('ied fling shrapnel blinder at ' .. target)
-    end
+    send("switch disrupting random")
+    sym.hunter.send('guile pocketsand ' .. target)
   end
-elseif bullets == 0 then
-  sym.hunter.send('guile pocketsand ' .. target)
+--attack progression (1)
 elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
-  send("switch disrupting random")
   sym.hunter.send('gun ambush ' .. target)
   send('assess ' .. target)
+--attack progression (2)
 elseif
   not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
-  send("switch disrupting random")
   sym.hunter.send('gun rapidfire ' .. target)
   send('assess ' .. target)
+--attack progression (3)
 elseif sym.hunter.flags.rapidfire and bullets &gt;= 1 then
   sym.hunter.send('guile haymaker ' .. target .. ' head')
   sym.hunter.send('assess ' .. target)
-  if caneject == true then
-    send("gun eject")
-  end
+
 else
-  sym.hunter.send('gun pointblank ' .. target)
+  sym.hunter.send('gun crackshot ' .. target)
 end</script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^44</regex>
+					<regex>^sens</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>kill (facility)</name>
@@ -981,7 +998,7 @@ else
 end</script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^gg</regex>
+					<regex>^gg$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>haymaker</name>
@@ -1061,11 +1078,13 @@ else
 end</script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^ee</regex>
+					<regex>^ee$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>facesmash</name>
-					<script>send('guile facesmash ' ..sym.target.. ' seat')</script>
+					<script>if sym.ui.roomitems[1].id ~= nil then
+send('guile facesmash ' ..sym.target..' ' ..sym.ui.roomitems[1].id)
+end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^fs$</regex>
@@ -1127,11 +1146,10 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
     sym.hunter.send('fling sleeper')
   elseif sym.pvp.flags.prone and not sym.pvp.flags.bind then
     sym.hunter.send('guile bind')
-  elseif bullets == 0 and windupcheck == 0 then
+  elseif bullets == 0 then
     send("switch weakening staggering")
-    --sym.hunter.send('ied fling wiring piercer at '..target)
-    sym.hunter.send('gun spin')
-  
+    sym.hunter.send('ied fling wiring piercer at '..target)
+    
   elseif bullets == 0 and windupcheck == 1 then
       send("switch weakening staggering")
       sym.hunter.send('guile pocketsand '..target)
@@ -1154,7 +1172,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
     sym.hunter.send('assess ' .. target)
   
   else
-    sym.hunter.send('gun pointblank '..target)
+    sym.hunter.send('gun crackshot '..target)
     windupcheck = 0
  end</script>
 					<command></command>
@@ -1358,7 +1376,7 @@ end</script>
 					<regex>^focus</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
