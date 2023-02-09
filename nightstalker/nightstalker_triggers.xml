@@ -2692,7 +2692,7 @@ sym.hunter.flags.repeating = true</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>degauss</name>
 					<script>sym.hunter.flags.degauss = true
-send('operate gaussify '..sym.target)</script>
+send('operate gaussify '..target)</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -3507,10 +3507,12 @@ expandAlias("map create off")</script>
 				<regexCodeList>
 					<string>You leave the wilderness.</string>
 					<string>With a cry of relief, you find the exit from the cache and dive out, evading your attackers.</string>
+					<string>^Swiveling their boosters quickly to one side\, you push a blast of green-blue energy .+ and zoom off to the the void\, evading your attackers\.$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>3</integer>
 					<integer>3</integer>
+					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
 		</TriggerGroup>
@@ -5434,10 +5436,12 @@ tempTimer(30, function()
 					<regexCodeList>
 						<string>^(.+) stands up\.$</string>
 						<string>Empowered with celestial grace and swift reflexes</string>
+						<string>^.+ must be prone before you can do that\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
 						<integer>2</integer>
+						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">

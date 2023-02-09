@@ -1904,7 +1904,8 @@ end</script>
     ['ooc'] = 'Local',
     ['emote'] = 'Local',
     ['market'] = 'Clan',
-    ['conflict'] = 'Clan'
+    ['conflict'] = 'Clan',
+    ['commerce'] = "Clan"
   }
 
   local channel = table.contains(channels, gmcpChannel:title()) and gmcpChannel:title() or to_channel[gmcpChannel]
