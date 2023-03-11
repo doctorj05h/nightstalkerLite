@@ -245,7 +245,7 @@ end</script>
     if not sym.pvp.flags.meltered then
       sym.hunter.send('ied fling shrapnel ripper at ' .. target)
       send('assess ' .. target)
-      if caneject == true then
+      if caneject == false then
         send("gun eject")
       end
     elseif sym.haveskill ('Fling', 'Improvisation') then
@@ -267,13 +267,14 @@ end</script>
 
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
     sym.hunter.send('gun ambush '..target)
-    if caneject then send('gun eject') end
+    if not caneject then send('gun eject') end
 
-  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
-    sym.hunter.send('gun rapidfire '..target)
+ -- elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
+ --   sym.hunter.send('gun rapidfire '..target)
   else
-    sym.hunter.send('gun crackshot '..target)
- --sym.hunter.send('guile haymaker '..target)
+--    sym.hunter.send('gun crackshot '..target)
+ sym.hunter.send('guile haymaker '..target)
+ if not caneject then send('gun eject') end
     end
   end
 end</script>
@@ -1455,9 +1456,8 @@ function sym.ui.update_mindsim()
   local class = gmcp.Char.Status.class
 
   if not sym.ui.footer then sym.ui.create_gauges(class) end
-
-  sym.ui.health:setValue(tonumber(gmcp.Char.Vitals.hp), tonumber(gmcp.Char.Vitals.maxhp), '&lt;center&gt;&lt;font="OCR A Extended"&gt;&lt;font color="LightGrey"&gt;&lt;font color="LightGrey"&gt;Health: ' .. string.format('%s / %s', gmcp.Char.Vitals.hp, gmcp.Char.Vitals.maxhp))
-
+  local hpper = math.floor(gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp * 100)
+  sym.ui.health:setValue(tonumber(gmcp.Char.Vitals.hp), tonumber(gmcp.Char.Vitals.maxhp), [[&lt;center&gt;&lt;font color="LightGrey"&gt;&lt;font color="]]..getSystemColour(hpper)..[["&gt;Health: &lt;b&gt;]] .. string.format('%s / %s', gmcp.Char.Vitals.hp, gmcp.Char.Vitals.maxhp).."&lt;/b&gt;")
   if class == 'Nanoseer' then
     sym.ui.nanites:setValue(tonumber(gmcp.Char.Vitals.nn), tonumber(gmcp.Char.Vitals.maxnn), '&lt;center&gt;&lt;font color="LightGrey"&gt;Nanites: ' .. gmcp.Char.Vitals.formatnn)
     sym.ui.sanity:setValue(tonumber(gmcp.Char.Vitals.sa), tonumber(gmcp.Char.Vitals.maxsa), '&lt;center&gt;&lt;font color="LightGrey"&gt;Sanity: ' .. gmcp.Char.Vitals.formatsa)
@@ -2666,7 +2666,8 @@ end</script>
     "Generator",
     "Rogueai",
     "Platform",
-    "Assassin"
+    "Assassin",
+    "Sarkeen"
   }</script>
 				<eventHandlerList />
 			</Script>

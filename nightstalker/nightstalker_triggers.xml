@@ -562,9 +562,7 @@ elseif string.match(desc, "station") or string.match(desc, "voidgate") then
   color = "#ffb266"
 elseif string.find(desc, "#%d+") then
   if not string.match(desc, "structure") then
-  
-    local ship_id = string.sub(string.match(desc, "#%d+"), 2)
-    
+    ship_id = string.sub(string.match(desc, "#%d+"), 2)
     if string.match(desc, "from Song") then
       color = "#ff33ff"
     elseif string.match(desc, "from Scat") then
@@ -574,15 +572,20 @@ elseif string.find(desc, "#%d+") then
     else
       if string.match(desc, target) then
         desc = "&gt; "..desc
-        color = "#ff07f8"
+        color = "#ff0707"
       end
     end
-    
   end
 end
 
-moveCursor('beacon', 0, 0)
-hinsertText('beacon', color..' '..distance.." "..dir.."\t"..desc.."\n")</script>
+for ship_id in string.gmatch(desc, "#%d+") do
+  ship_id = string.sub(ship_id, 2)
+  hechoLink('beacon', color..' '..distance.." "..dir.."\t"..desc.."\n",function() send('st '..ship_id) end,"target this "..ship_id,true)
+end  
+
+if not string.find(desc, "#%d+") then
+  hecho('beacon', color..' '..distance.." "..dir.."\t"..desc.."\n")
+end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -696,12 +699,12 @@ end</script>
 				<script>  tempTimer(
           3,
           function()
-          cechoLink('\n&lt;yellow&gt; Nighstalker requires showing balance to be enabled. Click here to do so!', [[send('config showbalance on')]],'config showbalance on', true)
-          cechoLink('\n&lt;yellow&gt; Nighstalker requires somekind of combat messages on. Click here to do so!', [[send('config combatmessages full')]],'config combatmessages full', true)
-          cechoLink('\n&lt;yellow&gt; Nighstalker requires ground map to be shown. Click here to do so!', [[sendAll('config mapshow on', 'map radius 5')]],'config mapshow on', true)
-          cechoLink('\n&lt;yellow&gt; Nighstalker recommends MXP. Click here to do so!', [[send('config mxp on')]],'config mxp on', true)
-          cechoLink('\n&lt;yellow&gt; Nighstalker recommends balance queueing. Click here to do so!', [[send('config usequeueing on')]],'config usequeueing on', true)
-          cechoLink('\n&lt;yellow&gt; Nighstalker recommends allowing the client to wrap text. Click here to do so!', [[send('config wrapwidth 0')]],'config wrapwidth 0', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker requires showing balance to be enabled. Click here to do so!', [[send('config showbalance on')]],'config showbalance on', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker requires somekind of combat messages on. Click here to do so!', [[send('config combatmessages full')]],'config combatmessages full', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker requires ground map to be shown. Click here to do so!', [[sendAll('config mapshow on', 'map radius 5')]],'config mapshow on', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker recommends MXP. Click here to do so!', [[send('config mxp on')]],'config mxp on', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker recommends balance queueing. Click here to do so!', [[send('config usequeueing on')]],'config usequeueing on', true)
+          cechoLink('\n&lt;yellow&gt; Nightstalker recommends allowing the client to wrap text. Click here to do so!', [[send('config wrapwidth 0')]],'config wrapwidth 0', true)
           sym.hunter.triggy(gmcp.Char.Status.class)
           sym.pvp.triggy(gmcp.Char.Status.class)
           end
@@ -1596,7 +1599,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -1763,7 +1766,7 @@ end</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>eject</name>
-					<script>caneject = false</script>
+					<script>caneject = true</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -1783,7 +1786,7 @@ end</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>eject cooldown</name>
-					<script>caneject = true
+					<script>caneject = false
 </script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -1803,7 +1806,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -3879,7 +3882,7 @@ if matches[2] == "helium" then
   cechoLink(
   '&lt;dark_salmon&gt; ' .. refined .. ' refined',
   function()
-    send('refinery queue ' .. refined .. ' ' .. material)
+    send('refinery queue ' .. refined .. ' ' .. material..' at refinery_' ..comm_location)
   end,
   "click to refine",
   true
@@ -3889,7 +3892,7 @@ else
   cechoLink(
   '&lt;dark_salmon&gt; ' .. refined .. ' refined',
   function()
-    send('refinery queue ' .. refined .. ' ' .. material)
+    send('refinery queue ' .. refined .. ' ' .. material..' at refinery_' ..comm_location)
   end,
   "click to refine",
   true
@@ -3906,7 +3909,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^raw.+\s+Raw\s(\w+).+\s+(\d+)\s+(.+)$</string>
+						<string>^raw.+\s+Raw\s(\w+).+\s+(\d+)\s+refinery #(\d+)$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -3997,6 +4000,27 @@ deselect()</script>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>2</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>auto insurance</name>
+					<script>local contract = matches[2]
+send('cargo contracts '..contract..' insure yes')</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^You have created a new cargo contract #(\d+)\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
@@ -4363,6 +4387,30 @@ end</script>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>2</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>shields tracking</name>
+					<script>target_ship_hull = tonumber(matches[2])
+target_ship_shield = tonumber(matches[3])
+if target_ship_hull &gt; 0 and target_ship_shield &lt;= 0 then
+sym.space.targetshields = false
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^Hull:\s+(\d+)%\s+Shields:\s+(\d+)%$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
@@ -4962,7 +5010,7 @@ end
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -5472,7 +5520,7 @@ end</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>forcefeed prep</name>
-					<script>send("forcefeed " ..target.." ripper")</script>
+					<script>send("forcefeed &amp;t ripper")</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -5554,7 +5602,7 @@ sym.pvp.flags.stickybomb = false</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -6031,7 +6079,7 @@ tempTimer(
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>they full up</name>
-					<script>cecho('OOoooeyyyy they are FULLL UP on afflictions, don\'t mess this up!')</script>
+					<script>cecho('\n&lt;b&gt;&lt;blue:yellow&gt; OOoooeyyyy they are FULLL UP on afflictions, don\'t mess this up!')</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
