@@ -164,7 +164,7 @@ if gmcp.Room.Info.environment == 'bridge' then
     'ship target ' .. target,
     'ship weapon fire slicer ' .. target,
     'ship weapon fire tractor ' .. target,
-    'ship weapon fire interdict ' .. target
+    'ship weapon fire interdict ' .. target, false
   )
  if not sym.space.targetshields or table.contains(shipPVE, target)then
   fireHull()
