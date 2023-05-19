@@ -111,12 +111,12 @@ function checkSystems()
   local efficacy =
     {
       "wetwiring_efficacy",
-      "muscular_efficacy",
       "mind_efficacy",
+      "muscular_efficacy",
       "internal_efficacy",
       "sensory_efficacy",
     }
-  local systems = {"wetwiring", "muscular", "mind", "internal", "sensory"}
+  local systems = {"wetwiring", "mind", "muscular", "internal", "sensory"}
   if not sym_ww then
     return
   end
@@ -198,11 +198,18 @@ end</script>
       else
         sym.hunter.send('plasma flash ' .. target)
       end
-    sym.hunter.flags.channeling = false
+    send('info here')
   else
-  if not sym.hunter.flags.contingency then
-    sym.hunter.send('contingency')
+
+  for key in pairs(mmp.defs.current) do
+    if string.find(key, "contingency") then
+      sym.hunter.flags.contingency = true
+      break
+    end
   end
+    if not sym.hunter.flags.contingency then
+     sym.hunter.send('contingency')
+    end
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 70 then
     sym.hunter.send('suit support')
   elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
@@ -217,9 +224,9 @@ end</script>
       end
 --  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
 --    sym.hunter.send('burn '..target)
---sym.hunter.send('wallop '..target)
   else
-    sym.hunter.send('mwp tear '..target)
+    sym.hunter.send('wallop '..target)
+    --sym.hunter.send('mwp tear '..target)
     end
   end
 end</script>
@@ -233,17 +240,17 @@ end</script>
   local bullets = tonumber(gmcp.Char.Vitals.bl)
       if sym.hunter.flags.channeling and bullets &gt; 0 then
       sym.hunter.send('gun pointblank '..target)
-      sym.hunter.flags.channeling = false
+      send('info here')
       elseif sym.hunter.flags.channeling and bullets == 0 then
       sym.hunter.send('guile pocketsand '..target)
-      sym.hunter.flags.channeling = false
+      send('info here')
     else
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
 
   elseif bullets == 0 then
-    if not sym.pvp.flags.meltered then
-      sym.hunter.send('ied fling shrapnel ripper at ' .. target)
+    if not sym.pvp.flags.meltered and string.find(gmcp.Room.Info.area, 'Vihana') then
+      sym.hunter.send('ied fling shrapnel melter at ' .. target)
       send('assess ' .. target)
       if caneject == false then
         send("gun eject")
@@ -269,11 +276,12 @@ end</script>
     sym.hunter.send('gun ambush '..target)
     if not caneject then send('gun eject') end
 
- -- elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
- --   sym.hunter.send('gun rapidfire '..target)
+--  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
+--    sym.hunter.send('gun rapidfire '..target)
+--    if not caneject then send('gun eject') end
   else
---    sym.hunter.send('gun crackshot '..target)
- sym.hunter.send('guile haymaker '..target)
+    sym.hunter.send('gun crackshot '..target)
+-- sym.hunter.send('guile haymaker '..target)
  if not caneject then send('gun eject') end
     end
   end
@@ -287,7 +295,7 @@ end</script>
   function(target)
     if sym.hunter.flags.channeling then
       sym.hunter.send('nano eyestrike')
-      sym.hunter.flags.channeling = false
+      send('info here')
     else
       if not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send('void embrace')
@@ -299,6 +307,7 @@ end</script>
       end
     end
   end
+  
 function limbdrainchooser()
 local limbtarget = {' right arm', ' left arm', ' right leg', ' left leg'}
 local limbrotation = limbrotation or 1
@@ -320,7 +329,7 @@ end
   local sym_name = gmcp.Char.Name.name
   if sym.hunter.flags.channeling then
       sym.hunter.send('gadget shock '..target)
-      sym.hunter.flags.channeling = false
+      send('info here')
   else
     if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
       sym.hunter.send('stimjector ' .. sym_name)
@@ -358,7 +367,7 @@ end</script>
   local sym_name = gmcp.Char.Name.name
   if sym.hunter.flags.channeling then
       sym.hunter.send('gadget shock '..target)
-      sym.hunter.flags.channeling = false
+      send('info here')
   else
     if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
       sym.hunter.send('stimjector ' .. sym_name)
@@ -374,8 +383,11 @@ end</script>
 --  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
 --    sym.hunter.send('gadget shock '..target)
     else
+      if string.find(gmcp.Room.Info.area, 'Vihana') then
+      sym.hunter.send('bot claw '..target)
+      else
       sym.hunter.send('bot disrupt '..target)
-      --sym.hunter.send('bot claw '..target)
+      end
     end
   end
 end</script>
@@ -390,7 +402,7 @@ end</script>
   local rage = tonumber(gmcp.Char.Vitals.rg)
     if sym.hunter.flags.channeling then
       sym.hunter.send('fever')
-      sym.hunter.flags.channeling = false
+      send('info here')
     else
 --if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
 --  sym.hunter.send("suffuse")
@@ -2374,8 +2386,8 @@ sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
   local c = 0
   for _, player in ipairs(sym.ui.roomplayers) do
     if c % 3 == 0 then sym.ui.info:decho('Room', string.format('\n %s- ', colour('SlateBlue'))) end
-    sym.ui.info:decho('Room', string.format('%s%-12s', colour('CornflowerBlue'), player.name))
-    sym.ui.info:dechoLink('Room', '&lt;180,10,80:0,0,0&gt;[X] ', [[send("st ]] .. player.name .. [[")]], "", true)
+    sym.ui.info:dechoLink('Room', '&lt;180,80,180:0,0,0&gt; X ', [[send("st ]] .. player.name .. [[")]], "click to target", true)
+    sym.ui.info:decho('Room', string.format('%s%-1s', colour('aquamarine'), player.name))
     c = c + 1
   end
 
@@ -2618,7 +2630,8 @@ sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.loadthis', 'sysLuaInstall
 			<name>ships</name>
 			<packageName></packageName>
 			<script>sym.space = sym.space or {}
-sym.space.flags = sym.space.flags or {}</script>
+sym.space.flags = sym.space.flags or {}
+sym.space.weapon.lastfired = sym.space.weapon.lastfired or {}</script>
 			<eventHandlerList />
 			<Script isActive="yes" isFolder="no">
 				<name>manual ship repair</name>
@@ -2671,6 +2684,51 @@ end</script>
   }</script>
 				<eventHandlerList />
 			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>weapon loadouts</name>
+				<packageName></packageName>
+				<script>local count = 0
+function fireShields()
+if not sym.space.targetshields then
+  fireHull()
+  end
+  for weapon_id, weapon in pairs(sym.space.weapon) do
+  if not sym.space.targetshields then
+  break
+  end
+    if count &lt; 2 and weapon.ready == "Yes" and (weapon.type == "EM" or weapon.type == "gravitic" or weapon.type == "kinetic") then
+      if weapon_id ~= sym.space.weapon.lastfired then
+        send('ship weapon fire ' .. weapon_id .. ' ' .. target)
+        sym.space.weapon.lastfired = weapon_id
+        count = count + 1
+        if count == 2 then
+          tempTimer(1.1, function()
+          count = 0
+           fireShields() end)
+        end
+      end
+    end
+  end
+end
+
+function fireHull()
+for weapon_id, weapon in pairs(sym.space.weapon) do
+    if count &lt; 2 and weapon.ready == "Yes" and (weapon.type == "thermal" or weapon.type == "gravitic" or weapon.type == "kinetic") then
+      if weapon_id ~= sym.space.weapon.lastfired then
+        send('ship weapon fire ' .. weapon_id .. ' ' .. target)
+        sym.space.weapon.lastfired = weapon_id
+        count = count + 1
+        if count == 2 then
+          tempTimer(1.1, function()
+          count = 0
+           fireHull() end)
+        end
+      end
+    end
+  end
+end</script>
+				<eventHandlerList />
+			</Script>
 		</ScriptGroup>
 		<ScriptGroup isActive="yes" isFolder="yes">
 			<name>hacker</name>
@@ -2680,7 +2738,7 @@ end</script>
 			<Script isActive="yes" isFolder="no">
 				<name>hacking prio</name>
 				<packageName></packageName>
-				<script>sym.hunter.priorities['Unknown location'] = {
+				<script>sym.hunter.priorities[''] = {
     'an erratic glitch',
     'a wedge-shaped black scanner',
     'a self-replicating antivirus',
@@ -3188,6 +3246,18 @@ end</script>
 				<packageName></packageName>
 				<script>color_table["spt_purple"] = {102, 0, 153}
 color_table["spt_blue"] = {0, 153, 204}</script>
+				<eventHandlerList />
+			</Script>
+		</ScriptGroup>
+		<ScriptGroup isActive="yes" isFolder="yes">
+			<name>pvp</name>
+			<packageName></packageName>
+			<script>sym.hunter.flags.degauss = {}</script>
+			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>degauss logic</name>
+				<packageName></packageName>
+				<script>-- variable of interest current_static, sym.hunter.flags.degauss, sym.hunter.flags.gaussify</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
