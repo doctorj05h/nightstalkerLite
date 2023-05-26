@@ -572,7 +572,7 @@ elseif string.find(desc, "#%d+") then
     elseif string.match(desc, "from Cele") then
     color = "#0080ff"
     else
-      if string.match(desc, target) then
+      if target ~= nil and string.match(desc, target) then
         desc = "&gt; "..desc
         color = "#ff0707"
       end
@@ -5093,11 +5093,9 @@ deselect()</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^(RS|CS|CA|RA)-\d+\s+\d\s+Song</string>
-					<string>^.+966.+$</string>
 					<string>^Your victim's .+ subsystem is not damaged enough\.$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
-					<integer>1</integer>
 					<integer>1</integer>
 					<integer>1</integer>
 				</regexCodePropertyList>
@@ -5176,7 +5174,6 @@ deselect()</script>
 					<string>Task count: </string>
 					<string>The ship can once again perform the </string>
 					<string>an abandoned .+ terminal</string>
-					<string>^.+965.+$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -5185,7 +5182,6 @@ deselect()</script>
 					<integer>3</integer>
 					<integer>2</integer>
 					<integer>2</integer>
-					<integer>1</integer>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
@@ -8692,17 +8688,18 @@ elseif class == 'B.E.A.S.T.' then
   end
 end
 
-cecho('\n&lt;navajo_white&gt;'..string.format("% 5s", matches[2])..': &lt;'..value..'&gt;' .. string.format("% 6s", armor) .. ' &lt;navajo_white&gt; Total Value: &lt;'..value..'&gt;' .. total .. '&lt;navajo_white&gt; Max: &lt;red&gt;' .. max.. '\n  ')
-
+cecho('\n&lt;navajo_white&gt;'..string.format("% 5s", matches[2])..': &lt;'..value..'&gt;' .. string.format("% 6s", armor) .. ' &lt;navajo_white&gt; Total Value: &lt;'..value..'&gt;' .. string.format("%.2f",total))
+-- armor upgrade code thanks to Mystor!
+cechoLink("&lt;navajo_white&gt; (equip armor)\n", [[send("armor upgrade ]]..matches[2]..[[ with ]]..armor..[[")]], "armor upgrade " .. matches[2].." with "..armor, true)
 for i, resValue in ipairs(resTable) do
     if resValue &gt;= 40 and class == 'B.E.A.S.T.' then
-        cecho(resType[i]..":&lt;cyan&gt; "..string.format("%.2f", resValue)..' ')
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
     elseif resValue &gt;= 30 and (class == 'Nanoseer' or class == 'Engineer') then
-        cecho(resType[i]..":&lt;cyan&gt; "..string.format("%.2f", resValue)..' ')
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
     elseif resValue &gt;= 20 and (class == 'Fury' or class == 'Scoundrel') then
-        cecho(resType[i]..":&lt;cyan&gt; "..string.format("%.2f", resValue)..' ')
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
     else
-        cecho(resType[i]..':&lt;gray&gt; '..string.format("%.2f", resValue)..' ')
+        cecho(string.format("% 5s",resType[i])..":&lt;gray&gt;  "..string.format("%.2f", resValue)..' ')
     end
 end</script>
 			<triggerType>0</triggerType>
@@ -8731,9 +8728,17 @@ local weppower = matches[5]
 local weplevel = matches[6]
 local wepdura = matches[7]
 
-if tonumber(weppower) &gt; 9650 then
+if tonumber(weppower) &gt;= 9650 then
   selectCaptureGroup(5)
-  setFgColor(255,0,0)
+  setFgColor(0, 255, 0)
+end
+if tonumber(weppower) &gt;= 9655 then
+  selectCaptureGroup(5)
+  setFgColor(250, 32, 240)
+end
+if tonumber(weppower) &gt;= 9660 then
+  selectCaptureGroup(5)
+  setFgColor(255, 215, 0)
 end</script>
 			<triggerType>0</triggerType>
 			<conditonLineDelta>0</conditonLineDelta>

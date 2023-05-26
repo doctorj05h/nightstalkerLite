@@ -237,10 +237,8 @@ end</script>
   local bullets = tonumber(gmcp.Char.Vitals.bl)
       if sym.hunter.flags.channeling and bullets &gt; 0 then
       sym.hunter.send('gun pointblank '..target)
---      send('info here')
       elseif sym.hunter.flags.channeling and bullets == 0 then
       sym.hunter.send('guile pocketsand '..target)
---      send('info here')
     else
   if not sym.hunter.flags.stimmed and sym.haveskill('Stim', 'Guile') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('guile stim')
