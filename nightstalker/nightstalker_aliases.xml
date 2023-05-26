@@ -469,7 +469,7 @@ send("artifact link ship_weapon_range here")
 send("artifact link quantum_cargo_nets here")
 send('artifact link sector_scanner here')
 send("artifact link ship_voidgate_hopper here")
-send("artifact link efficient_skip_2 here")
+sendAll("artifact link efficient_skip_2 here", "artifact link efficient_skip_3 here")
 
 
 --do this smarter someday</script>
@@ -637,55 +637,34 @@ end </script>
 					<regex>^arms$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
-					<name>beast burn rotation</name>
-					<script>local target = sym.target
-if not sym.hunter.flags.channeling then
-  if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
-    sym.hunter.send('suit support')
-  elseif not sym.hunter.flags.dualshot then
-    sym.hunter.send('mwp dualshot '..target)
-    send('assess '..target)
-  elseif sym.hunter.flags.dualshot and tonumber(gmcp.Char.Vitals.pl) &gt; 930 then
-    sym.hunter.send('plasma douse '..target)
-    send('assess '..target)
-  elseif sym.hunter.flags.dualshot and tonumber(gmcp.Char.Vitals.pl) &lt; 900 then
-    sym.hunter.send('plasma burn '..target)
-    send('assess ' ..target)
-  else
-     send('legclamp')
-     send('assess ' ..target)
-  end
-else
-  sym.hunter.send('plasma sear '..target)
-  send('info here')
-end
-</script>
-					<command></command>
-					<packageName></packageName>
-					<regex>^77</regex>
-				</Alias>
-				<Alias isActive="yes" isFolder="no">
 					<name>musc sunder rush</name>
 					<script>local target = sym.target
 if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('suit support')
+    send('assess ' .. target)
   elseif not sym.hunter.flags.dualshot then
     sym.hunter.send('mwp dualshot ' .. target)
     send('assess ' .. target)
+  elseif sym.hunter.flags.dualshot and not sym.hunter.flags.combust then
+    sym.hunter.send('plasma combust '..target)
+    send('assess '..target)
   elseif not sym.hunter.flags.routine and sym.hunter.flags.overclock then
+  if tonumber(gmcp.Char.Vitals.bal) == 1 then
     sym.hunter.send('suit routine ' .. target .. ' pound pound pound')
     sym.hunter.send('suit overclock')
     sym.hunter.send('mwp hooknet ' .. target)
     sym.hunter.send('suit pound ' .. target)    
     send('assess ' .. target)
+    end
+  elseif not sym.hunter.flags.discharge then
+    sym.hunter.send('suit discharge ' .. target)
+    send('assess ' .. target)
   elseif not sym.hunter.flags.routine then
     sym.hunter.send('suit routine ' .. target .. ' armvice legclamp legclamp')
-  elseif not sym.hunter.flags.airshot then
-    sym.hunter.send('mwp airshot ' .. target)
     send('assess ' .. target)
   else
-    sym.hunter.send('suit armvice ' .. target)
+    sym.hunter.send('mwp twist ' .. target)
     send('assess ' .. target)
   end
 else
