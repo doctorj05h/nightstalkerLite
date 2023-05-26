@@ -68,9 +68,13 @@ end</script>
 			<time>00:00:00.000</time>
 			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>ww blazing</name>
-				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
+				<script>if sym.pvp.flags.blazingstacks ~= nil then
+if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
 cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
+end
+else
+disableTimer('ww blazing')
 end</script>
 				<command></command>
 				<packageName></packageName>
@@ -78,9 +82,13 @@ end</script>
 			</Timer>
 			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>blazing</name>
-				<script>if sym.pvp.flags.blazingstacks &gt; 0 then
+				<script>if sym.pvp.flags.blazingstacks ~= nil then
+if sym.pvp.flags.blazingstacks &gt; 0 then
 sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks - 1
 cecho('\n&lt;red&gt; Currently Blazing\: ' ..sym.pvp.flags.blazingstacks..'\n ')
+end
+else
+disableTimer('blazing')
 end</script>
 				<command></command>
 				<packageName></packageName>
