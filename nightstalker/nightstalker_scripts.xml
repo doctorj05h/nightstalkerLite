@@ -244,13 +244,7 @@ end</script>
     sym.hunter.send('guile stim')
 
   elseif bullets == 0 then
-    if not sym.pvp.flags.meltered and string.find(gmcp.Room.Info.area, 'Vihana') then
-      sym.hunter.send('ied fling shrapnel melter at ' .. target)
-      send('assess ' .. target)
-      if caneject == false then
-        send("gun eject")
-      end
-    elseif sym.haveskill ('Fling', 'Improvisation') then
+    if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
       sym.hunter.send('ied fling shrapnel ripper at '..target)
     elseif sym.haveskill ('Pocketsand', 'Guile') then
@@ -305,13 +299,10 @@ end</script>
   
 function limbdrainchooser()
 local limbtarget = {' right arm', ' left arm', ' right leg', ' left leg'}
-local limbrotation = limbrotation or 1
+limbrotation = limbrotation or 1
     send('void limbdrain '..sym.target..limbtarget[limbrotation])
 
-    -- if we reach the end of the limbtarget table, reset limbrotation to 1
-   if limbrotation &gt; #limbtarget then
-     limbrotation = 1
-   end
+
 end
 </script>
 					<eventHandlerList />

@@ -908,6 +908,137 @@ send('crew status')</script>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>weapon calc</name>
+				<script>local weptype = matches[2]
+local wepnumber = matches[3]
+local wepname = matches[4]
+local weppower = matches[5]
+local weplevel = matches[6]
+local wepdura = matches[7]
+
+if tonumber(weppower) &gt;= 9650 then
+  selectCaptureGroup(5)
+  setFgColor(0, 255, 0)
+end
+if tonumber(weppower) &gt;= 9655 then
+  selectCaptureGroup(5)
+  setFgColor(250, 32, 240)
+end
+if tonumber(weppower) &gt;= 9660 then
+  selectCaptureGroup(5)
+  setFgColor(255, 215, 0)
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^(\w+)\s+(\d+)\s+(.+)\b\s+\b(\d+)\s+(\d+)\s+(\d+)%$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>armor calc</name>
+				<script>local armor = matches[3]
+local class = gmcp.Char.Status.class
+local res1 = tonumber(matches[4])
+local res2 = tonumber(matches[5])
+local res3 = tonumber(matches[6])
+local res4 = tonumber(matches[7])
+local res5 = tonumber(matches[8])
+local res6 = tonumber(matches[9])
+local res7 = tonumber(matches[10])
+local total = res1 + res2 + res3 + res4 + res5 + res6 + res7
+local resTable = {res1, res2, res3, res4, res5, res6, res7}
+local resType = {'imp', 'EM', 'thr', 'cel', 'men', 'dra', 'elc'}
+local max = total * 1.05
+local epic = 274
+local value = "white"
+deleteLine()
+if class == 'Fury' or class == 'Scoundrel' then
+  if total &gt;= (epic * .5) then
+  value = 'gold'
+  elseif total &gt;= (epic * .5 - 1) then
+  value = 'magenta'
+  elseif total &gt;= (epic * .5 - 2) then
+  value = 'dodger_blue'
+  elseif total &gt;= (epic * .5 - 3) then
+  value = 'green'
+  elseif total &gt;= (epic * .5 - 4) then
+  value = 'green'
+  elseif total &gt;= (epic * .5 - 5) then
+  value = 'gray'
+  end
+elseif class == 'Nanoseer' or class == 'Engineer' then
+  if total &gt;= (epic * .75) then
+  value = 'gold'
+  elseif total &gt;= (epic * .75 - 1) then
+  value = 'magenta'
+  elseif total &gt;= (epic * .75 - 2) then
+  value = 'dodger_blue'
+  elseif total &gt;= (epic * .75 - 3) then
+  value = 'green'
+  elseif total &gt;= (epic * .75 - 4) then
+  value = 'green'
+  elseif total &gt;= (epic * .75 - 5) then
+  value = 'gray'
+  end
+elseif class == 'B.E.A.S.T.' then
+  if total &gt;= epic then
+  value = 'gold'
+  elseif total &gt;= (epic - 1) then
+  value = 'magenta'
+  elseif total &gt;= (epic - 2) then
+  value = 'dodger_blue'
+  elseif total &gt;= (epic - 3) then
+  value = 'green'
+  elseif total &gt;= (epic - 4) then
+  value = 'green'
+  elseif total &gt;= (epic - 5) then
+  value = 'gray'
+  end
+end
+
+cecho('\n&lt;navajo_white&gt;'..string.format("% 5s", matches[2])..': &lt;'..value..'&gt;' .. string.format("% 6s", armor) .. ' &lt;navajo_white&gt; Total Value: &lt;'..value..'&gt;' .. string.format("%.2f",total))
+-- armor upgrade code thanks to Mystor!
+cechoLink("&lt;navajo_white&gt; (equip armor)\n", [[send("armor upgrade ]]..matches[2]..[[ with ]]..armor..[[")]], "armor upgrade " .. matches[2].." with "..armor, true)
+for i, resValue in ipairs(resTable) do
+    if resValue &gt;= 40 and class == 'B.E.A.S.T.' then
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
+    elseif resValue &gt;= 30 and (class == 'Nanoseer' or class == 'Engineer') then
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
+    elseif resValue &gt;= 20 and (class == 'Fury' or class == 'Scoundrel') then
+        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
+    else
+        cecho(string.format("% 5s",resType[i])..":&lt;gray&gt;  "..string.format("%.2f", resValue)..' ')
+    end
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^(\w+)\s+(\d+)\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>hunter</name>
@@ -1672,7 +1803,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -1879,9 +2010,9 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-nanoseer</name>
-				<script></script>
+				<script>limbrotation = limbrotation or 1</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -2462,8 +2593,10 @@ send('pointzero')</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>limbdrain</name>
-					<script>    limbrotation = limbrotation or 0
-    limbrotation = limbrotation + 1</script>
+					<script>limbrotation = limbrotation + 1
+if limbrotation &gt; 4 then
+  limbrotation = 1
+end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -5278,7 +5411,7 @@ end
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-scoundrel</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -5733,7 +5866,7 @@ tempTimer(30, function()
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>tripbind</name>
-					<script>if string.find(target, matches[2]) then
+					<script>if matches[2]:lower():find(target:lower():gsub("%s", "")) then
 send("guile bind " ..target)
 end</script>
 					<triggerType>0</triggerType>
@@ -5868,7 +6001,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-nanoseer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -6226,7 +6359,9 @@ sym.pvp.flags.mindaff = 0</script>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>mind aff track</name>
-					<script>sym.pvp.flags.mindaff = matches[3]</script>
+					<script>sym.pvp.flags.mindaff = matches[3]
+deleteLine()
+cecho("\n&lt;white&gt; - &lt;gray&gt;Affliction&lt;white&gt;: &lt;light_goldenrod&gt;" ..matches[2].. " Mind:&lt;b&gt; &lt;black:yellow&gt;"..matches[3]..'&lt;/b&gt;')</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -7162,7 +7297,7 @@ end</script>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>doused blaze</name>
 						<script>local burnee = matches[2]
-if string.find(target, burnee) then
+if burnee:lower():find(target:lower():gsub("%s", "")) then
   sym.hunter.flags.doused = false
   sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks + 2
   cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')
@@ -7228,7 +7363,7 @@ cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>burns tracking</name>
 						<script>local burnee = matches[2]
-if string.find(target, burnee) then
+if burnee:lower():find(target:lower():gsub("%s", "")) then
   sym.pvp.flags.burns = sym.pvp.flags.burns + 1
   sym.pvp.flags.blazingstacks = 0
   enableTimer('burns loss')
@@ -7434,7 +7569,13 @@ cecho("\n&lt;red&gt;Stance: &lt;dark_turquoise&gt;-&gt; &lt;white&gt;"..matches[
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>alerts</name>
-				<script></script>
+				<script>sym.pvp.flags.enemysubsystems = sym.pvp.flags.enemysubsystems or {
+  wetwiring = 1000,
+  muscular = 1000,
+  internal = 1000,
+  sensory = 1000,
+  mind = 1000
+}</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -7760,12 +7901,36 @@ end</script>
 					<script>deleteLine()
 sym.hunter.flags.subsysdealt = tonumber(matches[2])
 sym.hunter.flags.lastsubsys = matches[3]
-cecho("&lt;white&gt;, &lt;dark_orchid&gt;Subsys&lt;white&gt;: &lt;pink&gt;&lt;b&gt;"..matches[2].. "&lt;/b&gt; &lt;white&gt;" ..matches[3])
+cecho("\n&lt;white&gt; &lt;dark_orchid&gt;Subsys&lt;white&gt;: &lt;pink&gt;&lt;b&gt;"..matches[2].. "&lt;/b&gt; &lt;white&gt;" ..matches[3])
+sym.pvp.flags.enemysubsystems[matches[3]] = sym.pvp.flags.enemysubsystems[matches[3]] - (sym.hunter.flags.subsysdealt * 0.95)
+
+local healthPercentage = sym.pvp.flags.enemysubsystems[matches[3]] / 100
+healthPercentage = string.format("%.2f", healthPercentage)
+healthPercentage = tonumber(healthPercentage)
+
+if sym.pvp.flags.enemysubsystems[matches[3]] &lt;= 0 then
+  deleteLine()
+  cecho('&lt;red&gt;&lt;b&gt; This subsystem is dead: &lt;white&gt;' .. matches[3] .. '&lt;/b&gt;')
+else
+  local color = "&lt;white&gt;"
+  if healthPercentage &lt;= 75 then
+    color = "&lt;yellow&gt;"
+  end
+  if healthPercentage &lt;= 50 then
+    color = "&lt;orange&gt;"
+  end
+  if healthPercentage &lt;= 25 then
+    color = "&lt;red&gt;"
+  end
+  if matches[4]:lower():find(target:lower():gsub("%s", "")) then
+ cecho(color .. " Subsys: " .. healthPercentage .. "% &lt;white&gt;" .. matches[3])
+end
+end
+
 if sym.hunter.flags.subsysdealt &lt; 100 and sym.hunter.flags.lastsubsys == "muscular" and (sym.hunter.flags.lastdamage == 'thermal gun' or sym.hunter.flags.lastdamage == 'thermal tech') then
   deleteLine()
   sym.pvp.flags.blazingstacks = sym.pvp.flags.blazingstacks + 1
   cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '&lt;orange&gt; Burns&lt;white&gt;:&lt;yellow&gt; '..sym.pvp.flags.burns)
-
 end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -7790,6 +7955,13 @@ end</script>
 cecho("\n&lt;gray&gt;Targeting: &lt;gray&gt;&lt;&lt;red&gt; "..matches[2].." &lt;gray&gt;&gt;")
 target = matches[2]
 local class = gmcp.Char.Status.class
+sym.pvp.flags.enemysubsystems = {
+  wetwiring = 10000,
+  muscular = 10000,
+  internal = 10000,
+  sensory = 10000,
+  mind = 10000
+}
 if class == "Nanoseer" then
 sym.pvp.flags.rattle = false
 sym.pvp.flags.sluggish = false
@@ -7878,7 +8050,8 @@ end</script>
 			</Trigger>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>cover</name>
-				<script></script>
+				<script>isProp = isProp or {}
+allProps = allProps or {}</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -7894,11 +8067,17 @@ end</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>cover tracking</name>
 					<script>for i, item in pairs(sym.ui.roomitems) do
-  if item.id == matches[2] and string.find(matches[5], "[X]") then
-    table.insert(coverProps, item.id)
-  end
   if item.id == matches[2] and string.find(matches[5], "[Y]") then
     table.insert(flipProps, item.id)
+    table.insert(allProps, item.id)
+  elseif item.id == matches[2] and string.find(matches[5], "[X]") then
+    table.insert(coverProps, item.id)
+    table.insert(allProps, item.id)
+  elseif item.id == matches[2] and string.find(matches[5], "[S]") then
+    coverProps.item.id = nil
+  elseif item.id == matches[2] and string.find(matches[5], "[XFCYLSERI]") then
+    table.insert(isProp, item.id)
+    table.insert(allProps, item.id)
   end
 end</script>
 					<triggerType>0</triggerType>
@@ -7983,6 +8162,8 @@ setTriggerStayOpen('props tracking', 0)</script>
 					<name>movement</name>
 					<script>coverProps = {}
 flipProps = {}
+isProp = {}
+allProps = {}
 if gmcp.Char.Vitals.combat == "true" then
   send('assess ' .. target)
   send('props')
@@ -8626,137 +8807,6 @@ disableTrigger("Honors Gag")</script>
 				</regexCodePropertyList>
 			</Trigger>
 		</TriggerGroup>
-		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-			<name>armor calc</name>
-			<script>local armor = matches[3]
-local class = gmcp.Char.Status.class
-local res1 = tonumber(matches[4])
-local res2 = tonumber(matches[5])
-local res3 = tonumber(matches[6])
-local res4 = tonumber(matches[7])
-local res5 = tonumber(matches[8])
-local res6 = tonumber(matches[9])
-local res7 = tonumber(matches[10])
-local total = res1 + res2 + res3 + res4 + res5 + res6 + res7
-local resTable = {res1, res2, res3, res4, res5, res6, res7}
-local resType = {'imp', 'EM', 'thr', 'cel', 'men', 'dra', 'elc'}
-local max = total * 1.05
-local epic = 274
-local value = "white"
-deleteLine()
-if class == 'Fury' or class == 'Scoundrel' then
-  if total &gt;= (epic * .5) then
-  value = 'gold'
-  elseif total &gt;= (epic * .5 - 1) then
-  value = 'magenta'
-  elseif total &gt;= (epic * .5 - 2) then
-  value = 'dodger_blue'
-  elseif total &gt;= (epic * .5 - 3) then
-  value = 'green'
-  elseif total &gt;= (epic * .5 - 4) then
-  value = 'green'
-  elseif total &gt;= (epic * .5 - 5) then
-  value = 'gray'
-  end
-elseif class == 'Nanoseer' or class == 'Engineer' then
-  if total &gt;= (epic * .75) then
-  value = 'gold'
-  elseif total &gt;= (epic * .75 - 1) then
-  value = 'magenta'
-  elseif total &gt;= (epic * .75 - 2) then
-  value = 'dodger_blue'
-  elseif total &gt;= (epic * .75 - 3) then
-  value = 'green'
-  elseif total &gt;= (epic * .75 - 4) then
-  value = 'green'
-  elseif total &gt;= (epic * .75 - 5) then
-  value = 'gray'
-  end
-elseif class == 'B.E.A.S.T.' then
-  if total &gt;= epic then
-  value = 'gold'
-  elseif total &gt;= (epic - 1) then
-  value = 'magenta'
-  elseif total &gt;= (epic - 2) then
-  value = 'dodger_blue'
-  elseif total &gt;= (epic - 3) then
-  value = 'green'
-  elseif total &gt;= (epic - 4) then
-  value = 'green'
-  elseif total &gt;= (epic - 5) then
-  value = 'gray'
-  end
-end
-
-cecho('\n&lt;navajo_white&gt;'..string.format("% 5s", matches[2])..': &lt;'..value..'&gt;' .. string.format("% 6s", armor) .. ' &lt;navajo_white&gt; Total Value: &lt;'..value..'&gt;' .. string.format("%.2f",total))
--- armor upgrade code thanks to Mystor!
-cechoLink("&lt;navajo_white&gt; (equip armor)\n", [[send("armor upgrade ]]..matches[2]..[[ with ]]..armor..[[")]], "armor upgrade " .. matches[2].." with "..armor, true)
-for i, resValue in ipairs(resTable) do
-    if resValue &gt;= 40 and class == 'B.E.A.S.T.' then
-        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
-    elseif resValue &gt;= 30 and (class == 'Nanoseer' or class == 'Engineer') then
-        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
-    elseif resValue &gt;= 20 and (class == 'Fury' or class == 'Scoundrel') then
-        cecho(string.format("% 5s",resType[i])..":&lt;cyan&gt;  "..string.format("%.2f", resValue)..' ')
-    else
-        cecho(string.format("% 5s",resType[i])..":&lt;gray&gt;  "..string.format("%.2f", resValue)..' ')
-    end
-end</script>
-			<triggerType>0</triggerType>
-			<conditonLineDelta>0</conditonLineDelta>
-			<mStayOpen>0</mStayOpen>
-			<mCommand></mCommand>
-			<packageName></packageName>
-			<mFgColor>#ff0000</mFgColor>
-			<mBgColor>#ffff00</mBgColor>
-			<mSoundFile></mSoundFile>
-			<colorTriggerFgColor>#000000</colorTriggerFgColor>
-			<colorTriggerBgColor>#000000</colorTriggerBgColor>
-			<regexCodeList>
-				<string>^(\w+)\s+(\d+)\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%\s+(\d{2}\.\d{2})%$</string>
-			</regexCodeList>
-			<regexCodePropertyList>
-				<integer>1</integer>
-			</regexCodePropertyList>
-		</Trigger>
-		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-			<name>weapon calc</name>
-			<script>local weptype = matches[2]
-local wepnumber = matches[3]
-local wepname = matches[4]
-local weppower = matches[5]
-local weplevel = matches[6]
-local wepdura = matches[7]
-
-if tonumber(weppower) &gt;= 9650 then
-  selectCaptureGroup(5)
-  setFgColor(0, 255, 0)
-end
-if tonumber(weppower) &gt;= 9655 then
-  selectCaptureGroup(5)
-  setFgColor(250, 32, 240)
-end
-if tonumber(weppower) &gt;= 9660 then
-  selectCaptureGroup(5)
-  setFgColor(255, 215, 0)
-end</script>
-			<triggerType>0</triggerType>
-			<conditonLineDelta>0</conditonLineDelta>
-			<mStayOpen>0</mStayOpen>
-			<mCommand></mCommand>
-			<packageName></packageName>
-			<mFgColor>#ff0000</mFgColor>
-			<mBgColor>#ffff00</mBgColor>
-			<mSoundFile></mSoundFile>
-			<colorTriggerFgColor>#000000</colorTriggerFgColor>
-			<colorTriggerBgColor>#000000</colorTriggerBgColor>
-			<regexCodeList>
-				<string>^(\w+)\s+(\d+)\s+(.+)\b\s+\b(\d+)\s+(\d+)\s+(\d+)%$</string>
-			</regexCodeList>
-			<regexCodePropertyList>
-				<integer>1</integer>
-			</regexCodePropertyList>
-		</Trigger>
 	</TriggerPackage>
 	<TimerPackage />
 	<AliasPackage />

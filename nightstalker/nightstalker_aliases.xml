@@ -747,7 +747,7 @@ end</script>
 					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
@@ -768,9 +768,9 @@ then
     checkSystems()
 elseif bullets == 0 then
   if sym.haveskill('Fling', 'Improvisation') then
-    if not sym.pvp.flags.meltered and sym.ui.roomitems[1].id ~= nil and not sym.pvp.flags.stickybomb then
+    if not sym.pvp.flags.meltered and allProps[1] ~= nil and not sym.pvp.flags.stickybomb then
       send("switch impairing random")
-      sym.hunter.send('ied stick melter to ' ..sym.ui.roomitems[1].id)
+      sym.hunter.send('ied stick melter to ' ..allProps[1])
     elseif not sym.pvp.flags.meltered then
       send("switch impairing random")
       sym.hunter.send('ied fling melter at ' .. target)
@@ -788,7 +788,7 @@ elseif bullets == 0 then
   end
 
 elseif not sym.pvp.flags.facesmashed and sym.pvp.flags.stickybomb then
-   send('guile facesmash ' ..target..' '..sym.ui.roomitems[1].id)
+   send('guile facesmash ' ..target..' '..allProps[1])
    sym.hunter.send('assess ' .. target)
    if caneject == false then send("gun eject") end
    
@@ -1362,7 +1362,7 @@ end</script>
 					<regex>^dega$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
