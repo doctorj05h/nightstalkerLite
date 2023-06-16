@@ -581,31 +581,53 @@ send('ship disembark')</script>
 				<packageName></packageName>
 				<regex></regex>
 				<Alias isActive="yes" isFolder="no">
-					<name>beast muscular damage</name>
+					<name>beast muscular hinder</name>
 					<script>local target = sym.target
   if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 70 then
     sym.hunter.send('suit support')
+  elseif canmend then
+    checkSystems()
   elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
-    sym.hunter.send('mwp dualshot '..target..' railshot railshot')
+    sym.hunter.send('mwp dualshot '..target..' hobble hobble')
     send('assess '..target)
+  elseif not sym.hunter.flags.routine and sym.hunter.flags.overclock and not sym.hunter.flags.hooknet then
+    if tonumber(gmcp.Char.Vitals.bal) == 1 then
+      sym.hunter.send('suit routine ' .. target .. ' pound pound pound')
+      sym.hunter.send('suit overclock')
+      sym.hunter.send('mwp hooknet ' .. target)
+      sym.hunter.send('suit pound ' .. target)    
+      send('assess ' .. target)
+    end
+  elseif enemyEntangled then
+    sym.hunter.send('suit pound '.. target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.hooknet then
+    sym.hunter.send('mwp hooknet '.. target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.netlaunch then
+    sym.hunter.send('mwp netlaunch ' .. target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.routine then
+    sym.hunter.send('suit routine ' .. target .. ' armvice legclamp boot')
+    send('assess ' .. target)
   elseif sym.hunter.flags.dualshot and not sym.hunter.flags.combust then
     sym.hunter.send('plasma combust '..target)
     send('assess '..target)
   elseif not sym.hunter.flags.rails then
-    sym.hunter.send('railshot')
+    sym.hunter.send('hobble')
     send('assess ' ..target)
   else
     sym.hunter.send('mwp tear ' ..target)
+    send('assess ' .. target)
     end
   else
-  sym.hunter.send('plasma sear '..target)
-  send('info here')
+  sym.hunter.send('plasma flash '..target)
 end
 </script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^55</regex>
+					<regex>^hinder</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>beast muscular delay</name>
@@ -613,13 +635,16 @@ end
 if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('suit support')
+  elseif canmend then
+    checkSystems()
   elseif not sym.hunter.flags.airshot then
     sym.hunter.send('mwp airshot ' .. target)
+    send('assess ' .. target)
   elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
     sym.hunter.send('mwp dualshot ' .. target ..' hobble hobble')
     send('assess ' .. target)
   elseif not sym.hunter.flags.routine then
-    sym.hunter.send('suit routine ' .. target .. ' armvice armvice armvice')
+    sym.hunter.send('suit routine ' .. target .. ' armvice armvice legclamp')
     send('assess ' .. target)
   elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp hobble ' .. target)
@@ -630,7 +655,6 @@ if not sym.hunter.flags.channeling then
   end
 else
   sym.hunter.send('plasma sear ' .. target)
-  send('info here')
 end </script>
 					<command></command>
 					<packageName></packageName>
@@ -640,9 +664,18 @@ end </script>
 					<name>musc sunder rush</name>
 					<script>local target = sym.target
 if not sym.hunter.flags.channeling then
+  if mmp.defs.current["Sharpened wristblade"] then
+    send('mwp serrate')
+  elseif not mmp.defs.current["Serrated wristblade"] then
+    send('mwp serrate')
+  end
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('suit support')
     send('assess ' .. target)
+  elseif canmend then
+    checkSystems()
+  elseif entangled then
+    send('plasma disentangle jaidyn')
   elseif not sym.hunter.flags.dualshot then
     sym.hunter.send('mwp dualshot ' .. target)
     send('assess ' .. target)
@@ -650,13 +683,16 @@ if not sym.hunter.flags.channeling then
     sym.hunter.send('plasma combust '..target)
     send('assess '..target)
   elseif not sym.hunter.flags.routine and sym.hunter.flags.overclock then
-  if tonumber(gmcp.Char.Vitals.bal) == 1 then
-    sym.hunter.send('suit routine ' .. target .. ' pound pound pound')
-    sym.hunter.send('suit overclock')
-    sym.hunter.send('mwp hooknet ' .. target)
-    sym.hunter.send('suit pound ' .. target)    
-    send('assess ' .. target)
+    if tonumber(gmcp.Char.Vitals.bal) == 1 then
+      sym.hunter.send('suit routine ' .. target .. ' pound pound pound')
+      sym.hunter.send('suit overclock')
+      sym.hunter.send('mwp hooknet ' .. target)
+      sym.hunter.send('suit pound ' .. target)    
+      send('assess ' .. target)
     end
+  elseif enemyEntangled then
+    sym.hunter.send('suit pound '.. target)
+    send('assess ' .. target)
   elseif not sym.hunter.flags.discharge then
     sym.hunter.send('suit discharge ' .. target)
     send('assess ' .. target)
@@ -691,21 +727,45 @@ end</script>
       else
         sym.hunter.send('plasma flash ' .. target)
       end
-    send('info here')
   else
   if not sym.hunter.flags.contingency then
     sym.hunter.send('contingency')
   end
+  if mmp.defs.current["Serrated wristblade"] then
+    send('mwp sharpen')
+  elseif not mmp.defs.current["Sharpened wristblade"] then
+    send('mwp sharpen')
+  end
   if not sym.hunter.flags.support and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 70 then
     sym.hunter.send('suit support')
+  elseif canmend then
+    checkSystems()
+  elseif not sym.hunter.flags.routine then
+    sym.hunter.send('suit routine ' .. target .. ' boot boot boot')
+    send('assess ' .. target)
   elseif not sym.hunter.flags.dualshot and not sym.hunter.flags.rails then
-    sym.hunter.send('mwp dualshot '..target..' headshot headshot')
+    if tonumber(gmcp.Char.Vitals.bal) == 1 then
+      sym.hunter.send('mwp dualshot '..target..' headshot headshot')
+        if sym.pvp.flags.blazingstacks &gt; 5 and sym.pvp.flags.burns &lt; 3 and sym.hunter.flags.overclock then
+          sym.hunter.send('suit overclock')
+          sym.hunter.send('plasma conflagrate '..target)
+        end
+    end
   elseif not sym.hunter.flags.rails then
     sym.hunter.send('mwp headshot ' ..target)
+    send('assess ' .. target)
+  elseif not sym.hunter.flags.doused then
+    sym.hunter.send('plasma douse '..target)
+    send('assess ' .. target)
+  elseif sym.pvp.flags.blazingstacks &gt; 5 and sym.pvp.flags.burns &lt; 3 then
+    sym.hunter.send('plasma conflagrate '..target)
+    send('assess ' .. target)
+  elseif sym.pvp.flags.burns == 3 and tonumber(gmcp.Char.Vitals.pl) &gt; 301 then
+    sym.hunter.send('plasma incinerate '..target)
+    send('assess ' .. target)
   else
-    --sym.hunter.send('mwp wallop '..target)
-    --sym.hunter.send('burn '..target)
     sym.hunter.send('tear '..target)
+    send('assess ' .. target)
     end
   end</script>
 					<command></command>
@@ -721,7 +781,6 @@ end</script>
       else
         sym.hunter.send('plasma flash ' .. target)
       end
-    send('info here')
   else
   if not sym.hunter.flags.contingency then
     sym.hunter.send('contingency')
@@ -1187,7 +1246,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 					<regex>^aoe$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-engineer</name>
 				<script></script>
 				<command></command>
@@ -1362,7 +1421,7 @@ end</script>
 					<regex>^dega$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
@@ -1389,18 +1448,21 @@ elseif not sym.pvp.flags.enveloped then
   sym.hunter.send('nano envelop '.. target)
 elseif tonumber(sym.pvp.flags.mindaff) &gt; 5 then
   sym.hunter.send('void minddrain ' .. target)
+    sym.hunter.send('assess')
 elseif sym.pvp.flags.rattle then
   sym.hunter.send('nano confound ' .. target)
-  
+    sym.hunter.send('assess')
 elseif sym.pvp.flags.sluggish then
   sym.hunter.send('CLEARQUEUE')
   sym.hunter.send('void rattle ' .. target)
-  
+    sym.hunter.send('assess')
 elseif sym.pvp.flags.distracted then
   sym.hunter.send('CLEARQUEUE')
   sym.hunter.send('nano sluggish ' .. target)
+    sym.hunter.send('assess')
 elseif tonumber(sym.pvp.flags.mindaff) &gt; 3 then
   sym.hunter.send('nano distract ' .. target)
+    sym.hunter.send('assess')
   
 elseif not sym.pvp.flags.mindswap then
   sym.hunter.send('nano mindswap ' .. target)
@@ -1412,7 +1474,6 @@ elseif sym.pvp.flags.mindswap then
   
 else
   sym.hunter.send('eyestrike')
-  send('info here')
   end
   </script>
 					<command></command>
@@ -1449,8 +1510,12 @@ else
 				<Alias isActive="yes" isFolder="no">
 					<name>shatter route</name>
 					<script>    local target = sym.target
-  if not sym.hunter.flags.embraced and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and not sym.hunter.flags.channeling then
+ if sym.hunter.flags.channeling then
+      sym.hunter.send('nano eyestrike')
+  elseif not sym.hunter.flags.embraced and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 78 and not sym.hunter.flags.channeling then
     sym.hunter.send('void embrace')
+  elseif sym.pvp.flags.freezestacks &gt; (sym.pvp.flags.stacksNeeded + 1) then
+    sym.hunter.send('void shatter '..target)
   elseif canmend then
     checkSystems()
   elseif not sym.hunter.flags.speedup then
@@ -1465,6 +1530,9 @@ else
     expandAlias('frenzy')
     sym.hunter.send('void freeze '..target)
     sym.hunter.send('assess')
+  elseif sym.hunter.flags.frozen then
+    expandAlias('frenzy')
+    limbdrainchooser()  
   else
     sym.hunter.send('eyestrike')
     send('info here')
@@ -1480,9 +1548,9 @@ tempTimer(3, [[sym.hunter.send('nano miniaturization')]])
 tempTimer(7, [[sym.hunter.send('nano protect')]])
 tempTimer(11, [[sym.hunter.send('nano rush')]])
 tempTimer(14.5, [[sym.hunter.send('nano alertness')]])
-tempTimer(18, [[sym.hunter.send('oblivion swap traveller')]])
+tempTimer(18, [[sym.hunter.send('oblivion swap progenitor')]])
 tempTimer(18, [[sym.hunter.send('oblivion affinity conqueror')]])
-tempTimer(21.5, [[sym.hunter.send('oblivion affinity progenitor')]])
+tempTimer(21.5, [[sym.hunter.send('oblivion affinity traveller')]])
 tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 					<command></command>
 					<packageName></packageName>
@@ -1495,9 +1563,15 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
     sym.hunter.send('void embrace')
   elseif canmend then
     checkSystems()
+  elseif not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+    sym.hunter.send('oblivion speedup')  
   elseif not sym.pvp.flags.affinitied and tonumber(gmcp.Char.Vitals.nn) &gt; 150 then
     expandAlias('frenzy')
     sym.hunter.send('nano affinity '..target)
+    sym.hunter.send('assess')
+  elseif not sym.pvp.flags.multiswarm then
+    expandAlias('frenzy')
+    sym.hunter.send('nano multiswarm '.. target)
     sym.hunter.send('assess')
   elseif sym.pvp.flags.affinitied and not sym.hunter.flags.multistrike then
     expandAlias('frenzy')
@@ -1523,7 +1597,7 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
       send('info here')
     elseif not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send('void embrace')
-      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+      elseif not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
         sym.hunter.send('oblivion speedup')  
       elseif sym.pvp.flags.freezestacks &gt; 3 then
         expandAlias('frenzy')
@@ -1542,6 +1616,24 @@ tempTimer(24, [[sym.hunter.send('oblivion negation')]])</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^hud$</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>nanoKill</name>
+					<script>local target = sym.target
+if sym.hunter.flags.channeling then
+  sym.hunter.send('nano eyestrike')
+  send('info here')
+elseif not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
+  sym.hunter.send('void embrace')
+elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+  sym.hunter.send('oblivion speedup')    
+else
+  expandAlias('frenzy')
+  sym.hunter.send('void freeze ' .. target)
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^kill</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="no" isFolder="yes">
@@ -1787,6 +1879,23 @@ end</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^unlock$</regex>
+			</Alias>
+			<Alias isActive="yes" isFolder="no">
+				<name>terminals</name>
+				<script>  local output = "Access Terminals:\n"
+
+  for _, terminal in ipairs(sym.accessTerminals) do
+    output = output .. "ID: " .. terminal.id .. "\n"
+    output = output .. "Room: " .. terminal.room .. "\n"
+    output = output .. "Hacking Level: " .. terminal.hackingLevel .. "\n"
+    output = output .. "Area: " .. terminal.area .. "\n"
+    output = output .. "&lt;orange&gt;--------------------------&lt;white&gt;\n"
+  end
+
+cecho(output)</script>
+				<command></command>
+				<packageName></packageName>
+				<regex>^terminals$</regex>
 			</Alias>
 		</AliasGroup>
 		<AliasGroup isActive="yes" isFolder="yes">
