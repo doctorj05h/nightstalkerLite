@@ -162,6 +162,8 @@ end</script>
 
   ['B.E.A.S.T.'] = function()
     sym.hunter.flags.backhand = false
+    sym.pvp.flags.blazingstacks = 0
+    sym.pvp.flags.burns = 0
   end,
 
   ['Scoundrel'] = function()
@@ -169,9 +171,16 @@ end</script>
 
   ['Nanoseer'] = function()
     sym.hunter.flags.frozen = false
+    sym.pvp.flags.freezestacks = 0
+    sym.pvp.flags.multiswarm = false
+    sym.hunter.flags.multistrike = false
+    sym.pvp.flags.stacksNeeded = 10
+    sym.hunter.flags.frozen = false
+    sym.pvp.flags.sensaff = 0
   end,
 
   ['Engineer'] = function()
+  sym.pvp.currentstatic = 0
   end,
 
   ['Fury'] = function()
@@ -219,6 +228,12 @@ end</script>
       if sym.hunter.flags.overclock then
         sym.hunter.send('suit overclock')
       end
+  elseif sym.hunter.bot then
+    if not sym.hunter.flags.routine then
+      sym.hunter.send('suit routine ' .. target .. ' pulse pulse pulse')
+    else
+      sym.hunter.send('suit pulse')
+    end
 --  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
 --    sym.hunter.send('burn '..target)
   else
@@ -246,7 +261,8 @@ end</script>
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
-      sym.hunter.send('ied fling shrapnel ripper at '..target)
+--      sym.hunter.send('ied fling shrapnel ripper at '..target)
+    sym.hunter.send('guile suckerpunch '..target)
     elseif sym.haveskill ('Pocketsand', 'Guile') then
       sym.hunter.send('guile pocketsand '..target)
     elseif sym.haveskill ('Spin', 'Gunslinging') then
@@ -284,12 +300,11 @@ end</script>
   function(target)
     if sym.hunter.flags.channeling then
       sym.hunter.send('nano eyestrike')
-      send('info here')
     else
       if not sym.hunter.flags.embraced and sym.haveskill('Embrace', 'Voidism') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send('void embrace')
---      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
---        sym.hunter.send('oblivion speedup')  
+      elseif #sym.ui.roommobs &gt; 1 and not sym.hunter.flags.speedup and not sym.hunter.flags.speeduproom then
+        sym.hunter.send('oblivion speedup') 
       else 
         expandAlias('frenzy')
         sym.hunter.send('void freeze ' .. target)
@@ -297,13 +312,7 @@ end</script>
     end
   end
   
-function limbdrainchooser()
-local limbtarget = {' right arm', ' left arm', ' right leg', ' left leg'}
-limbrotation = limbrotation or 1
-    send('void limbdrain '..sym.target..limbtarget[limbrotation])
 
-
-end
 </script>
 					<eventHandlerList />
 				</Script>
@@ -324,6 +333,8 @@ end
     elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop and sym.haveskill('Airdrop', 'Bots')then
       send('airdrop')
 -- remove the commented out code below for lower level bashing
+
+
 --  elseif not sym.hunter.flags.repeated and sym.haveskill('Repeat', 'Bots') and tonumber(string.match(gmcp.IRE.Target.Info.hpperc, '%d+')) &gt; 75 then
 --    sym.hunter.send('bot repeat claw '..target)
 --  elseif not sym.hunter.flags.harassed and sym.haveskill('Harass', 'Bots') then
@@ -353,7 +364,6 @@ end</script>
   local sym_name = gmcp.Char.Name.name
   if sym.hunter.flags.channeling then
       sym.hunter.send('gadget shock '..target)
-      send('info here')
   else
     if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and sym.haveskill('Stimjector', 'Gadgets') and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
       sym.hunter.send('stimjector ' .. sym_name)
@@ -368,12 +378,14 @@ end</script>
 --    sym.hunter.send('bot harass '..target)
 --  elseif sym.hunter.flags.repeating and sym.haveskill('Shock', 'Gadgets') then
 --    sym.hunter.send('gadget shock '..target)
+    elseif sym.hunter.bot then
+      sym.hunter.send('bot pulse '..target)
     else
-      if string.find(gmcp.Room.Info.area, 'Vihana') then
-      sym.hunter.send('bot claw '..target)
-      else
+--      if string.find(gmcp.Room.Info.area, 'Vihana') then
+--      sym.hunter.send('bot claw '..target)
+--      else
       sym.hunter.send('bot disrupt '..target)
-      end
+--      end
     end
   end
 end</script>
@@ -460,7 +472,8 @@ end</script>
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>priorities</name>
 				<packageName></packageName>
-				<script>sym.hunter.priorities = sym.hunter.priorities or {}</script>
+				<script>sym.hunter.priorities = sym.hunter.priorities or {}
+sym.hunter.mechanical = sym.hunter.mechanical or {}</script>
 				<eventHandlerList />
 				<Script isActive="yes" isFolder="no">
 					<name>locorin swamp</name>
@@ -545,6 +558,20 @@ end</script>
   'an oily-skinned Vihana tracker',
   'a grasping Vihana acquisitor'
 }</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>mechanical targets</name>
+					<packageName></packageName>
+					<script>sym.hunter.mechanical = {
+'a stationary sentry bot',
+'a well-armed security bot',
+'the thrashing root of a cyborg leech orchid',
+'a rampaging construction mech',
+'a cyborg leech orchid',
+'a dilapidated construction mech'
+}
+</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -712,10 +739,19 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
 
   if mob then
     local target = gmcp.Char.Status.target:match('%d+')
+    sym.hunter.bot = false
+    
     if target and mob.id == target then return end
     sym.echo('&lt;128,128,128&gt;Next Target: &lt;128,128,200&gt;' .. mob.name .. '&lt;128,128,128&gt; (&lt;128,128,200&gt;' .. mob.id .. '&lt;128,128,128&gt;)\n')
     enableTrigger('hunting balance')
     send('st ' .. mob.id, false)
+
+    for _, value in ipairs(sym.hunter.mechanical) do
+      if value == mob.name then
+      sym.hunter.bot = true
+      break
+    end
+  end
     if sym.hunter.runner.config.calling then
       send('crt Target: '..mob.id, false)
     end
@@ -2720,7 +2756,9 @@ end</script>
 		<ScriptGroup isActive="yes" isFolder="yes">
 			<name>hacker</name>
 			<packageName></packageName>
-			<script>sym.hacker = sym.hacker or {}</script>
+			<script>sym.hacker = sym.hacker or {}
+sym.hacker.targeting = sym.hacker.targeting or {}
+sym.loadtable('accessTerminals')</script>
 			<eventHandlerList />
 			<Script isActive="yes" isFolder="no">
 				<name>hacking prio</name>
@@ -3245,6 +3283,36 @@ color_table["spt_blue"] = {0, 153, 204}</script>
 				<name>degauss logic</name>
 				<packageName></packageName>
 				<script>-- variable of interest current_static, sym.hunter.flags.degauss, sym.hunter.flags.gaussify</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>limbdrain</name>
+				<packageName></packageName>
+				<script>function limbdrainchooser()
+local limbtarget = {' right arm', ' left arm', ' right leg', ' left leg'}
+limbrotation = limbrotation or 1
+    send('void limbdrain '..sym.target..limbtarget[limbrotation])
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>freeze stack threshold needed</name>
+				<packageName></packageName>
+				<script>-- I'd like to thank chatGPT for doing my thinking for me here
+
+function calculateStacksNeeded(subsystemsTable)
+  local thresholdDamage = 1500
+  -- Threshold damage for stack decrease
+  
+  local totalDamage = (20000 - subsystemsTable.internal - subsystemsTable.muscular)
+  local stacksNeeded = 10 - math.floor(totalDamage / thresholdDamage)
+  
+  sym.pvp.flags.stacksNeeded = math.max(0, stacksNeeded)
+  -- Ensure stacksNeeded never goes below 0
+  
+  return sym.pvp.flags.stacksNeeded
+end
+</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
