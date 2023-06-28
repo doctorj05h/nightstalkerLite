@@ -127,7 +127,7 @@ end</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:10.000</time>
-			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>crew timer</name>
 				<script>if gmcp.Char.Vitals.bal == '0' then
 clearWindow('Crew')

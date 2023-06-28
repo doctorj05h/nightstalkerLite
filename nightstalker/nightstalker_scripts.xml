@@ -223,19 +223,19 @@ end</script>
       if sym.hunter.flags.overclock then
         sym.hunter.send('suit overclock')
       end
-  elseif not sym.hunter.flags.rails then
-    sym.hunter.send('mwp headshot ' ..target)
-      if sym.hunter.flags.overclock then
-        sym.hunter.send('suit overclock')
-      end
+--  elseif not sym.hunter.flags.rails then
+--    sym.hunter.send('mwp headshot ' ..target)
+--      if sym.hunter.flags.overclock then
+--        sym.hunter.send('suit overclock')
+--      end
   elseif sym.hunter.bot then
     if not sym.hunter.flags.routine then
       sym.hunter.send('suit routine ' .. target .. ' pulse pulse pulse')
     else
       sym.hunter.send('suit pulse')
     end
---  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
---    sym.hunter.send('burn '..target)
+  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
+    sym.hunter.send('burn '..target)
   else
     sym.hunter.send('wallop '..target)
 --    sym.hunter.send('mwp tear '..target)
@@ -261,8 +261,12 @@ end</script>
   elseif bullets == 0 then
     if sym.haveskill ('Fling', 'Improvisation') then
       send("switch weakening random")
---      sym.hunter.send('ied fling shrapnel ripper at '..target)
-    sym.hunter.send('guile suckerpunch '..target)
+      if sym.hunter.bot then
+        sym.hunter.send('ied fling shrapnel zapper at '..target)
+      else
+        sym.hunter.send('ied fling shrapnel ripper at '..target)
+      end
+--      sym.hunter.send('guile suckerpunch '..target)
     elseif sym.haveskill ('Pocketsand', 'Guile') then
       sym.hunter.send('guile pocketsand '..target)
     elseif sym.haveskill ('Spin', 'Gunslinging') then
@@ -278,16 +282,18 @@ end</script>
 
 
   elseif not sym.hunter.flags.ambushed and sym.haveskill('Ambush', 'Gunslinging') then
+      if sym.hunter.bot then sym.hunter.send('gun switch arcing') else sym.hunter.send('gun switch combusting') end
     sym.hunter.send('gun ambush '..target)
-    if not caneject then send('gun eject') end
+      if not caneject then send('gun eject') end
 
 --  elseif not sym.hunter.flags.rapidfire and sym.haveskill('Rapidfire', 'Gunslinging') and bullets &gt;= 2 then
 --    sym.hunter.send('gun rapidfire '..target)
 --    if not caneject then send('gun eject') end
   else
+      if sym.hunter.bot then sym.hunter.send('gun switch arcing') else sym.hunter.send('gun switch combusting') end
     sym.hunter.send('gun crackshot '..target)
 -- sym.hunter.send('guile haymaker '..target)
- if not caneject then send('gun eject') end
+      if not caneject then send('gun eject') end
     end
   end
 end</script>
@@ -417,14 +423,14 @@ end</script>
         not sym.hunter.flags.suffused and
         ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send("suffuse")
-      elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
-        local to_combo =
-          {
-            ['symmetry'] = 'combo gutrend overpower',
-            ['flare'] = 'combo wound overpower',
-            ['eruption'] = 'combo rupture overpower',
-          }
-        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+--      elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
+--        local to_combo =
+--          {
+--            ['symmetry'] = 'combo gutrend overpower',
+--            ['flare'] = 'combo wound overpower',
+--            ['eruption'] = 'combo rupture overpower',
+--          }
+--        sym.hunter.send(to_combo[stance] .. ' ' .. target)
       else
         if sym.hunter.flags.unstoppable == true then
           local to_combo =
@@ -566,10 +572,13 @@ sym.hunter.mechanical = sym.hunter.mechanical or {}</script>
 					<script>sym.hunter.mechanical = {
 'a stationary sentry bot',
 'a well-armed security bot',
-'the thrashing root of a cyborg leech orchid',
 'a rampaging construction mech',
 'a cyborg leech orchid',
-'a dilapidated construction mech'
+'an overgrown cyborg leech orchid',
+'a dilapidated construction mech',
+'a glitch-riddled security robot',
+'an aggressively malfunctioning drone',
+'a dirty recycling bot'
 }
 </script>
 					<eventHandlerList />
@@ -739,7 +748,6 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
 
   if mob then
     local target = gmcp.Char.Status.target:match('%d+')
-    sym.hunter.bot = false
     
     if target and mob.id == target then return end
     sym.echo('&lt;128,128,128&gt;Next Target: &lt;128,128,200&gt;' .. mob.name .. '&lt;128,128,128&gt; (&lt;128,128,200&gt;' .. mob.id .. '&lt;128,128,128&gt;)\n')
@@ -750,6 +758,8 @@ sym.registerevent('runner movement', 'gmcp.Room.Info', 'sym.hunter.movement')</s
       if value == mob.name then
       sym.hunter.bot = true
       break
+      else
+      sym.hunter.bot = false
     end
   end
     if sym.hunter.runner.config.calling then
@@ -2711,23 +2721,32 @@ end</script>
 				<name>weapon loadouts</name>
 				<packageName></packageName>
 				<script>local count = 0
+
 function fireShields()
-if not sym.space.targetshields then
-  fireHull()
+  if not sym.space.targetshields then
+    fireHull()
   end
   for weapon_id, weapon in pairs(sym.space.weapon) do
-  if not sym.space.targetshields then
-  break
-  end
-    if count &lt; 2 and weapon.ready == "Yes" and (weapon.type == "EM" or weapon.type == "gravitic" or weapon.type == "kinetic") then
+    if not sym.space.targetshields then
+      break
+    end
+    if
+      count &lt; 2 and
+      weapon.ready == "Yes" and
+      (weapon.type == "EM" or weapon.type == "gravitic" or weapon.type == "kinetic")
+    then
       if weapon_id ~= sym.space.weapon.lastfired then
         send('ship weapon fire ' .. weapon_id .. ' ' .. target)
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
         if count == 2 then
-          tempTimer(1.1, function()
-          count = 0
-           fireShields() end)
+          tempTimer(
+            1.1,
+            function()
+              count = 0
+              fireShields()
+            end
+          )
         end
       end
     end
@@ -2735,16 +2754,24 @@ if not sym.space.targetshields then
 end
 
 function fireHull()
-for weapon_id, weapon in pairs(sym.space.weapon) do
-    if count &lt; 2 and weapon.ready == "Yes" and (weapon.type == "thermal" or weapon.type == "gravitic" or weapon.type == "kinetic") then
+  for weapon_id, weapon in pairs(sym.space.weapon) do
+    if
+      count &lt; 2 and
+      weapon.ready == "Yes" and
+      (weapon.type == "thermal" or weapon.type == "gravitic" or weapon.type == "kinetic")
+    then
       if weapon_id ~= sym.space.weapon.lastfired then
         send('ship weapon fire ' .. weapon_id .. ' ' .. target)
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
         if count == 2 then
-          tempTimer(1.1, function()
-          count = 0
-           fireHull() end)
+          tempTimer(
+            1.1,
+            function()
+              count = 0
+              fireHull()
+            end
+          )
         end
       end
     end
@@ -2756,9 +2783,7 @@ end</script>
 		<ScriptGroup isActive="yes" isFolder="yes">
 			<name>hacker</name>
 			<packageName></packageName>
-			<script>sym.hacker = sym.hacker or {}
-sym.hacker.targeting = sym.hacker.targeting or {}
-sym.loadtable('accessTerminals')</script>
+			<script>sym.loadtable('accessTerminals')</script>
 			<eventHandlerList />
 			<Script isActive="yes" isFolder="no">
 				<name>hacking prio</name>
@@ -2781,9 +2806,7 @@ sym.loadtable('accessTerminals')</script>
 				<name>h_targeting</name>
 				<packageName></packageName>
 				<script>function sym.hacker.targeting()
-
   local mob = sym.hunter.checktarget()
-
   if mob then
     local target = gmcp.Char.Status.target:match('%d+')
     if target and mob.id == target then return end
@@ -3282,7 +3305,33 @@ color_table["spt_blue"] = {0, 153, 204}</script>
 			<Script isActive="yes" isFolder="no">
 				<name>degauss logic</name>
 				<packageName></packageName>
-				<script>-- variable of interest current_static, sym.hunter.flags.degauss, sym.hunter.flags.gaussify</script>
+				<script>-- variable of interest current_static, sym.hunter.flags.degauss, sym.hunter.flags.gaussify
+local target = sym.target
+local sym_name = gmcp.Char.Name.name
+sym.pvp.currentstatic = tonumber(sym.pvp.currentstatic)
+
+if ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 50 and sym.pvp.currentstatic &gt; 300 then
+    sym.hunter.send('operate degauss '.. target ..' stimjector')
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.degauss.turret and sym.pvp.currentstatic &gt; 500 then
+    sym.hunter.send('operate degauss '.. target ..' turret')
+  elseif sym.pvp.currentstatic &gt; 750 then
+    sym.hunter.send('operate degauss '.. target ..' minitank')
+  elseif sym.hunter.flags.degauss.taser then
+    sym.hunter.send('operate gaussify '..target)
+    sym.hunter.send('assess ' .. target)
+  elseif sym.hunter.flags.repeating then
+    sym.hunter.send('gadget shock ' .. target)
+    sym.hunter.send('assess ' .. target)
+  elseif not sym.hunter.flags.harassed and not sym.hunter.flags.airdrop then
+    sym.hunter.send('bot harass '..target)
+    sym.hunter.send('assess ' .. target)
+  elseif canmend then
+    checkSystems()
+  else
+    sym.hunter.send('bot disrupt ' .. target)
+    sym.hunter.send('assess ' .. target)
+end</script>
 				<eventHandlerList />
 			</Script>
 			<Script isActive="yes" isFolder="no">

@@ -1246,7 +1246,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 					<regex>^aoe$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-engineer</name>
 				<script></script>
 				<command></command>
@@ -1264,18 +1264,23 @@ if not sym.hunter.flags.channeling then
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
     send('airdrop')
   elseif not sym.hunter.flags.repeated then
-    sym.hunter.send('bot repeat disrupt ' .. target)
-    sym.hunter.send('assess ' .. target)
+    if sym.pvp.flags.enemysubsystems.internal &gt; 7500 then
+      sym.hunter.send('bot repeat disrupt ' .. target)
+      sym.hunter.send('assess ' .. target)
+    else
+      sym.hunter.send('bot repeat claw ' .. target)
+      sym.hunter.send('assess ' .. target)
+    end
   elseif not sym.hunter.flags.gaussfield then
     sym.hunter.send('operate gaussfield')
     sym.hunter.send('assess ' .. target)
   elseif not sym.pvp.flags.worming then
     sym.hunter.send('bot worm ' .. target)
     sym.hunter.send('assess ' .. target)
-  elseif not sym.hunter.flags.gaussify and not sym.hunter.flags.degauss.taser and sym.pvp.currentstatic &gt; 0 then
-    sym.hunter.send('operate degauss '..target..' taser')
+  elseif not sym.hunter.flags.degauss.turret and sym.pvp.currentstatic &gt; 500 then
+    sym.hunter.send('operate degauss '..target..' turret')
     sym.hunter.send('assess ' .. target)
-  elseif sym.hunter.flags.degauss.taser then
+  elseif not sym.hunter.flags.gaussify then
     sym.hunter.send('operate gaussify '..target)
     sym.hunter.send('assess ' .. target)
   elseif sym.hunter.flags.repeating then
@@ -1293,7 +1298,6 @@ if not sym.hunter.flags.channeling then
 else
   sym.hunter.send('gadget shock ' .. target)
   sym.hunter.send('assess ' .. target)
-  send('info here')
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -1636,7 +1640,7 @@ end</script>
 					<regex>^kill</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-fury</name>
 				<script></script>
 				<command></command>
