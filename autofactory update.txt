@@ -1,0 +1,93 @@
+
+This helpfile is to help as a quick reference to the resources required for different things made by autofactories.
+
+
+%7::ALLOYS:: AF_46 RS-4453 (143, 143)%
+
+%2-% 1 %3Paristeel (paristeel) %%2=% 4 Titanium %6+% 2 Isotropic Duramine (duramine) 
+%2-% 1 %3Transteel (transteel) %%2=% 4 Titanium %6+% 2 Magnaril 
+%2-% 1 %3Modular frame (modular_frame) %%2=% 35 Transteel %6+% 30 Paristeel %6+% 25 Ultarine 
+
+%7::NONMETALS:: AF_40 CS-5238 (227, 250)%
+
+%2-% 1 %3R-glass (rglass) %%2=% 8 Tritium %6+% 5 Vandium %6+% 3 Ultarine
+%2-% 3 %3Nanoplastic (nanoplastic) %%2=% 8 Helium-11 (helium11) %6+% 3 Vandium %6+% 6 Elessium %6+% 4 Isotropic Duramine (duramine)
+%2-% 20 %3Diamene sheet (disheet) %%2=% 10 Diamene
+%2-% 1 %3Modular panel (modular_panel) %%2=% 35 R-glass (rglass) [nonmetals] %6+% 20 Nanoplastic %6+% 5 Paristeel [alloys]
+
+%7::QPCS:: AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15)%
+
+%2-% 3 %3HDS Astrium (hdsastrium) %%2=% 10 Astrium %6+% 10 Iriil
+%2-% 1 %3QPC (qpc) %%2=% 1 HDS Astrium %6+% 3 Stesium %6+% 3 Ultarine
+%2-% 1 %3Modular power core (modular_powercore) %%2=% 40 QPC %6+% 5 Sensor Package (sensors) %6+% 5 Universal matter manipulator (umm)
+
+%7::PROCESSORS:: AF_42 RS-4850 (88, 238) AND AF_46 RS-4453 (143, 143)%
+
+%2-% 1 %3Processing Array (array) %%2=% 24 Diamene sheet %6+% 5 Magnaril %6+% 5 Elessium %6+% 1 Nanoplastic
+%2-% 2 %3Sensor Package (sensors) %%2=% 1 R-glass (rglass) %6+% 1 Processing Array %6+% 1 QPC
+%2-% 1 %3AI Core (ai_core) %%2=% 45 Processing Array %6+% 8 R-glass (rglass)
+
+%7::BOTS:: AF_15 Paskal (137, 113) NPC%
+
+%2-% 5 %3semi-autonomous astromech (astromech) %%2=% 1 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
+%2-% 5 %3gas harvesting drone (harvestdrone) %%2=% 1 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
+%2-% 2 %3Universal matter manipulator (umm) %%2=% 1 Paristeel %6+% 2 Nanoplastic %6+% 1 QPC
+%2-% 1 %3Automation machinery (automation_machinery) %%2=% 5 Processing Array %6+% 30 Universal matter manipulator (umm) %6+% 10 Sensor Package (sensors)
+
+
+%7::BATTERIES:: AF_51 RS-7651 (222, 42) AND AF_57 RS-7651 (245, 15) AND AF_64 RS-7751 (30, 143)%
+
+%2-% 12 %3kinetic battery (kinetic_battery) %%2=% 1 Transteel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Ultarine
+%2-% 12 %3thermal battery (thermal_battery) %%2=% 1 Transteel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Stesium
+%2-% 12 %3EM battery (em_battery) %%2=% 1 Paristeel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Elessium
+%2-% 12 %3gravitic battery (gravitic_battery) %%2=% 1 Paristeel %6+% 4 Diamene sheet %6+% 1 HDS Astrium %6+% 5 Astrium
+
+%7::EXPLOSIVES:: AF_38 RS-5645 (1, 100)%
+
+%2-% 100 %3kinetic missile (kinetic_missile) %%2=% 1 Transteel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Ultarine
+%2-% 100 %3thermal missile (thermal_missile) %%2=% 1 Transteel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Stesium
+%2-% 100 %3EM missile (em_missile) %%2=% 1 Paristeel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Elessium
+%2-% 100 %3gravitic missile (gravitic_missile) %%2=% 1 Paristeel %6+% 1 Processing Array %6+% 1 Sensor Package (sensors) %6+% 2 Astrium
+%2-% 50 %3vacuum mine (mine) %%2=% 2 Paristeel %6+% 1 Transteel %6+% 20 Stesium
+%2-% 70 %3subspace counter-measure (countermeasure) %%2=% 1 R-glass (rglass) %6+% 2 Nanoplastic %6+% 1 QPC %6+% 1 Universal matter manipulator
+
+
+%7::REPAIR:: AF_41 Vai (169, 147)%
+
+%2-% 75 %3ship repairing kit (repairkit) %%2=% 1 Paristeel %6+% 1 Transteel %6+% 1 R-glass (rglass) %6+% 1 Nanoplastic %6+% 4 Diamene sheet
+%2-% 90 %3Structural repairkit (structural_repair) %%2=% 5 Paristeel %6+% 5 Transteel %6+% 5 Nanoplastic %6+% 2 QPC %6+% 1 Processing Array %6+% 1 Universal matter manipulator (umm) %6+% 2 R-glass (rglass) %6+% 1 Sensor Package (sensors)
+
+%7::RESOURCES:: AF_40 CS-5238 (227, 250) AF_63 CS-5239 (20, 239)%
+
+%2-% 100 %3mineral probe (probe) %%2=% 1 Diamene sheet %6+% 1 QPC %6+% 1 Universal matter manipulator (umm) %6+% 1 Sensor Package (sensors)
+%2-% 100 %3multifield tether (tether) %%2=% 1 Paristeel %6+% 5 Magnaril
+%2-% 100 %3nanoplastic scoop (scoop) %%2=% 1 Paristeel %6+% 1 Nanoplastic
+
+%7::STRUCTURES::%
+
+%2-% 1 %3Refinery core (refinery_core) %%2=% 4 Modular frame %6+% 4 Modular panel %6+% 4 Modular power core %6+% 4 Automation machinery %6+% 1 AI Core %6+% 50 Diamene %6+% 50 Isotropic Duramine (duramine) %6+% 50 Astrium %6+% 50 Stesium %6+% 50  Titanium %6+% 50 Vandium %6+% 50 Magnaril %6+% 50 Helium-11 (helium11) %6+% 50 Elessium %6+% 50 Tritium %6+% 50 Ultarine %6+% 50 Iriil
+%2-% 1 %3Autofactory core (autofactory_core) %%2=% 4 Modular frame %6+% 4 Modular panel %6+% 4 Modular power core %6+% 4 Automation machinery %6+% 1 AI Core %6+% 5 Transteel %6+% 5 Paristeel %6+% 5 R-glass (rglass) %6+% 5 Nanoplastic %6+% 5 Diamene sheet %6+% 5 HDS Astrium %6+% 5 QPC %6+% 5 Processing Array %6+% 5 Universal matter manipulator (umm) %6+% 5 Sensor Package (sensors)
+
+%7::PROJECTILES::%
+
+%2-% 50 %3kinetic projectile (kinetic_projectile) %%2=% 1 Transteel %6+% 3 Ultarine
+%2-% 50 %3thermal projectile (thermal_projectile) %%2=% 1 Transteel %6+% 3 Stesium
+%2-% 50 %3EM projectile (em_projectile) %%2=% 1 Paristeel %6+% 3 Elessium
+%2-% 50 %3gravitic projectile (gravitic_projectile) %%2=% 1 Paristeel %6+% 3 Astrium
+
+%7::LENSES::%
+
+%2-% 5 %3thermal lens (thermal_lens) %%2=% 1 Universal matter manipulator (umm) %6+% 2 R-glass (rglass) %6+% 40 Diamene sheet %6+% 20 Stesium
+%2-% 5 %3EM lens (em_lens) %%2=% 1 Universal matter manipulator (umm) %6+% 2 R-glass (rglass) %6+% 40 Diamene sheet %6+% 20 Elessium
+%2-% 5 %3gravitic lens (gravitic_lens) %%2=% 1 Universal matter manipulator (umm) %6+% 2 R-glass (rglass) %6+% 40 Diamene sheet %6+% 20 Astrium
+
+%7::EWAR::%
+
+%2-% 50 %3engine slicer script (script_engine) %%2=% 10 Vandium %6+% 1 Processing Array
+%2-% 50 %3capacitor slicer script (script_capacitor) %%2=% 10 Magnaril %6+% 1 Processing Array
+%2-% 50 %3shield slicer script (script_shield) %%2=% 10 Elessium %6+% 1 Processing Array
+%2-% 50 %3shipsim slicer script (script_shipsim) %%2=% 10 Stesium %6+% 1 Processing Array
+%2-% 50 %3sensor slicer script (script_sensor) %%2=% 10 Astrium %6+% 1 Processing Array
+%2-% 10 %3capdrainer coil (capdrainer_coil) %%2=% 15 Magnaril %6+% 1 Paristeel
+%2-% 10 %3interdiction web (web) %%2=% 1 Paristeel %6+% 1 Transteel %6+% 25 Vandium %6+% 25 Elessium %6+% 1 Sensor Package (sensors)
+%2-% 1 %3capacitor battery (capbattery) %%2=% 20 Magnaril %6+% 10 Ultarine %6+% 1 QPC

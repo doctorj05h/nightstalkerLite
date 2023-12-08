@@ -806,7 +806,7 @@ end</script>
 					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
@@ -1640,7 +1640,7 @@ end</script>
 					<regex>^kill</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-fury</name>
 				<script></script>
 				<command></command>
@@ -1648,7 +1648,7 @@ end</script>
 				<regex></regex>
 				<Alias isActive="yes" isFolder="no">
 					<name>bleed1</name>
-					<script>local target = sym.target
+					<script>  local target = sym.target
 local stance = gmcp.Char.Vitals.st:lower()
 local rage = tonumber(gmcp.Char.Vitals.rg)
 if not sym.hunter.flags.channeling then
@@ -1798,7 +1798,7 @@ if not sym.hunter.flags.channeling then
           }
         sym.hunter.send(to_combo[stance] .. ' ' .. target)
       else
-        if not sym.hunter.flags.resistant and rage &gt; 10 then
+        if not sym.hunter.flags.resistant and rage &gt; 5 then
           local to_combo =
             {
               ['symmetry'] = 'combo swiftcut resistant',
@@ -1825,6 +1825,124 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>ml1</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>musc2</name>
+					<script>local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if
+    not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75
+  then
+    sym.hunter.send("suffuse")
+  elseif canmend and not sym.hunter.flags.unstoppable then
+    checkSystems()
+  else
+    if sym.hunter.flags.unstoppable then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo swiftcut twist',
+          ['ember'] = 'combo assail twist',
+          ['blaze'] = 'combo barrage twist',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    else
+      if sym.hunter.flags.unstoppableready then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo swiftcut unstoppable',
+            ['ember'] = 'combo assail unstoppable',
+            ['blaze'] = 'combo barrage unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else
+        if not sym.hunter.flags.resistant and rage &gt; 5 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut resistant',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo barrage resistant',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut upperlash',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo barrage upperlash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  send('info here')
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>ml2</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>heartrend</name>
+					<script>local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if
+    not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75
+  then
+    sym.hunter.send("suffuse")
+  elseif canmend and not sym.hunter.flags.unstoppable then
+    checkSystems()
+  else
+    if sym.hunter.flags.unstoppable then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo swiftcut overwhelm',
+          ['ember'] = 'combo assail overwhelm',
+          ['blaze'] = 'combo heartrend overwhelm',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    else
+      if sym.hunter.flags.unstoppableready then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo swiftcut unstoppable',
+            ['ember'] = 'combo assail unstoppable',
+            ['blaze'] = 'combo heartrend unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else
+        if not sym.hunter.flags.resistant and rage &gt; 10 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut resistant',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo heartrend resistant',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo swiftcut upperlash',
+              ['ember'] = 'combo assail rend',
+              ['blaze'] = 'combo heartrend upperlash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  send('info here')
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^hr$</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">

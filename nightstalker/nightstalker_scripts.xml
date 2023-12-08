@@ -223,19 +223,19 @@ end</script>
       if sym.hunter.flags.overclock then
         sym.hunter.send('suit overclock')
       end
---  elseif not sym.hunter.flags.rails then
---    sym.hunter.send('mwp headshot ' ..target)
---      if sym.hunter.flags.overclock then
---        sym.hunter.send('suit overclock')
---      end
+  elseif not sym.hunter.flags.rails then
+    sym.hunter.send('mwp headshot ' ..target)
+      if sym.hunter.flags.overclock then
+        sym.hunter.send('suit overclock')
+      end
   elseif sym.hunter.bot then
     if not sym.hunter.flags.routine then
       sym.hunter.send('suit routine ' .. target .. ' pulse pulse pulse')
     else
       sym.hunter.send('suit pulse')
     end
-  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
-    sym.hunter.send('burn '..target)
+--  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
+--    sym.hunter.send('burn '..target)
   else
     sym.hunter.send('wallop '..target)
 --    sym.hunter.send('mwp tear '..target)
@@ -406,7 +406,6 @@ end</script>
   local rage = tonumber(gmcp.Char.Vitals.rg)
     if sym.hunter.flags.channeling then
       sym.hunter.send('fever')
-      send('info here')
     else
 --if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
 --  sym.hunter.send("suffuse")
@@ -423,14 +422,14 @@ end</script>
         not sym.hunter.flags.suffused and
         ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
         sym.hunter.send("suffuse")
---      elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
---        local to_combo =
---          {
---            ['symmetry'] = 'combo gutrend overpower',
---            ['flare'] = 'combo wound overpower',
---            ['eruption'] = 'combo rupture overpower',
---          }
---        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      elseif sym.hunter.flags.unstoppable == true and sym.hunter.flags.overpower == false then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo gutrend overpower',
+            ['flare'] = 'combo wound overpower',
+            ['eruption'] = 'combo rupture overpower',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
       else
         if sym.hunter.flags.unstoppable == true then
           local to_combo =
@@ -578,9 +577,28 @@ sym.hunter.mechanical = sym.hunter.mechanical or {}</script>
 'a dilapidated construction mech',
 'a glitch-riddled security robot',
 'an aggressively malfunctioning drone',
-'a dirty recycling bot'
+'a dirty recycling bot',
+'a maintenance bot'
 }
 </script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>paperweight</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['Paperweight'] = {
+  'an enormous frost salamander',
+  'a tiny frost salamander'
+}
+</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>arrizuri quarry</name>
+					<packageName></packageName>
+					<script>sym.hunter.priorities['Arrizuri Quarry'] = {
+  'a ferocious atzaparaki'
+}</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -701,7 +719,7 @@ function sym.hunter.previousroom()
     sym.hunter.system.stop()
 		decho('&lt;0,128,128&gt;Hunting completed!\n')
     local name = gmcp.Char.Status.name
-    if name == "Jaidyn" then
+    if name == "Jaidyn" or name == 'Ife' then
       sym.hunter.runner:init()
       sym.hunter.runner:start()
     end
@@ -2655,6 +2673,95 @@ end
 
 sym.registerevent('ui installed', 'sysInstall', 'sym.ui.loadthis', 'sysLuaInstallModule')
 sym.registerevent('ui loaded', 'sysLoadEvent', 'sym.ui.loadthis', 'sysLuaInstallModule')</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>rainbowtext test</name>
+				<packageName></packageName>
+				<script>local rainbowColors = {
+  {255, 0, 0},     -- red
+  {255, 165, 0},   -- orange
+  {255, 255, 0},   -- yellow
+  {0, 128, 0},     -- green
+  {0, 0, 255},     -- blue
+  {75, 0, 130},    -- indigo
+  {238, 130, 238}, -- violet
+}
+
+local function getRandomColor()
+  return rainbowColors[math.random(1, #rainbowColors)]
+end
+
+function rainbowGradientText(input)
+  local output = ""
+  local length = #input
+  local step = 1 / length
+
+  local startIndex = math.random(1, #rainbowColors)
+  local endIndex = startIndex + #rainbowColors - 1
+
+  local transitionStep = 1 / (#rainbowColors - 1)
+
+  for i = 1, length do
+    local char = input:sub(i, i)
+    local t = (i - 1) * step
+
+    local colorIndex1 = (startIndex + math.floor(t / transitionStep)) % #rainbowColors + 1
+    local colorIndex2 = (colorIndex1 % #rainbowColors) + 1
+
+    local color1 = rainbowColors[colorIndex1]
+    local color2 = rainbowColors[colorIndex2]
+
+    local subStep = (t % transitionStep) / transitionStep -- Sub-step within each color gradient
+    local r = math.floor(color1[1] + (color2[1] - color1[1]) * subStep)
+    local g = math.floor(color1[2] + (color2[2] - color1[2]) * subStep)
+    local b = math.floor(color1[3] + (color2[3] - color1[3]) * subStep)
+
+    r = math.max(0, math.min(255, r))
+    g = math.max(0, math.min(255, g))
+    b = math.max(0, math.min(255, b))
+
+    local colorString = string.format("&lt;%d,%d,%d&gt;", r, g, b)
+    output = output .. colorString .. char
+  end
+
+  return output
+end</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>gradient text</name>
+				<packageName></packageName>
+				<script>function gradientText(input, startColor, endColor)
+  local output = ""
+  local length = string.len(input)
+  local step = 2 / (length - 1)
+
+  local startR, startG, startB = startColor[1], startColor[2], startColor[3]
+  local endR, endG, endB = endColor[1], endColor[2], endColor[3]
+
+  for i = 1, length do
+    local char = input:sub(i, i)
+    local t = (i - 1) * step
+
+    if t &gt; 1 then
+      t = 2 - t
+    end
+
+    local r = math.floor(startR + (endR - startR) * t)
+    local g = math.floor(startG + (endG - startG) * t)
+    local b = math.floor(startB + (endB - startB) * t)
+    
+    r = math.max(0, math.min(255, r))
+    g = math.max(0, math.min(255, g))
+    b = math.max(0, math.min(255, b))
+    
+    local color = string.format("&lt;%d,%d,%d&gt;", r, g, b)
+    output = output .. color .. char
+  end
+
+  return output
+end</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
