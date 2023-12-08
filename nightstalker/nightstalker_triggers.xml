@@ -610,7 +610,7 @@ end
 if ship_id ~= nil and ship_id ~= target then
 local output = color..' '..distance.." "..dir.."\t"..desc.."\n"
   hechoLink('beacon', output, function() send('st '..ship_id) end, "target this "..ship_id, true)
-elseif ship_id == target then
+elseif ship_id ~= nil and ship_id == target then
   desc = "&gt; "..desc
   color = "#ff0707"
 local output = color..' '..distance.." "..dir.."\t"..desc.."\n"
