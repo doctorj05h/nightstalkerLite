@@ -2830,57 +2830,86 @@ end</script>
 				<script>local count = 0
 
 function fireShields()
-  if not sym.space.targetshields then
-    fireHull()
-  end
   for weapon_id, weapon in pairs(sym.space.weapon) do
-    if not sym.space.targetshields then
-      break
-    end
-    if
-      count &lt; 2 and
-      weapon.ready == "Yes" and
-      (weapon.type == "EM" or weapon.type == "gravitic" or weapon.type == "kinetic")
-    then
-      if weapon_id ~= sym.space.weapon.lastfired then
+    if weapon.ready == "Yes" and shouldFireAtShields(weapon) then
+      if count &lt; 2 and weapon_id ~= sym.space.weapon.lastfired then
         send('ship weapon fire ' .. weapon_id .. ' ' .. target)
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
-        if count == 2 then
-          tempTimer(
-            1.1,
-            function()
-              count = 0
-              fireShields()
-            end
-          )
-        end
       end
     end
+  end
+
+  if count &gt; 0 then
+    tempTimer(
+      1.1,
+      function()
+        count = 0
+        fireShields()
+      end
+    )
   end
 end
 
 function fireHull()
   for weapon_id, weapon in pairs(sym.space.weapon) do
-    if
-      count &lt; 2 and
-      weapon.ready == "Yes" and
-      (weapon.type == "thermal" or weapon.type == "gravitic" or weapon.type == "kinetic")
-    then
-      if weapon_id ~= sym.space.weapon.lastfired then
+    if weapon.ready == "Yes" and shouldFireAtHull(weapon) then
+      if count &lt; 2 and weapon_id ~= sym.space.weapon.lastfired then
         send('ship weapon fire ' .. weapon_id .. ' ' .. target)
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
-        if count == 2 then
-          tempTimer(
-            1.1,
-            function()
-              count = 0
-              fireHull()
-            end
-          )
+      end
+    end
+  end
+
+  if count &gt; 0 then
+    tempTimer(
+      1.1,
+      function()
+        count = 0
+        fireHull()
+      end
+    )
+  end
+end
+
+function shouldFireAtShields(weapon)
+  return weapon.type == "EM" or weapon.type == "gravitic"
+end
+
+function shouldFireAtHull(weapon)
+  return weapon.type == "thermal" or weapon.type == "kinetic"
+end
+
+function fireWeapons()
+  local allShieldsDown = true
+
+  for _, weapon in pairs(sym.space.weapon) do
+    if weapon.ready == "Yes" then
+      if not shouldFireAtShields(weapon) and sym.space.targetshields then
+        allShieldsDown = false
+        break
+      end
+    end
+  end
+
+  if math.floor(gmcp.Char.Vitals.ship_cap / gmcp.Char.Vitals.ship_cap_max * 100) &gt;= 50 then
+    -- Above 50% capacitor: fire all shield weapons
+    if not allShieldsDown then
+      for weapon_id, weapon in pairs(sym.space.weapon) do
+        if weapon.ready == "Yes" and shouldFireAtShields(weapon) then
+          send('ship weapon fire ' .. weapon_id .. ' ' .. target)
         end
       end
+    elseif not sym.space.targetshields then
+      fireHull()
+    end
+  else
+    -- Below 50% capacitor: fire in sequence
+    if not allShieldsDown then
+      fireShields()
+    elseif not sym.space.targetshields then
+      fireHull()
     end
   end
 end</script>
