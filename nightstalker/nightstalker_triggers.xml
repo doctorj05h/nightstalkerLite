@@ -261,10 +261,7 @@ end
 selectCurrentLine()
 copy()
 appendBuffer("mapwinHacking")
-deleteLine()
-
-
-</script>
+deleteLine()</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>1</conditonLineDelta>
 				<mStayOpen>70</mStayOpen>
@@ -283,8 +280,7 @@ deleteLine()
 				</regexCodePropertyList>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>stop update</name>
-					<script>setTriggerStayOpen("capture map (hacking)", 0)
-</script>
+					<script>setTriggerStayOpen("capture map (hacking)", 0)</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -675,12 +671,10 @@ send('map')</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>You disembark from</string>
-					<string>Your vision comes back into focus as your consciousness returns to your physical body.</string>
 					<string>You drift towards</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>2</integer>
-					<integer>3</integer>
 					<integer>2</integer>
 				</regexCodePropertyList>
 			</Trigger>
@@ -714,7 +708,8 @@ end</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>switch hack map</name>
-				<script>sym.ui.mapper.switch('Hacking')</script>
+				<script>sym.ui.mapper.switch('Hacking')
+send('config usequeueing off')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -1113,11 +1108,15 @@ end</script>
 				<script>sym.hunter.reset[gmcp.Char.Status.class]()
 checkSystems()
 selectCurrentLine()
-setFgColor(185,55,70)
+setFgColor(185, 55, 70)
 resetFormat()
 deselect()
 sym.hunter.flags.channeling = false
-send('info here')</script>
+if gmcp.Room.Info.environment == 'bridge' then
+  sym.space.targetshields = true
+else
+  send('info here')
+end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -1131,7 +1130,7 @@ send('info here')</script>
 				<regexCodeList>
 					<string>You have slain (.+)\.$</string>
 					<string>You have defeated (.+)\.$</string>
-					<string>^You collapse to the ground, killed</string>
+					<string>You collapse to the ground,  killed</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -5569,6 +5568,7 @@ deselect()</script>
 					<string>- a bulging metastatic slug</string>
 					<string>The ore crusher continues its operations</string>
 					<string>You can again use the Neural Blinder artifact power.</string>
+					<string>OpsGain</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -5581,6 +5581,7 @@ deselect()</script>
 					<integer>2</integer>
 					<integer>2</integer>
 					<integer>3</integer>
+					<integer>2</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -5677,6 +5678,57 @@ end
 					<string>That's already flipped over.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>3</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>redhighlight</name>
+				<script>selectCurrentLine()
+setFgColor(255,25,5)
+resetFormat()
+deselect()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>OpsLoss</string>
+					<string>Damage Taken</string>
+					<string>NoSync();</string>
+					<string>Error(</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>2</integer>
+					<integer>3</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>evasion and dodge</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#00fafa</mFgColor>
+				<mBgColor>#050505</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You skillfully evade some of the damage!</string>
+					<string>With preternatural speed, you anticipate the attack and move out of the way.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>3</integer>
 					<integer>3</integer>
 				</regexCodePropertyList>
 			</Trigger>
@@ -8405,45 +8457,42 @@ end
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>targeting highlight</name>
 					<script>deleteLine()
-cecho("\n&lt;gray&gt;Targeting: &lt;gray&gt;&lt;&lt;red&gt; "..matches[2].." &lt;gray&gt;&gt;")
+cecho("\n&lt;gray&gt;Targeting: &lt;gray&gt;&lt;&lt;red&gt; " .. matches[2] .. " &lt;gray&gt;&gt;")
 target = matches[2]
-
 local class = gmcp.Char.Status.class
-sym.pvp.flags.enemysubsystems = {
-  wetwiring = 10000,
-  muscular = 10000,
-  internal = 10000,
-  sensory = 10000,
-  mind = 10000
-}
-if class == "Nanoseer" then
-sym.pvp.flags.rattle = false
-sym.pvp.flags.sluggish = false
-sym.pvp.flags.distracted = false
-sym.pvp.flags.mindaff = 0
-sym.pvp.flags.enveloped = false
-sym.pvp.flags.freezestacks = 0
-elseif class == "Engineer" then
-sym.pvp.currentstatic = 0
-sym.pvp.currentshards = 0
-enableTimer('static')
-sym.pvp.flags.worming = false
-cecho('\n ')
-cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
-cecho('\n&lt;ansi_light_red&gt;     Current Shards: '..sym.pvp.currentshards)
-cecho('\n ')
-elseif class == "B.E.A.S.T." then
-sym.hunter.flags.combust = false
-sym.hunter.flags.doused = false
-sym.pvp.flags.blazingstacks = 0
-sym.pvp.flags.burns = sym.pvp.flags.burns or 0
-cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')
+if gmcp.Room.Info.num == -2 and #sym.ui.roommobs &gt; 0 and sym.hacker.sync then
+  expandAlias('infect')
 else
+  sym.pvp.flags.enemysubsystems =
+    {wetwiring = 10000, muscular = 10000, internal = 10000, sensory = 10000, mind = 10000}
+  if class == "Nanoseer" then
+    sym.pvp.flags.rattle = false
+    sym.pvp.flags.sluggish = false
+    sym.pvp.flags.distracted = false
+    sym.pvp.flags.mindaff = 0
+    sym.pvp.flags.enveloped = false
+    sym.pvp.flags.freezestacks = 0
+  elseif class == "Engineer" then
+    sym.pvp.currentstatic = 0
+    sym.pvp.currentshards = 0
+    enableTimer('static')
+    sym.pvp.flags.worming = false
+    cecho('\n ')
+    cecho('\n&lt;ansi_light_cyan&gt;     Current Static: ' .. sym.pvp.currentstatic)
+    cecho('\n&lt;ansi_light_red&gt;     Current Shards: ' .. sym.pvp.currentshards)
+    cecho('\n ')
+  elseif class == "B.E.A.S.T." then
+    sym.hunter.flags.combust = false
+    sym.hunter.flags.doused = false
+    sym.pvp.flags.blazingstacks = 0
+    sym.pvp.flags.burns = sym.pvp.flags.burns or 0
+    cecho('\n&lt;red&gt; Currently Blazing\: ' .. sym.pvp.flags.blazingstacks .. '\n ')
+  else
+  end
 end
 if gmcp.Room.Info.environment == 'bridge' then
   sym.space.targetshields = true
-end
-</script>
+end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -8703,7 +8752,13 @@ sym.hacker.targeting = sym.hacker.targeting or {}</script>
 			<regexCodePropertyList />
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>hack variables</name>
-				<script>sym.hacker = {}</script>
+				<script>sym.hacker.decoy = false
+sym.hacker.overwrite = false
+sym.hacker.password = ""
+sym.hacker.sync = true
+send('config usequeueing off')
+sym.ui.mapper.switch('Ground')
+send('map')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -8716,8 +8771,10 @@ sym.hacker.targeting = sym.hacker.targeting or {}</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>You blink hazily as your eyes adjust to the world around you and you quickly consult your mindsim to catch up on worldly affairs.</string>
+					<string>Your vision comes back into focus as your consciousness returns to your physical body.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>3</integer>
 					<integer>3</integer>
 				</regexCodePropertyList>
 			</Trigger>
@@ -8828,7 +8885,8 @@ sym.hacker.sync = true</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>room check</name>
-				<script>tempTimer(.02, [[sym.hacker.targeting()]])</script>
+				<script>sym.hacker.targeting()
+sym.hacker.decoy = false</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -8841,18 +8899,16 @@ sym.hacker.sync = true</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>Directory list of</string>
-					<string>.+\.Delete\(\)$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>2</integer>
-					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>sync balance</name>
 				<script>sym.hacker.sync = true
 if #sym.ui.roommobs &gt; 0 then
-  expandAlias('infect')
+   expandAlias('infect')
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -9394,6 +9450,28 @@ cecho('3710')</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>hack attack</name>
+				<script>sym.hacker.targeting()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>.+\.Delete\(\)$</string>
+					<string>Error("ON_COOLDOWN</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>SPT</name>

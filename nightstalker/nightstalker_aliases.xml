@@ -1987,10 +1987,22 @@ end</script>
 				<script>if not sym.hacker.overwrite then
   send('overwrite ' .. sym.target)
 elseif not sym.hacker.decoy and #sym.ui.roommobs &gt; 2 then
-  send('decoy')
+  local foundDecoy = false
+  for _, mob in ipairs(sym.ui.roommobs) do
+    if mob.attrib == "m" and mob.name == "decoy" then
+      foundDecoy = true
+      break
+    end
+  end
+  if not foundDecoy then
+    send('decoy')
+  else
+    send('infect ' .. sym.target)
+  end
 else
   send('infect ' .. sym.target)
-end</script>
+end
+</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^infect$</regex>
