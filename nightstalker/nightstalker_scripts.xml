@@ -2475,7 +2475,6 @@ sym.ui.roomfilters = sym.ui.roomfilters or {}</script>
     setFgColor('infowinRoom', unpack(color_table[colours[2]]))
     setBgColor('infowinRoom', r, g, b)
     if ignoring then setStrikeOut('infowinRoom', true) end
---    sym.ui.info:dechoLink('Room', string.format('%s%-1s ', colour('white'), entity.id), [[send("probe ]] .. entity.id .. [[")]], "", true)
     echoPopup('infowinRoom', entity.name, {
       [[send('st ]]..entity.id..[[', false)]],
       [[send('probe ]]..entity.id..[[', false)]],
@@ -3447,6 +3446,7 @@ color_table["spt_blue"] = {0, 153, 204}</script>
 				<name>degauss logic</name>
 				<packageName></packageName>
 				<script>-- variable of interest current_static, sym.hunter.flags.degauss, sym.hunter.flags.gaussify
+-- think about using degauss to taser for spasms *shrug*
 function degausslogic()
 local target = sym.target
 local sym_name = gmcp.Char.Name.name

@@ -253,6 +253,10 @@ sym.ui.mapper:decho(
 
 clearUserWindow("mapwinHacking")
 sym.ui.mapper.switch('Hacking')
+sym.hacker.decoy = false
+sym.hacker.overwrite = false
+sym.hacker.password = ""
+sym.hacker.sync = true
 
 hackclear = false
 
@@ -1081,7 +1085,7 @@ end</script>
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>hunting balance</name>
 				<script>sym.hunter.class[gmcp.Char.Status.class](sym.target)</script>
 				<triggerType>0</triggerType>
@@ -5335,7 +5339,7 @@ end</script>
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>critical hits</name>
 				<script>deleteLine()
 local hit = matches[2]
@@ -5370,16 +5374,18 @@ end</script>
 				<mStayOpen>0</mStayOpen>
 				<mCommand></mCommand>
 				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
+				<mFgColor>#ffff00</mFgColor>
+				<mBgColor>#555500</mBgColor>
 				<mSoundFile></mSoundFile>
 				<colorTriggerFgColor>#000000</colorTriggerFgColor>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^You have scored a (.+) hit\!</string>
+					<string>You find a hidden exit to the</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
+					<integer>2</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -5447,7 +5453,6 @@ deselect()</script>
 					<string>You have successfully primed the demolition charge here.</string>
 					<string>^(RS|CS|CA|RA)-\d+\s+\d\s+Ishvana</string>
 					<string>Your renown in the hacking community </string>
-					<string>You find a hidden exit to the</string>
 					<string>The asteroid has been completely broken down.</string>
 					<string>^.+been completely emptied\.$</string>
 					<string>The ore crusher ceases operations</string>
@@ -5458,7 +5463,6 @@ deselect()</script>
 					<integer>0</integer>
 					<integer>3</integer>
 					<integer>1</integer>
-					<integer>2</integer>
 					<integer>2</integer>
 					<integer>3</integer>
 					<integer>3</integer>
@@ -8770,11 +8774,9 @@ send('map')</script>
 				<colorTriggerFgColor>#000000</colorTriggerFgColor>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
-					<string>You blink hazily as your eyes adjust to the world around you and you quickly consult your mindsim to catch up on worldly affairs.</string>
 					<string>Your vision comes back into focus as your consciousness returns to your physical body.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
-					<integer>3</integer>
 					<integer>3</integer>
 				</regexCodePropertyList>
 			</Trigger>

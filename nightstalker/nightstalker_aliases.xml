@@ -1263,6 +1263,9 @@ if not sym.hunter.flags.channeling then
     sym.hunter.send('turret qpcboost')
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
     send('airdrop')
+  elseif not sym.pvp.flags.worming and sym.pvp.currentstatic &gt; 0 then
+    sym.hunter.send('bot worm ' .. target)
+    sym.hunter.send('assess ' .. target)
   elseif not sym.hunter.flags.repeated then
     if sym.pvp.flags.enemysubsystems.internal &gt; 7500 then
       sym.hunter.send('bot repeat disrupt ' .. target)
@@ -1273,9 +1276,6 @@ if not sym.hunter.flags.channeling then
     end
   elseif not sym.hunter.flags.gaussfield then
     sym.hunter.send('operate gaussfield')
-    sym.hunter.send('assess ' .. target)
-  elseif not sym.pvp.flags.worming then
-    sym.hunter.send('bot worm ' .. target)
     sym.hunter.send('assess ' .. target)
   elseif not sym.hunter.flags.degauss.turret and sym.pvp.currentstatic &gt; 500 then
     sym.hunter.send('operate degauss '..target..' turret')
