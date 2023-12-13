@@ -254,8 +254,6 @@ sym.ui.mapper:decho(
 clearUserWindow("mapwinHacking")
 sym.ui.mapper.switch('Hacking')
 sym.hacker.decoy = false
-sym.hacker.overwrite = false
-sym.hacker.password = ""
 sym.hacker.sync = true
 
 hackclear = false
@@ -712,7 +710,11 @@ end</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>switch hack map</name>
-				<script>sym.ui.mapper.switch('Hacking')
+				<script>sym.hacker.decoy = false
+sym.hacker.overwrite = false
+sym.hacker.password = ""
+sym.hacker.sync = true
+sym.ui.mapper.switch('Hacking')
 send('config usequeueing off')</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -1085,7 +1087,7 @@ end</script>
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>hunting balance</name>
 				<script>sym.hunter.class[gmcp.Char.Status.class](sym.target)</script>
 				<triggerType>0</triggerType>
@@ -8760,7 +8762,7 @@ sym.hacker.targeting = sym.hacker.targeting or {}</script>
 sym.hacker.overwrite = false
 sym.hacker.password = ""
 sym.hacker.sync = true
-send('config usequeueing off')
+send('config usequeueing on')
 sym.ui.mapper.switch('Ground')
 send('map')</script>
 				<triggerType>0</triggerType>
@@ -9446,6 +9448,26 @@ cecho('3710')</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>^.+ from Antinomy Anomalistics\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>quickmark pawn</name>
+					<script>cecho('&lt;white&gt;Could be &lt;cyan&gt; 3901|3788&lt;white&gt;...')</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>^.+ from Quickmark Pawn\.$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
