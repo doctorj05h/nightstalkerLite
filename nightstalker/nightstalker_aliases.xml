@@ -2016,17 +2016,52 @@ end
 			</Alias>
 			<Alias isActive="yes" isFolder="no">
 				<name>terminals</name>
-				<script>  local output = "Access Terminals:\n"
+				<script>local output = "Access Terminals:\n"
 
+local function terminalsArea()
+  table.sort(
+    sym.accessTerminals,
+    function(a, b)
+      if a.area then
+        return a.area &lt; b.area
+      else
+      end
+    end
+  )
   for _, terminal in ipairs(sym.accessTerminals) do
     output = output .. "ID: " .. tostring(terminal.id or 0) .. "\n"
     output = output .. "Room: " .. tostring(terminal.room or 0) .. "\n"
     output = output .. "Hacking Level: " .. tostring(terminal.hackingLevel or 0) .. "\n"
     output = output .. "Area: " .. tostring(terminal.area or 'Unknown') .. "\n"
-    output = output .. "&lt;orange&gt;--------------------------&lt;white&gt;\n"
+    output = output .. "&lt;green&gt;--------------------------&lt;white&gt;\n"
   end
+  cecho(output)
+end
 
-cecho(output)</script>
+local function terminalsLevel()
+  table.sort(
+    sym.accessTerminals,
+    function(a, b)
+      if a.hackingLevel then
+        return a.hackingLevel &lt; b.hackingLevel
+      else
+      end
+    end
+  )
+  for _, terminal in ipairs(sym.accessTerminals) do
+    output = output .. "ID: " .. tostring(terminal.id or 0) .. "\n"
+    output = output .. "Room: " .. tostring(terminal.room or 0) .. "\n"
+    output = output .. "Hacking Level: " .. tostring(terminal.hackingLevel or 0) .. "\n"
+    output = output .. "Area: " .. tostring(terminal.area or 'Unknown') .. "\n"
+    output = output .. "&lt;green&gt;--------------------------&lt;white&gt;\n"
+  end
+  cecho(output)
+end
+
+--display either sorting by area or by level
+
+cechoLink("\n&lt;white&gt;Sort terminals by &lt;orange&gt;area &lt;white&gt;- ", function(choice) terminalsArea() end, 'See what\'s in your general area', true)
+cechoLink("Sort terminals by &lt;green&gt;level.", function(choice) terminalsLevel() end, 'See a list by level.', true)</script>
 				<command></command>
 				<packageName></packageName>
 				<regex>^terminals$</regex>

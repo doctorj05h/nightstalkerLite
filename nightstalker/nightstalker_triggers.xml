@@ -8995,6 +8995,7 @@ end</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>movement check temrinal</name>
 					<script>sym.accessTerminals = sym.accessTerminals or {}
+
 for _, entry in ipairs(sym.ui.roomitems) do
   if entry.name == "an unobtrusive access terminal" then
     local terminalExists = false
@@ -9003,9 +9004,9 @@ for _, entry in ipairs(sym.ui.roomitems) do
         terminalExists = true
         local output = "&lt;b&gt;Access Terminals:&lt;/b&gt;\n"
         for _, terminal in ipairs(sym.accessTerminals) do
-          output = output .. "&lt;b&gt;ID:&lt;/b&gt; " .. terminal.id .. "\n"
-          output = output .. "&lt;b&gt;Room:&lt;/b&gt; " .. terminal.room .. "\n"
-          output = output .. "&lt;b&gt;Hacking Level:&lt;/b&gt; " .. terminal.hackingLevel .. "\n"
+          output = output .. "&lt;b&gt;ID:&lt;/b&gt; " .. tostring(terminal.id or 0) .. "\n"
+          output = output .. "&lt;b&gt;Room:&lt;/b&gt; " .. tostring(terminal.room or 0) .. "\n"
+          output = output .. "&lt;b&gt;Hacking Level:&lt;/b&gt; " .. tostring(terminal.hackingLevel or 0) .. "\n"
           -- Check if the terminal is in the current room
           if gmcp.Room.Info.num == terminal.room then
             cechoLink(
@@ -9097,24 +9098,24 @@ deleteLine()</script>
 					</Trigger>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>terminal level track</name>
-						<script>local hackingLevel = tonumber(matches[2])
-
+						<script>local hackingLevel = tonumber(matches[2] or 0)
 if hackingLevel then
   for _, entry in ipairs(sym.ui.roomitems) do
     if entry.name == "an unobtrusive access terminal" then
       for _, terminal in ipairs(sym.accessTerminals) do
         if terminal.id == entry.id then
-          terminal.hackingLevel = tonumber(hackingLevel)
-          table.sort(sym.accessTerminals,
-            function(a, b)
-              return a.hackingLevel &lt; b.hackingLevel
-            end)
+          if not terminal.id or terminal.id == 0 then
+            sym.accessTerminals[i] = nil -- Remove entry with nil or 0 ID
+          else
+            terminal.hackingLevel = tonumber(hackingLevel or 0)
+          end
           break
         end
       end
     end
   end
 end
+
 sym.savetable('accessTerminals')</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
