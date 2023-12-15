@@ -2019,10 +2019,10 @@ end
 				<script>  local output = "Access Terminals:\n"
 
   for _, terminal in ipairs(sym.accessTerminals) do
-    output = output .. "ID: " .. terminal.id .. "\n"
-    output = output .. "Room: " .. terminal.room .. "\n"
-    output = output .. "Hacking Level: " .. terminal.hackingLevel .. "\n"
-    output = output .. "Area: " .. terminal.area .. "\n"
+    output = output .. "ID: " .. tostring(terminal.id or 0) .. "\n"
+    output = output .. "Room: " .. tostring(terminal.room or 0) .. "\n"
+    output = output .. "Hacking Level: " .. tostring(terminal.hackingLevel or 0) .. "\n"
+    output = output .. "Area: " .. tostring(terminal.area or 'Unknown') .. "\n"
     output = output .. "&lt;orange&gt;--------------------------&lt;white&gt;\n"
   end
 

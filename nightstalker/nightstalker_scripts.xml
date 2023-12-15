@@ -2859,6 +2859,8 @@ function fireHull()
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
       end
+    else
+      break
     end
   end
 
