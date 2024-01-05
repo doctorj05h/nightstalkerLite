@@ -234,11 +234,15 @@ end</script>
     else
       sym.hunter.send('suit pulse')
     end
---  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
---    sym.hunter.send('burn '..target)
+-- stop experimenting with burn bashing.. it's booty
   else
-    sym.hunter.send('wallop '..target)
---    sym.hunter.send('mwp tear '..target)
+--    sym.hunter.send('wallop '..target)
+    sym.hunter.send('mwp tear '..target)
+-- new experiment!! incendiary! (its good ttk 6.03)
+--      sym.hunter.send('mwp incendiary '..target)
+--      if sym.hunter.flags.overclock then
+--        sym.hunter.send('suit overclock')
+--      end
     end
   end
 end</script>
@@ -2859,8 +2863,6 @@ function fireHull()
         sym.space.weapon.lastfired = weapon_id
         count = count + 1
       end
-    else
-      break
     end
   end
 
@@ -3507,6 +3509,39 @@ function calculateStacksNeeded(subsystemsTable)
   return sym.pvp.flags.stacksNeeded
 end
 </script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>rage logic</name>
+				<packageName></packageName>
+				<script>battleFlow = {
+symmetry = { 'strike', 'deflect', 'unstoppable' },
+ember = { 'resistant', 'upperlash', 'stun' },
+flare = { 'reel', 'flyinglash', 'berserk' },
+inferno = { 'daze', 'aftershock', 'proptoss' },
+spark = { 'grapple', 'topple', 'sandblast' },
+eruption = { 'flyingcut', 'airleap', 'deepstrike' },
+blaze = { 'rend', 'airflip', 'expose' },
+unstoppable = { 'slice', 'quake', 'judgement', 'shatter', 'overwhelm', 'twist', 'position', 'throw', 'overpower' }
+}
+function heartRend(stance)
+local currentstance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+local options = battleFlow[stance]
+
+if options then
+
+if sym.hunter.flags.unstoppable then
+  return  sym.hunter.send('rage overwhelm ' .. target)
+elseif sym.hunter.flags.unstoppableready then
+  return battleFlow[stance]
+end
+
+else
+  return nil
+end
+
+end</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
