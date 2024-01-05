@@ -709,7 +709,7 @@ else
 end</script>
 					<command></command>
 					<packageName></packageName>
-					<regex>^88$</regex>
+					<regex>^sund$</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>suit examine</name>
@@ -806,7 +806,7 @@ end</script>
 					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
@@ -1425,7 +1425,7 @@ end</script>
 					<regex>^dega$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>
@@ -1699,6 +1699,60 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^bl1</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>bleed3</name>
+					<script>  local target = sym.target
+local stance = gmcp.Char.Vitals.st:lower()
+local rage = tonumber(gmcp.Char.Vitals.rg)
+if not sym.hunter.flags.channeling then
+  if not sym.hunter.flags.suffused and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 71 then
+    sym.hunter.send("suffuse")
+  elseif canmend and not sym.hunter.flags.unstoppable then
+    checkSystems()
+  else if sym.hunter.flags.unstoppable then
+      local to_combo =
+        {
+          ['symmetry'] = 'combo gutrend twist',
+          ['flare'] = 'combo wound twist',
+          ['eruption'] = 'combo hypertension twist',
+        }
+      sym.hunter.send(to_combo[stance] .. ' ' .. target)
+    else if sym.hunter.flags.unstoppableready then
+        local to_combo =
+          {
+            ['symmetry'] = 'combo gutrend unstoppable',
+            ['flare'] = 'combo wound unstoppable',
+            ['eruption'] = 'combo hypertension unstoppable',
+          }
+        sym.hunter.send(to_combo[stance] .. ' ' .. target)
+      else if not sym.hunter.flags.berserk and rage &gt;= 5 then
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend berserk',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo hypertension berserk',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        else
+          local to_combo =
+            {
+              ['symmetry'] = 'combo gutrend flyinglash',
+              ['flare'] = 'combo wound deepstrike',
+              ['eruption'] = 'combo hypertension flyinglash',
+            }
+          sym.hunter.send(to_combo[stance] .. ' ' .. target)
+        end
+      end
+    end
+  end
+else
+  sym.hunter.send("fever")
+  send('info here')
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^bl3</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>bleed2damage</name>
