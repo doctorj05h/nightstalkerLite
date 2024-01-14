@@ -806,7 +806,7 @@ end</script>
 					<regex>^fire$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-scoundrel</name>
 				<script></script>
 				<command></command>
@@ -1425,7 +1425,7 @@ end</script>
 					<regex>^dega$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>

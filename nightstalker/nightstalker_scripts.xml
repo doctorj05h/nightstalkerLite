@@ -235,9 +235,16 @@ end</script>
       sym.hunter.send('suit pulse')
     end
 -- stop experimenting with burn bashing.. it's booty
+  -- you can't tell me what to do me! I want to try it again!
+  elseif tonumber(gmcp.Char.Vitals.pl) &gt; 100 then
+      sym.hunter.send('plasma burn '..target)
+        if sym.hunter.flags.overclock then
+          sym.hunter.send('suit overclock')
+        end
   else
---    sym.hunter.send('wallop '..target)
-    sym.hunter.send('mwp tear '..target)
+    sym.hunter.send('wallop '..target)
+--    sym.hunter.send('mwp tear '..target)
+
 -- new experiment!! incendiary! (its good ttk 6.03)
 --      sym.hunter.send('mwp incendiary '..target)
 --      if sym.hunter.flags.overclock then
