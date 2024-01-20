@@ -1246,7 +1246,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 					<regex>^aoe$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-engineer</name>
 				<script></script>
 				<command></command>
@@ -1310,6 +1310,8 @@ local sym_name = gmcp.Char.Name.name
 if not sym.hunter.flags.channeling then
   if not sym.hunter.flags.stimjected and not sym.hunter.flags.autoheal and ((gmcp.Char.Vitals.hp / gmcp.Char.Vitals.maxhp) * 100) &lt; 75 then
     sym.hunter.send('stimjector ' .. sym_name)
+  elseif sym.pvp.flags.enemysubsystems.muscular &lt;= 0 then
+    sym.hunter.send('operate squash ' .. target)
   elseif not sym.hunter.flags.turretpower then
     sym.hunter.send('turret qpcboost')
   elseif tonumber(gmcp.Char.Vitals.pt) &lt; 36 and not sym.hunter.flags.airdrop then
@@ -1425,7 +1427,7 @@ end</script>
 					<regex>^dega$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-nanoseer</name>
 				<script></script>
 				<command></command>

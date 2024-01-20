@@ -2864,6 +2864,7 @@ end
 
 function fireHull()
   for weapon_id, weapon in pairs(sym.space.weapon) do
+  if not sym.space.targetshields then
     if weapon.ready == "Yes" and shouldFireAtHull(weapon) then
       if count &lt; 2 and weapon_id ~= sym.space.weapon.lastfired then
         send('ship weapon fire ' .. weapon_id .. ' ' .. target)
@@ -2871,6 +2872,9 @@ function fireHull()
         count = count + 1
       end
     end
+   else
+     break
+  end
   end
 
   if count &gt; 0 then
