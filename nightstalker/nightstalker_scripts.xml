@@ -3046,6 +3046,8 @@ function spt_install()
       Shen = "LightPink",
       Tukkav = "peru",
       Whoorn = "RoyalBlue",
+      Bushraki = "firebrick",
+      Belaul = 'khaki',
       
       Beast = "SteelBlue",
       Engineer = "yellow",
