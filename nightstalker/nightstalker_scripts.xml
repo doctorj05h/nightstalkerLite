@@ -730,7 +730,7 @@ function sym.hunter.previousroom()
     sym.hunter.system.stop()
 		decho('&lt;0,128,128&gt;Hunting completed!\n')
     local name = gmcp.Char.Status.name
-    if name == "Jaidyn" or name == 'Ife' then
+    if name == "Jaidyn" then
       sym.hunter.runner:init()
       sym.hunter.runner:start()
     end

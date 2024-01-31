@@ -2758,7 +2758,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-engineer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -3369,7 +3369,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>oh-fury</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -5198,8 +5198,10 @@ cecho('\n&lt;blue:black&gt;Astromechs:&lt;white&gt; In transit to the &lt;yellow
 					<string>^.+ moves in to attack you\.$</string>
 					<string>^.+ leaps into aggressive action\.$</string>
 					<string>^Roaring with a stony\, gutteral roar that shakes the earth underfoot\, .+ attacks\, lumbering forward with swinging claws\.$</string>
+					<string>^.+ charges forward with its claws raised for attack\.$</string>
 				</regexCodeList>
 				<regexCodePropertyList>
+					<integer>1</integer>
 					<integer>1</integer>
 					<integer>1</integer>
 					<integer>1</integer>
@@ -7229,7 +7231,7 @@ sym.pvp.flags.sensaff = sym.pvp.flags.sensaff + 1</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-engineer</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -7327,17 +7329,7 @@ end</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>&lt;/3</name>
 					<script>shouldheartbreak = 1000 - (matches[2] * 10)
-echo('\n'..shouldheartbreak)
-if shouldheartbreak + sym.pvp.currentstatic &gt;= 1000 and shouldheartbreak &gt;= 500 then
-  cecho('\n &lt;cyan&gt;&lt;/3 ITS TIME TO BREAK SOME HEARTS!! &lt;/3')
-  send('bot heartbreaker ' .. target)
-elseif shouldheartbreak + sym.pvp.currentstatic &gt; 900 and shouldheartbreak &gt;= 500 then
-  cecho('\n &lt;yellow&gt; ITS HEARTBREAK TIME!! But.. claw or something not there yet')
-  send('assess ' .. target)
-  send('bot claw ' .. target)
-else
-  cecho('\n &lt;green&gt; Not yet.. let that wormie wiggle')
-end</script>
+echo('\n'..shouldheartbreak)</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -7398,7 +7390,17 @@ sym.pvp.flags.worming = false</script>
 						<script>sym.pvp.currentstatic = tonumber(matches[2])
 cecho('\n ')
 cecho('\n&lt;ansi_light_cyan&gt;     Current Static: '..sym.pvp.currentstatic)
-cecho('\n ')</script>
+cecho('\n ')
+if shouldheartbreak + sym.pvp.currentstatic &gt;= 1000 and shouldheartbreak &gt;= 500 then
+  cecho('\n &lt;cyan&gt;&lt;/3 ITS TIME TO BREAK SOME HEARTS!! &lt;/3')
+  send('bot heartbreaker ' .. target)
+elseif shouldheartbreak + sym.pvp.currentstatic &gt; 900 and shouldheartbreak &gt;= 500 then
+  cecho('\n &lt;yellow&gt; ITS HEARTBREAK TIME!! But.. claw or something not there yet')
+  send('assess ' .. target)
+  send('bot claw ' .. target)
+else
+  cecho('\n &lt;green&gt; Not yet.. let that wormie wiggle')
+end</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -8129,7 +8131,7 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>op-fury</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -9721,9 +9723,9 @@ cecho('3710')</script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>New trigger</name>
-					<script></script>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>vitus pharma</name>
+					<script>send('path track 1554')</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -9734,8 +9736,12 @@ cecho('3710')</script>
 					<mSoundFile></mSoundFile>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
+					<regexCodeList>
+						<string>^.+ from Vitus Pharmaceuticals\.$</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">

@@ -391,6 +391,15 @@ cechoLink(
   "Path track to v8945.",
   true
 )
+cecho("\nPaperweight                      - ")
+cechoLink(
+  "&lt;white&gt; (v&lt;u&gt;13933&lt;/u&gt;)",
+  function()
+    send("path track 13933")
+  end,
+  "Path track to v13933.",
+  true
+)
 cecho("\nSuiko, Pi Station, Fly Only      - ")
 cechoLink(
   "&lt;white&gt; (v&lt;u&gt;4302&lt;/u&gt;)",
@@ -1246,7 +1255,7 @@ local bullets = tonumber(gmcp.Char.Vitals.bl)
 					<regex>^aoe$</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
+			<AliasGroup isActive="yes" isFolder="yes">
 				<name>a-engineer</name>
 				<script></script>
 				<command></command>
@@ -1642,7 +1651,7 @@ end</script>
 					<regex>^kill</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="yes" isFolder="yes">
+			<AliasGroup isActive="no" isFolder="yes">
 				<name>a-fury</name>
 				<script></script>
 				<command></command>
@@ -1865,6 +1874,8 @@ if not sym.hunter.flags.channeling then
             ['symmetry'] = 'combo swiftcut unstoppable',
             ['ember'] = 'combo assail unstoppable',
             ['blaze'] = 'combo barrage unstoppable',
+            ['flare'] = 'combo sear deepstrike',
+            ['eruption'] = 'combo hypertension airleap',
           }
         sym.hunter.send(to_combo[stance] .. ' ' .. target)
       else
@@ -1874,6 +1885,8 @@ if not sym.hunter.flags.channeling then
               ['symmetry'] = 'combo swiftcut resistant',
               ['ember'] = 'combo assail rend',
               ['blaze'] = 'combo barrage resistant',
+              ['flare'] = 'combo sear deepstrike',
+              ['eruption'] = 'combo hypertension airleap',
             }
           sym.hunter.send(to_combo[stance] .. ' ' .. target)
         else
